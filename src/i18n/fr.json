@@ -1,0 +1,85 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "apply": "Postuler",
+    "view": "Voir",
+    "share": "Partager",
+    "required": "Champ requis",
+    "optional": "Optionnel"
+  },
+  "nav": {
+    "companies": "Entreprises",
+    "jobs": "Offres d'emploi",
+    "about": "À propos",
+    "signin": "Se connecter",
+    "signup": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "profile": "Mon profil",
+    "logout": "Déconnexion"
+  },
+  "landing": {
+    "hero_title": "Connectez-vous aux talents tech qui construisent le Maroc numérique",
+    "hero_subtitle": "La plateforme officielle de l'APEBI pour mettre en relation entreprises membres et talents tech marocains.",
+    "cta_hire": "Je cherche un talent",
+    "cta_work": "Je cherche une opportunité",
+    "stats_companies": "entreprises membres",
+    "stats_talents": "profils talents",
+    "stats_jobs": "offres actives",
+    "how_it_works": "Comment ça marche",
+    "for_companies": "Pour les entreprises",
+    "for_talents": "Pour les talents"
+  },
+  "company": {
+    "member_badge": "Membre APEBI",
+    "label_badge": "Label APEBI TechTalent",
+    "active_jobs": "offres actives",
+    "all_jobs": "Voir toutes les offres",
+    "spontaneous": "Candidature spontanée",
+    "size": "Taille",
+    "sector": "Secteur",
+    "city": "Ville",
+    "member_since": "Membre depuis"
+  },
+  "job": {
+    "apply": "Postuler",
+    "save": "Sauvegarder",
+    "contract": "Contrat",
+    "location": "Lieu",
+    "remote": "Télétravail",
+    "salary": "Salaire",
+    "level": "Niveau",
+    "skills": "Compétences requises",
+    "posted": "Publiée le",
+    "closes": "Clôture le",
+    "applications": "candidatures"
+  },
+  "talent": {
+    "availability": "Disponibilité",
+    "experience": "ans d'expérience",
+    "skills": "Compétences",
+    "complete_profile": "Compléter le profil",
+    "profile_visibility": "Visibilité du profil",
+    "profile_visible": "Profil visible aux recruteurs",
+    "profile_hidden": "Profil masqué"
+  },
+  "status": {
+    "pending": "En attente",
+    "approved": "Validé",
+    "rejected": "Rejeté",
+    "sent": "Envoyée",
+    "viewed": "Vue",
+    "shortlisted": "Shortlisté",
+    "accepted": "Acceptée",
+    "active": "Active",
+    "closed": "Clôturée"
+  }
+}
