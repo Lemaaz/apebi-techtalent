@@ -31,7 +31,6 @@ type ApplicationRow = {
   id: string
   status: string | null
   created_at: string | null
-  cover_letter: string | null
   job_postings: {
     id: string
     title: string
@@ -48,7 +47,9 @@ type ApplicationRow = {
 }
 
 function timeAgo(dateStr: string): string {
-  const diffDays = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86_400_000)
+  const ts = new Date(dateStr).getTime()
+  if (isNaN(ts)) return ''
+  const diffDays = Math.floor((Date.now() - ts) / 86_400_000)
   if (diffDays === 0) return "Aujourd'hui"
   if (diffDays === 1) return 'Hier'
   if (diffDays < 30) return `Il y a ${diffDays} j`
@@ -70,10 +71,10 @@ export default async function CandidaturesPage() {
 
   if (!talent) redirect('/talent/inscription')
 
-  const { data: applications = [] } = await supabase
+  const { data, error: appsError } = await supabase
     .from('applications')
     .select(
-      `id, status, created_at, cover_letter,
+      `id, status, created_at,
        job_postings (
          id, title, slug, contract_type, city, remote_policy,
          company_profiles ( name, slug, logo_url )
@@ -82,6 +83,10 @@ export default async function CandidaturesPage() {
     .eq('talent_id', talent.id)
     .order('created_at', { ascending: false })
     .returns<ApplicationRow[]>()
+
+  if (appsError) console.error('[candidatures] fetch error', appsError)
+
+  const applications = data ?? []
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -99,9 +104,9 @@ export default async function CandidaturesPage() {
           <div className="mb-6 flex items-center justify-between">
             <h1 className="font-heading text-xl font-bold text-foreground">
               Mes candidatures
-              {(applications as ApplicationRow[]).length > 0 && (
+              {applications.length > 0 && (
                 <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
-                  {(applications as ApplicationRow[]).length}
+                  {applications.length}
                 </span>
               )}
             </h1>
@@ -110,7 +115,7 @@ export default async function CandidaturesPage() {
             </Link>
           </div>
 
-          {(applications as ApplicationRow[]).length === 0 ? (
+          {applications.length === 0 ? (
             <div className="flex flex-col items-center rounded-xl border border-dashed border-border py-16 text-center">
               <Briefcase className="mb-3 size-8 text-muted-foreground" aria-hidden />
               <p className="font-heading text-sm font-semibold text-foreground">
@@ -128,7 +133,7 @@ export default async function CandidaturesPage() {
             </div>
           ) : (
             <ul className="space-y-3" role="list">
-              {(applications as ApplicationRow[]).map((app) => {
+              {applications.map((app) => {
                 const job = app.job_postings
                 const company = job?.company_profiles
                 return (
@@ -162,7 +167,7 @@ export default async function CandidaturesPage() {
                             STATUS_STYLES[app.status ?? 'sent'] ?? 'bg-muted text-muted-foreground',
                           )}
                         >
-                          {STATUS_LABELS[app.status ?? 'sent'] ?? app.status}
+                          {STATUS_LABELS[app.status ?? 'sent'] ?? 'Statut inconnu'}
                         </span>
                         <span className="text-[10px] text-muted-foreground">
                           {app.created_at ? timeAgo(app.created_at) : ''}
