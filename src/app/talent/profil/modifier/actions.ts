@@ -92,7 +92,7 @@ export async function updateTalentProfile(
 
 // ── Update skills ─────────────────────────────────────────────
 
-export async function updateTalentSkills(formData: FormData) {
+export async function updateTalentSkills(formData: FormData): Promise<void> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -110,16 +110,18 @@ export async function updateTalentSkills(formData: FormData) {
   if (!talent) redirect('/talent/inscription')
 
   // Delete all existing skills then re-insert
-  await supabase.from('talent_skills').delete().eq('talent_id', talent.id)
+  const { error: deleteError } = await supabase.from('talent_skills').delete().eq('talent_id', talent.id)
+  if (deleteError) console.error('[updateTalentSkills] delete failed:', deleteError.message)
 
   if (skill_ids.length > 0) {
     const validIds = skill_ids.filter((id) =>
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id),
     )
     if (validIds.length > 0) {
-      await supabase
+      const { error: insertError } = await supabase
         .from('talent_skills')
         .insert(validIds.map((skill_id) => ({ talent_id: talent.id, skill_id })))
+      if (insertError) console.error('[updateTalentSkills] insert failed:', insertError.message)
     }
   }
 
