@@ -45,8 +45,12 @@ export async function createTalentProfile(
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Non authentifié' }
 
-  const skill_ids = formData.getAll('skill_ids') as string[]
+  const rawSkillIds = formData.getAll('skill_ids') as string[]
   const job_type = formData.getAll('job_type') as string[]
+
+  // Validate skill_ids to only allow valid UUIDs
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  const skill_ids = rawSkillIds.filter((id) => UUID_RE.test(id))
 
   const parsed = schema.safeParse({
     first_name: formData.get('first_name'),
@@ -84,9 +88,17 @@ export async function createTalentProfile(
   }
 
   if (skill_ids.length > 0) {
-    await supabase
+    const { error: skillError } = await supabase
       .from('talent_skills')
       .insert(skill_ids.map((skill_id) => ({ talent_id: profile.id, skill_id })))
+
+    if (skillError) {
+      console.error('[createTalentProfile] skill insert failed:', skillError.message)
+      return {
+        error:
+          "Profil créé, mais erreur lors de l'enregistrement des compétences. Ajoutez-les depuis votre profil.",
+      }
+    }
   }
 
   redirect('/talent/profil')
