@@ -30,8 +30,10 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
+              onKeyDown={(e) => { if (e.key === 'Escape') setDropdownOpen(false) }}
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-muted"
               aria-expanded={dropdownOpen}
+              aria-label={`Menu de ${user.email}`}
             >
               <div
                 className={cn(
@@ -52,7 +54,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                   onClick={() => setDropdownOpen(false)}
                   aria-hidden
                 />
-                <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-xl border border-border bg-background p-1 shadow-lg">
+                <div role="menu" className="absolute right-0 top-full z-50 mt-1 w-48 rounded-xl border border-border bg-background p-1 shadow-lg">
                   <p className="truncate px-3 py-1.5 text-xs text-muted-foreground">
                     {user.email}
                   </p>
@@ -60,6 +62,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                   <Link
                     href={dashboardHref}
                     onClick={() => setDropdownOpen(false)}
+                    role="menuitem"
                     className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"
                   >
                     {user.role === 'entreprise' ? (
@@ -72,6 +75,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                   <form action={signOut}>
                     <button
                       type="submit"
+                      role="menuitem"
                       className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-rose-600 hover:bg-rose-500/10"
                     >
                       <LogOut className="size-4" aria-hidden />
