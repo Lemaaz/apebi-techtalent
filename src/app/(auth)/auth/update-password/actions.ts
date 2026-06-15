@@ -2,6 +2,7 @@
 'use server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { translateAuthError } from '@/lib/supabase/auth-errors'
 import { redirect } from 'next/navigation'
 
 export type UpdatePasswordState = { error: string | null }
@@ -32,7 +33,7 @@ export async function updatePassword(
   const supabase = await createClient()
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password })
 
-  if (error) return { error: 'Impossible de mettre à jour le mot de passe. Le lien a peut-être expiré.' }
+  if (error) return { error: translateAuthError(error.message) }
 
   redirect('/connexion?message=password-updated')
 }

@@ -19,9 +19,12 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/connexion?error=lien-expire`)
   }
 
-  // next param → reset mot de passe
-  if (next) {
-    return NextResponse.redirect(`${origin}${next}`)
+  // next param → reset mot de passe (validate to prevent open redirect)
+  const safeNext = next && next.startsWith('/') && !next.startsWith('//')
+    ? next
+    : null
+  if (safeNext) {
+    return NextResponse.redirect(`${origin}${safeNext}`)
   }
 
   // Pas de next → confirmation email → rediriger selon le rôle
