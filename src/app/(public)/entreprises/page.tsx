@@ -1,0 +1,170 @@
+import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { Building2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { Navbar } from '@/components/layout/navbar'
+import { Footer } from '@/components/layout/footer'
+import { CompanyCard } from '@/components/company/company-card'
+import { CompanyFilters } from '@/components/company/company-filters'
+
+// ── Metadata ─────────────────────────────────────────────────
+
+export const metadata: Metadata = {
+  title: 'Entreprises membres APEBI',
+  description:
+    "Découvrez les entreprises membres de l'APEBI qui recrutent des talents tech au Maroc.",
+}
+
+// ── Types ────────────────────────────────────────────────────
+
+type SearchParams = Promise<{
+  q?: string
+  sector?: string
+  size?: string
+  label?: string
+}>
+
+// Supabase returns embedded counts as [{ count: number }]
+type CompanyRow = {
+  id: string
+  name: string
+  slug: string
+  sector: string
+  company_size: string | null
+  city: string | null
+  logo_url: string | null
+  has_techtalent_label: boolean
+  apebi_member_since: string | null
+  job_postings: { count: number }[]
+}
+
+// ── Data fetching ────────────────────────────────────────────
+
+async function fetchCompanies(params: {
+  q?: string
+  sector?: string
+  size?: string
+  labelOnly?: boolean
+}) {
+  const supabase = await createClient()
+
+  let query = supabase
+    .from('company_profiles')
+    .select(
+      `id, name, slug, sector, company_size, city, logo_url,
+       has_techtalent_label, apebi_member_since,
+       job_postings(count)`,
+    )
+    .eq('validation_status', 'approved')
+    .order('is_featured', { ascending: false })
+    .order('name', { ascending: true })
+
+  if (params.q) {
+    query = query.ilike('name', `%${params.q}%`)
+  }
+  if (params.sector) {
+    query = query.eq('sector', params.sector)
+  }
+  if (params.size) {
+    query = query.eq('company_size', params.size)
+  }
+  if (params.labelOnly) {
+    query = query.eq('has_techtalent_label', true)
+  }
+
+  const { data, error } = await query.returns<CompanyRow[]>()
+
+  if (error) {
+    console.error('[entreprises] Supabase error:', error.message)
+    return []
+  }
+
+  return data ?? []
+}
+
+// ── Empty state ───────────────────────────────────────────────
+
+function EmptyState({ filtered }: { filtered: boolean }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-muted">
+        <Building2 className="size-7 text-muted-foreground" aria-hidden />
+      </div>
+      <p className="font-heading text-sm font-semibold text-foreground">
+        {filtered ? 'Aucune entreprise trouvée' : 'Aucune entreprise pour le moment'}
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        {filtered
+          ? "Essayez d'autres filtres ou effacez la recherche."
+          : "Les entreprises membres APEBI apparaîtront ici une fois validées."}
+      </p>
+    </div>
+  )
+}
+
+// ── Page ─────────────────────────────────────────────────────
+
+export default async function EntreprisesPage({
+  searchParams,
+}: {
+  searchParams: SearchParams
+}) {
+  const { q, sector, size, label } = await searchParams
+  const hasFilters = !!(q || sector || size || label)
+
+  const companies = await fetchCompanies({
+    q,
+    sector,
+    size,
+    labelOnly: label === 'true',
+  })
+
+  return (
+    <div className="flex min-h-dvh flex-col">
+      <Navbar />
+
+      <main className="flex-1">
+        {/* ── Header + filters ───────────────────── */}
+        <div className="border-b border-border bg-muted/30 px-4 py-6 sm:px-6">
+          <div className="mx-auto max-w-7xl">
+            <h1 className="font-heading text-xl font-semibold text-foreground">
+              Entreprises membres APEBI
+            </h1>
+
+            {/* CompanyFilters is a Client Component — wrap in Suspense to avoid
+                SSR mismatch from useSearchParams */}
+            <div className="mt-4">
+              <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-muted" />}>
+                <CompanyFilters total={companies.length} />
+              </Suspense>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Company grid ───────────────────────── */}
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+          {companies.length === 0 ? (
+            <EmptyState filtered={hasFilters} />
+          ) : (
+            <ul
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              role="list"
+              aria-label="Liste des entreprises"
+            >
+              {companies.map((company) => {
+                const jobCount = company.job_postings[0]?.count ?? 0
+                return (
+                  <li key={company.id}>
+                    <CompanyCard company={company} jobCount={jobCount} />
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}

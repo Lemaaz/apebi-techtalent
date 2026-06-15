@@ -5,7 +5,7 @@ const PROTECTED_TALENT_ROUTES = ['/talent']
 const PROTECTED_RECRUITER_ROUTES = ['/entreprise']
 const PROTECTED_ADMIN_ROUTES = ['/admin']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
