@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -46,7 +47,7 @@ type JobDetailRow = {
   } | null
 }
 
-async function fetchJob(slug: string): Promise<JobDetailRow | null> {
+const fetchJob = cache(async function fetchJob(slug: string): Promise<JobDetailRow | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('job_postings')
@@ -67,7 +68,7 @@ async function fetchJob(slug: string): Promise<JobDetailRow | null> {
   }
 
   return data
-}
+})
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params
