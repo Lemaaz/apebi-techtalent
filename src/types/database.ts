@@ -1,136 +1,769 @@
-// Auto-généré via: supabase gen types typescript --project-id [ref] > src/types/database.ts
-// Pour l'instant : types manuels alignés sur DATA_DICTIONARY.md
-
-export type UserRole = 'TALENT' | 'RECRUITER' | 'PARTNER' | 'ADMIN'
-export type ValidationStatus = 'pending' | 'approved' | 'rejected'
-export type ApplicationStatus = 'sent' | 'viewed' | 'shortlisted' | 'rejected' | 'accepted'
-export type JobStatus = 'draft' | 'pending' | 'active' | 'closed' | 'rejected'
-export type ContractType = 'CDI' | 'CDD' | 'Freelance' | 'Stage' | 'Alternance'
-export type SeniorityLevel = 'Junior' | 'Mid' | 'Senior' | 'Lead' | 'Expert'
-export type RemotePolicy = 'Full remote' | 'Hybride' | 'Présentiel'
-export type SkillLevel = 'Débutant' | 'Intermédiaire' | 'Avancé' | 'Expert'
-export type Availability = 'Immédiate' | '1 mois' | '3 mois' | 'Non disponible'
-
-export interface TalentProfile {
-  id: string
-  user_id: string
-  first_name: string
-  last_name: string
-  title?: string
-  bio?: string
-  avatar_url?: string
-  city?: string
-  country: string
-  linkedin_url?: string
-  github_url?: string
-  portfolio_url?: string
-  years_experience?: number
-  seniority_level?: SeniorityLevel
-  availability?: Availability
-  job_type?: ContractType[]
-  remote_preference?: RemotePolicy
-  expected_salary_range?: string
-  visibility: boolean
-  completeness_score: number
-  validation_status: ValidationStatus
-  validation_note?: string
-  linkedin_imported_at?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface CompanyProfile {
-  id: string
-  name: string
-  slug: string
-  description?: string
-  culture?: string
-  logo_url?: string
-  banner_url?: string
-  website_url?: string
-  linkedin_url?: string
-  sector: string
-  company_size?: '1-10' | '11-50' | '51-200' | '201-500' | '500+'
-  founded_year?: number
-  city?: string
-  country: string
-  apebi_member_since?: string
-  apebi_member_id?: string
-  has_techtalent_label: boolean
-  label_valid_until?: string
-  validation_status: ValidationStatus
-  validation_note?: string
-  is_featured: boolean
-  created_at: string
-  updated_at: string
-}
-
-export interface JobPosting {
-  id: string
-  company_id: string
-  created_by: string
-  title: string
-  slug: string
-  description: string
-  contract_type: ContractType
-  seniority_level?: SeniorityLevel
-  city?: string
-  remote_policy?: RemotePolicy
-  salary_range?: string
-  domain_id?: string
-  status: JobStatus
-  closes_at?: string
-  views_count: number
-  applications_count: number
-  created_at: string
-  updated_at: string
-  published_at?: string
-  company?: CompanyProfile
-}
-
-export interface Application {
-  id: string
-  job_id: string
-  talent_id: string
-  cover_letter?: string
-  cv_url?: string
-  status: ApplicationStatus
-  recruiter_note?: string
-  created_at: string
-  updated_at: string
-  job?: JobPosting
-  talent?: TalentProfile
-}
-
-export interface Domain {
-  id: string
-  code: string
-  name_fr: string
-  name_en: string
-  description_fr?: string
-  icon?: string
-  color?: string
-}
-
-export interface Skill {
-  id: string
-  domain_id: string
-  name: string
-  name_en?: string
-  category?: string
-  is_active: boolean
-  domain?: Domain
-}
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
-      talent_profiles: { Row: TalentProfile; Insert: Partial<TalentProfile>; Update: Partial<TalentProfile> }
-      company_profiles: { Row: CompanyProfile; Insert: Partial<CompanyProfile>; Update: Partial<CompanyProfile> }
-      job_postings: { Row: JobPosting; Insert: Partial<JobPosting>; Update: Partial<JobPosting> }
-      applications: { Row: Application; Insert: Partial<Application>; Update: Partial<Application> }
-      domains: { Row: Domain; Insert: Partial<Domain>; Update: Partial<Domain> }
-      skills: { Row: Skill; Insert: Partial<Skill>; Update: Partial<Skill> }
+      applications: {
+        Row: {
+          cover_letter: string | null
+          created_at: string | null
+          cv_url: string | null
+          id: string
+          job_id: string
+          recruiter_note: string | null
+          status: string | null
+          talent_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          cover_letter?: string | null
+          created_at?: string | null
+          cv_url?: string | null
+          id?: string
+          job_id: string
+          recruiter_note?: string | null
+          status?: string | null
+          talent_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          cover_letter?: string | null
+          created_at?: string | null
+          cv_url?: string | null
+          id?: string
+          job_id?: string
+          recruiter_note?: string | null
+          status?: string | null
+          talent_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "job_postings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_talent_id_fkey"
+            columns: ["talent_id"]
+            isOneToOne: false
+            referencedRelation: "talent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_members: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          full_name: string
+          id: string
+          job_title: string | null
+          role_in_company: string | null
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          full_name: string
+          id?: string
+          job_title?: string | null
+          role_in_company?: string | null
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          job_title?: string | null
+          role_in_company?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_members_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_profiles: {
+        Row: {
+          apebi_member_id: string | null
+          apebi_member_since: string | null
+          banner_url: string | null
+          city: string | null
+          company_size: string | null
+          country: string | null
+          created_at: string | null
+          culture: string | null
+          description: string | null
+          founded_year: number | null
+          has_techtalent_label: boolean | null
+          id: string
+          is_featured: boolean | null
+          label_valid_until: string | null
+          linkedin_url: string | null
+          logo_url: string | null
+          name: string
+          sector: string
+          slug: string
+          updated_at: string | null
+          validation_note: string | null
+          validation_status: string | null
+          website_url: string | null
+        }
+        Insert: {
+          apebi_member_id?: string | null
+          apebi_member_since?: string | null
+          banner_url?: string | null
+          city?: string | null
+          company_size?: string | null
+          country?: string | null
+          created_at?: string | null
+          culture?: string | null
+          description?: string | null
+          founded_year?: number | null
+          has_techtalent_label?: boolean | null
+          id?: string
+          is_featured?: boolean | null
+          label_valid_until?: string | null
+          linkedin_url?: string | null
+          logo_url?: string | null
+          name: string
+          sector?: string
+          slug: string
+          updated_at?: string | null
+          validation_note?: string | null
+          validation_status?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          apebi_member_id?: string | null
+          apebi_member_since?: string | null
+          banner_url?: string | null
+          city?: string | null
+          company_size?: string | null
+          country?: string | null
+          created_at?: string | null
+          culture?: string | null
+          description?: string | null
+          founded_year?: number | null
+          has_techtalent_label?: boolean | null
+          id?: string
+          is_featured?: boolean | null
+          label_valid_until?: string | null
+          linkedin_url?: string | null
+          logo_url?: string | null
+          name?: string
+          sector?: string
+          slug?: string
+          updated_at?: string | null
+          validation_note?: string | null
+          validation_status?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      domains: {
+        Row: {
+          code: string
+          color: string | null
+          description_fr: string | null
+          icon: string | null
+          id: string
+          name_en: string
+          name_fr: string
+        }
+        Insert: {
+          code: string
+          color?: string | null
+          description_fr?: string | null
+          icon?: string | null
+          id?: string
+          name_en: string
+          name_fr: string
+        }
+        Update: {
+          code?: string
+          color?: string | null
+          description_fr?: string | null
+          icon?: string | null
+          id?: string
+          name_en?: string
+          name_fr?: string
+        }
+        Relationships: []
+      }
+      educations: {
+        Row: {
+          degree: string | null
+          end_year: number | null
+          field: string | null
+          id: string
+          institution: string
+          is_apebi_labeled: boolean | null
+          start_year: number | null
+          talent_id: string
+        }
+        Insert: {
+          degree?: string | null
+          end_year?: number | null
+          field?: string | null
+          id?: string
+          institution: string
+          is_apebi_labeled?: boolean | null
+          start_year?: number | null
+          talent_id: string
+        }
+        Update: {
+          degree?: string | null
+          end_year?: number | null
+          field?: string | null
+          id?: string
+          institution?: string
+          is_apebi_labeled?: boolean | null
+          start_year?: number | null
+          talent_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "educations_talent_id_fkey"
+            columns: ["talent_id"]
+            isOneToOne: false
+            referencedRelation: "talent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      experiences: {
+        Row: {
+          company_name: string
+          description: string | null
+          end_date: string | null
+          id: string
+          is_current: boolean | null
+          location: string | null
+          start_date: string
+          talent_id: string
+          title: string
+        }
+        Insert: {
+          company_name: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean | null
+          location?: string | null
+          start_date: string
+          talent_id: string
+          title: string
+        }
+        Update: {
+          company_name?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean | null
+          location?: string | null
+          start_date?: string
+          talent_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiences_talent_id_fkey"
+            columns: ["talent_id"]
+            isOneToOne: false
+            referencedRelation: "talent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_postings: {
+        Row: {
+          applications_count: number | null
+          city: string | null
+          closes_at: string | null
+          company_id: string
+          contract_type: string
+          created_at: string | null
+          created_by: string
+          description: string
+          domain_id: string | null
+          id: string
+          published_at: string | null
+          remote_policy: string | null
+          salary_range: string | null
+          seniority_level: string | null
+          slug: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          views_count: number | null
+        }
+        Insert: {
+          applications_count?: number | null
+          city?: string | null
+          closes_at?: string | null
+          company_id: string
+          contract_type: string
+          created_at?: string | null
+          created_by: string
+          description: string
+          domain_id?: string | null
+          id?: string
+          published_at?: string | null
+          remote_policy?: string | null
+          salary_range?: string | null
+          seniority_level?: string | null
+          slug: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          applications_count?: number | null
+          city?: string | null
+          closes_at?: string | null
+          company_id?: string
+          contract_type?: string
+          created_at?: string | null
+          created_by?: string
+          description?: string
+          domain_id?: string | null
+          id?: string
+          published_at?: string | null
+          remote_policy?: string | null
+          salary_range?: string | null
+          seniority_level?: string | null
+          slug?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_postings_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_postings_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_skills: {
+        Row: {
+          is_required: boolean | null
+          job_id: string
+          skill_id: string
+        }
+        Insert: {
+          is_required?: boolean | null
+          job_id: string
+          skill_id: string
+        }
+        Update: {
+          is_required?: boolean | null
+          job_id?: string
+          skill_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_skills_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "job_postings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          link: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_jobs: {
+        Row: {
+          job_id: string
+          saved_at: string | null
+          talent_id: string
+        }
+        Insert: {
+          job_id: string
+          saved_at?: string | null
+          talent_id: string
+        }
+        Update: {
+          job_id?: string
+          saved_at?: string | null
+          talent_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_jobs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "job_postings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_jobs_talent_id_fkey"
+            columns: ["talent_id"]
+            isOneToOne: false
+            referencedRelation: "talent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skills: {
+        Row: {
+          category: string | null
+          domain_id: string
+          id: string
+          is_active: boolean | null
+          name: string
+          name_en: string | null
+        }
+        Insert: {
+          category?: string | null
+          domain_id: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          name_en?: string | null
+        }
+        Update: {
+          category?: string | null
+          domain_id?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          name_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      talent_profiles: {
+        Row: {
+          availability: string | null
+          avatar_url: string | null
+          bio: string | null
+          city: string | null
+          completeness_score: number | null
+          country: string | null
+          created_at: string | null
+          expected_salary_range: string | null
+          first_name: string
+          github_url: string | null
+          id: string
+          job_type: string[] | null
+          last_name: string
+          linkedin_imported_at: string | null
+          linkedin_url: string | null
+          portfolio_url: string | null
+          remote_preference: string | null
+          seniority_level: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string
+          validation_note: string | null
+          validation_status: string | null
+          visibility: boolean | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          completeness_score?: number | null
+          country?: string | null
+          created_at?: string | null
+          expected_salary_range?: string | null
+          first_name: string
+          github_url?: string | null
+          id?: string
+          job_type?: string[] | null
+          last_name: string
+          linkedin_imported_at?: string | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          remote_preference?: string | null
+          seniority_level?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id: string
+          validation_note?: string | null
+          validation_status?: string | null
+          visibility?: boolean | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          completeness_score?: number | null
+          country?: string | null
+          created_at?: string | null
+          expected_salary_range?: string | null
+          first_name?: string
+          github_url?: string | null
+          id?: string
+          job_type?: string[] | null
+          last_name?: string
+          linkedin_imported_at?: string | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          remote_preference?: string | null
+          seniority_level?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string
+          validation_note?: string | null
+          validation_status?: string | null
+          visibility?: boolean | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      talent_skills: {
+        Row: {
+          level: string | null
+          skill_id: string
+          talent_id: string
+        }
+        Insert: {
+          level?: string | null
+          skill_id: string
+          talent_id: string
+        }
+        Update: {
+          level?: string | null
+          skill_id?: string
+          talent_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "talent_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "talent_skills_talent_id_fkey"
+            columns: ["talent_id"]
+            isOneToOne: false
+            referencedRelation: "talent_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      is_admin: { Args: never; Returns: boolean }
+      is_company_member: { Args: { company_uuid: string }; Returns: boolean }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
