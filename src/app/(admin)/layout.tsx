@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { Shield, Users, Building2, Briefcase, LayoutDashboard, ArrowLeft } from 'lucide-react'
+import { Shield, Users, Building2, Briefcase, LayoutDashboard, ArrowLeft, Award, CalendarDays } from 'lucide-react'
 import { AdminSidebarNav } from '@/components/admin/admin-sidebar-nav'
 
 const NAV = [
@@ -10,6 +10,8 @@ const NAV = [
   { href: '/admin/talents',     label: 'Talents',     icon: Users },
   { href: '/admin/entreprises', label: 'Entreprises', icon: Building2 },
   { href: '/admin/offres',      label: 'Offres',      icon: Briefcase },
+  { href: '/admin/labels',      label: 'Labels',      icon: Award },
+  { href: '/admin/events',      label: 'Événements',  icon: CalendarDays },
 ]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

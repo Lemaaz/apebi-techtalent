@@ -118,6 +118,7 @@ export type Database = {
           has_techtalent_label: boolean | null
           id: string
           is_featured: boolean | null
+          label_qr_token: string | null
           label_valid_until: string | null
           linkedin_url: string | null
           logo_url: string | null
@@ -143,6 +144,7 @@ export type Database = {
           has_techtalent_label?: boolean | null
           id?: string
           is_featured?: boolean | null
+          label_qr_token?: string | null
           label_valid_until?: string | null
           linkedin_url?: string | null
           logo_url?: string | null
@@ -168,6 +170,7 @@ export type Database = {
           has_techtalent_label?: boolean | null
           id?: string
           is_featured?: boolean | null
+          label_qr_token?: string | null
           label_valid_until?: string | null
           linkedin_url?: string | null
           logo_url?: string | null
@@ -252,6 +255,106 @@ export type Database = {
           },
         ]
       }
+      event_registrations: {
+        Row: {
+          event_id: string
+          id: string
+          registered_at: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          registered_at?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          registered_at?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          date_debut: string
+          date_fin: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_apebi_event: boolean | null
+          lieu: string | null
+          organisateur_company_id: string | null
+          places_disponibles: number | null
+          slug: string
+          status: string | null
+          title: string
+          type_event: string | null
+          updated_at: string | null
+          url_inscription_externe: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          date_debut: string
+          date_fin?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_apebi_event?: boolean | null
+          lieu?: string | null
+          organisateur_company_id?: string | null
+          places_disponibles?: number | null
+          slug: string
+          status?: string | null
+          title: string
+          type_event?: string | null
+          updated_at?: string | null
+          url_inscription_externe?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          date_debut?: string
+          date_fin?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_apebi_event?: boolean | null
+          lieu?: string | null
+          organisateur_company_id?: string | null
+          places_disponibles?: number | null
+          slug?: string
+          status?: string | null
+          title?: string
+          type_event?: string | null
+          updated_at?: string | null
+          url_inscription_externe?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organisateur_company_id_fkey"
+            columns: ["organisateur_company_id"]
+            isOneToOne: false
+            referencedRelation: "company_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       experiences: {
         Row: {
           company_name: string
@@ -308,6 +411,7 @@ export type Database = {
           description: string
           domain_id: string | null
           id: string
+          mission_duration: string | null
           published_at: string | null
           remote_policy: string | null
           salary_range: string | null
@@ -329,6 +433,7 @@ export type Database = {
           description: string
           domain_id?: string | null
           id?: string
+          mission_duration?: string | null
           published_at?: string | null
           remote_policy?: string | null
           salary_range?: string | null
@@ -350,6 +455,7 @@ export type Database = {
           description?: string
           domain_id?: string | null
           id?: string
+          mission_duration?: string | null
           published_at?: string | null
           remote_policy?: string | null
           salary_range?: string | null
@@ -374,6 +480,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "domains"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_postings_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "mv_domain_activity"
+            referencedColumns: ["domain_id"]
           },
         ]
       }
@@ -405,7 +518,81 @@ export type Database = {
             foreignKeyName: "job_skills_skill_id_fkey"
             columns: ["skill_id"]
             isOneToOne: false
+            referencedRelation: "mv_skills_demand"
+            referencedColumns: ["skill_id"]
+          },
+          {
+            foreignKeyName: "job_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "mv_skills_supply"
+            referencedColumns: ["skill_id"]
+          },
+          {
+            foreignKeyName: "job_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
             referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      label_applications: {
+        Row: {
+          applicant_type: string
+          company_id: string | null
+          created_at: string | null
+          criteria_data: Json | null
+          id: string
+          notes_admin: string | null
+          reviewed_at: string | null
+          reviewer_id: string | null
+          status: string
+          submitted_at: string | null
+          talent_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          applicant_type: string
+          company_id?: string | null
+          created_at?: string | null
+          criteria_data?: Json | null
+          id?: string
+          notes_admin?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+          submitted_at?: string | null
+          talent_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          applicant_type?: string
+          company_id?: string | null
+          created_at?: string | null
+          criteria_data?: Json | null
+          id?: string
+          notes_admin?: string | null
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+          submitted_at?: string | null
+          talent_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "label_applications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "label_applications_talent_id_fkey"
+            columns: ["talent_id"]
+            isOneToOne: false
+            referencedRelation: "talent_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -509,6 +696,13 @@ export type Database = {
             referencedRelation: "domains"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "skills_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "mv_domain_activity"
+            referencedColumns: ["domain_id"]
+          },
         ]
       }
       talent_profiles: {
@@ -523,15 +717,21 @@ export type Database = {
           expected_salary_range: string | null
           first_name: string
           github_url: string | null
+          has_techtalent_label: boolean | null
           id: string
           job_type: string[] | null
+          label_qr_token: string | null
+          label_valid_until: string | null
           last_name: string
           linkedin_imported_at: string | null
           linkedin_url: string | null
+          mission_duration_weeks: number | null
           portfolio_url: string | null
           remote_preference: string | null
           seniority_level: string | null
           title: string | null
+          tjm_max: number | null
+          tjm_min: number | null
           updated_at: string | null
           user_id: string
           validation_note: string | null
@@ -550,15 +750,21 @@ export type Database = {
           expected_salary_range?: string | null
           first_name: string
           github_url?: string | null
+          has_techtalent_label?: boolean | null
           id?: string
           job_type?: string[] | null
+          label_qr_token?: string | null
+          label_valid_until?: string | null
           last_name: string
           linkedin_imported_at?: string | null
           linkedin_url?: string | null
+          mission_duration_weeks?: number | null
           portfolio_url?: string | null
           remote_preference?: string | null
           seniority_level?: string | null
           title?: string | null
+          tjm_max?: number | null
+          tjm_min?: number | null
           updated_at?: string | null
           user_id: string
           validation_note?: string | null
@@ -577,15 +783,21 @@ export type Database = {
           expected_salary_range?: string | null
           first_name?: string
           github_url?: string | null
+          has_techtalent_label?: boolean | null
           id?: string
           job_type?: string[] | null
+          label_qr_token?: string | null
+          label_valid_until?: string | null
           last_name?: string
           linkedin_imported_at?: string | null
           linkedin_url?: string | null
+          mission_duration_weeks?: number | null
           portfolio_url?: string | null
           remote_preference?: string | null
           seniority_level?: string | null
           title?: string | null
+          tjm_max?: number | null
+          tjm_min?: number | null
           updated_at?: string | null
           user_id?: string
           validation_note?: string | null
@@ -616,6 +828,20 @@ export type Database = {
             foreignKeyName: "talent_skills_skill_id_fkey"
             columns: ["skill_id"]
             isOneToOne: false
+            referencedRelation: "mv_skills_demand"
+            referencedColumns: ["skill_id"]
+          },
+          {
+            foreignKeyName: "talent_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "mv_skills_supply"
+            referencedColumns: ["skill_id"]
+          },
+          {
+            foreignKeyName: "talent_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
             referencedRelation: "skills"
             referencedColumns: ["id"]
           },
@@ -630,7 +856,77 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      mv_domain_activity: {
+        Row: {
+          active_jobs: number | null
+          approved_talents: number | null
+          code: string | null
+          domain_id: string | null
+          name_en: string | null
+          name_fr: string | null
+        }
+        Relationships: []
+      }
+      mv_geo_distribution: {
+        Row: {
+          city: string | null
+          city_key: string | null
+          talent_count: number | null
+        }
+        Relationships: []
+      }
+      mv_skills_demand: {
+        Row: {
+          demand_count: number | null
+          domain_code: string | null
+          domain_id: string | null
+          name: string | null
+          name_en: string | null
+          skill_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skills_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "mv_domain_activity"
+            referencedColumns: ["domain_id"]
+          },
+        ]
+      }
+      mv_skills_supply: {
+        Row: {
+          domain_code: string | null
+          domain_id: string | null
+          name: string | null
+          name_en: string | null
+          skill_id: string | null
+          supply_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skills_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "mv_domain_activity"
+            referencedColumns: ["domain_id"]
+          },
+        ]
+      }
     }
     Functions: {
       create_company_with_member: {
@@ -651,6 +947,7 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_company_member: { Args: { company_uuid: string }; Returns: boolean }
+      refresh_observatoire: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
