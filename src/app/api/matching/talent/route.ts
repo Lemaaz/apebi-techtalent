@@ -1,0 +1,31 @@
+import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { matchJobsToTalent } from '@/lib/ai-matching'
+
+export const maxDuration = 60
+
+export async function GET() {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+
+    const { data: talent } = await supabase
+      .from('talent_profiles')
+      .select('id, validation_status')
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    if (!talent) return NextResponse.json({ error: 'Profil talent introuvable' }, { status: 404 })
+    if (talent.validation_status !== 'approved') {
+      return NextResponse.json({ error: 'Profil non encore validé' }, { status: 403 })
+    }
+
+    const results = await matchJobsToTalent(talent.id)
+    return NextResponse.json({ results })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Erreur interne'
+    console.error('[matching/talent]', message)
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}

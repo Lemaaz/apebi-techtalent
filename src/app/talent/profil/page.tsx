@@ -12,6 +12,7 @@ import { AdminStatusBadge } from '@/components/admin/admin-status-badge'
 import { AvailabilityBadge } from '@/components/shared/application-status-badge'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+import { TalentMatchingPanel } from '@/components/matching/matching-panel'
 import { toggleVisibility } from './actions'
 import { cn } from '@/lib/utils'
 
@@ -545,6 +546,13 @@ export default async function TalentProfilPage() {
             </SideCard>
           </aside>
         </div>
+
+        {/* ── Matching IA — offres recommandées ────────────── */}
+        {talent.validation_status === 'approved' && (
+          <div className="mx-auto mt-8 max-w-5xl">
+            <TalentMatchingPanel />
+          </div>
+        )}
       </main>
 
       <Footer />

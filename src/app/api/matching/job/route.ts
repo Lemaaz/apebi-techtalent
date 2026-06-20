@@ -1,0 +1,41 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { matchTalentsToJob } from '@/lib/ai-matching'
+
+export const maxDuration = 60
+
+export async function POST(req: NextRequest) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+
+    const { job_id } = await req.json() as { job_id?: string }
+    if (!job_id) return NextResponse.json({ error: 'job_id requis' }, { status: 400 })
+
+    // Vérifier que l'utilisateur est recruteur de l'entreprise propriétaire
+    const { data: member } = await supabase
+      .from('company_members')
+      .select('company_id')
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    if (!member) return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
+
+    const { data: job } = await supabase
+      .from('job_postings')
+      .select('id')
+      .eq('id', job_id)
+      .eq('company_id', member.company_id)
+      .maybeSingle()
+
+    if (!job) return NextResponse.json({ error: 'Offre introuvable ou accès refusé' }, { status: 403 })
+
+    const results = await matchTalentsToJob(job_id)
+    return NextResponse.json({ results })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Erreur interne'
+    console.error('[matching/job]', message)
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}
