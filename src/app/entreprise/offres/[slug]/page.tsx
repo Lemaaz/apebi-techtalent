@@ -5,8 +5,6 @@ import { ArrowLeft, Pencil, MapPin, Briefcase, Clock, Users, Sparkles } from 'lu
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { JobMatchingPanel } from '@/components/matching/matching-panel'
 
 type Params = Promise<{ slug: string }>
@@ -83,10 +81,8 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
   const isMission = ['Freelance', 'Consulting'].includes(job.contract_type)
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[#0F0F0F]">
-      <Navbar />
-      <main className="flex-1 px-4 py-8 sm:px-6">
-        <div className="mx-auto max-w-5xl">
+    <div className="px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-5xl">
 
           {/* Back */}
           <Link
@@ -243,9 +239,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   )
 }

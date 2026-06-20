@@ -5,8 +5,6 @@ import { ArrowLeft, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { JobPostingForm, type SkillGroup } from '@/components/jobs/job-posting-form'
 import { updateJobPosting, deleteJobPosting } from './actions'
 
@@ -94,10 +92,8 @@ export default async function ModifierOffrePage({ params }: { params: Params }) 
     .map((js) => js.skill_id)
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-      <main className="flex-1 px-4 py-8 sm:px-6">
-        <div className="mx-auto max-w-2xl">
+    <div className="px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-2xl">
           <Link
             href="/entreprise/offres"
             className="mb-6 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
@@ -148,9 +144,7 @@ export default async function ModifierOffrePage({ params }: { params: Params }) 
               }
             />
           </div>
-        </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   )
 }

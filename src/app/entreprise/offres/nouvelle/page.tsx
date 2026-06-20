@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { JobPostingForm, type SkillGroup } from './_form'
 
 export const metadata: Metadata = {
@@ -52,9 +50,7 @@ export default async function NouvelleOffrePage() {
   )
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-      <main className="flex-1 px-4 py-8 sm:px-6">
+      <div className="px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-2xl">
           <Link
             href="/entreprise/offres"
@@ -72,8 +68,6 @@ export default async function NouvelleOffrePage() {
             <JobPostingForm skillGroups={skillGroups} />
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
   )
 }

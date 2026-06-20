@@ -246,7 +246,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
           <section className="border-t border-white/8 px-4 py-12 sm:px-6">
             <div className="mx-auto max-w-7xl">
               <h2 className="mb-2 font-heading text-lg font-semibold text-white">
-                Parcours par domaine C5
+                Parcours par domaine Apebi
               </h2>
               <p className="mb-8 text-[13px] text-white/40">
                 Filtrez le catalogue par domaine technique pour trouver les formations qui correspondent à votre trajectoire.

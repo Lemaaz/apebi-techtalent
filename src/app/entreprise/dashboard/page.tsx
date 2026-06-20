@@ -7,8 +7,6 @@ import { buttonVariants } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
 import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 import { ApplicationStatusBadge, ApplicationStatusActions, JobStatusBadge } from '@/components/shared/application-status-badge'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { updateApplicationStatus } from './actions'
 import { cn } from '@/lib/utils'
 
@@ -76,16 +74,12 @@ export default async function DashboardRecruteurPage() {
   // ── No company ────────────────────────────────────────────
   if (!member) {
     return (
-      <div className="flex min-h-dvh flex-col">
-        <Navbar />
-        <main className="flex flex-1 items-center justify-center px-4">
-          <EmptyState
-            icon={Briefcase}
-            title="Compte non associé"
-            description="Votre compte n'est pas encore associé à une entreprise APEBI. Contactez l'équipe C5 pour activer votre accès recruteur."
-          />
-        </main>
-        <Footer />
+      <div className="flex flex-1 items-center justify-center px-4">
+        <EmptyState
+          icon={Briefcase}
+          title="Compte non associé"
+          description="Votre compte n'est pas encore associé à une entreprise APEBI. Contactez l'équipe C5 pour activer votre accès recruteur."
+        />
       </div>
     )
   }
@@ -120,10 +114,7 @@ export default async function DashboardRecruteurPage() {
   const pendingApps = applications.filter((a) => a.status === 'sent').length
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1">
+    <>
         {/* ── Header ────────────────────────────────────── */}
         <div
           className="border-b px-4 py-6 sm:px-6"
@@ -164,9 +155,13 @@ export default async function DashboardRecruteurPage() {
             {/* KPI cards */}
             <div className="mt-5 grid gap-3 sm:grid-cols-4">
               <AdminKpiCard icon={Briefcase} label="Offres actives"   value={activeJobs}        sublabel={`${jobs.length} au total`} />
-              <AdminKpiCard icon={Users}    label="Candidatures"      value={totalApplications} sublabel="toutes offres confondues" />
+              <Link href="/entreprise/candidatures">
+                <AdminKpiCard icon={Users}    label="Candidatures"      value={totalApplications} sublabel="toutes offres confondues" />
+              </Link>
               <AdminKpiCard icon={Eye}      label="Vues"              value={totalViews}         sublabel="vues sur vos offres" />
-              <AdminKpiCard icon={Clock}    label="À traiter"         value={pendingApps}        urgent={pendingApps > 0} sublabel="candidatures non lues" />
+              <Link href="/entreprise/candidatures?tab=a-traiter">
+                <AdminKpiCard icon={Clock}    label="À traiter"         value={pendingApps}        urgent={pendingApps > 0} sublabel="candidatures non lues" />
+              </Link>
             </div>
           </div>
         </div>
@@ -334,9 +329,6 @@ export default async function DashboardRecruteurPage() {
             </section>
           )}
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </>
   )
 }

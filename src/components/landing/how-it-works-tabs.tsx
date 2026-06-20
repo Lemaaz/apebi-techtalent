@@ -17,7 +17,7 @@ const RECRUITER_STEPS = [
   {
     step: 3,
     title: 'Sélectionnez les talents',
-    description: 'Accédez aux profils validés par l\'équipe C5 et entrez en contact directement.',
+    description: 'Accédez aux profils validés par l\'équipe APEBI et entrez en contact directement.',
   },
 ] as const
 
@@ -25,7 +25,7 @@ const TALENT_STEPS = [
   {
     step: 1,
     title: 'Créez votre profil',
-    description: 'Import LinkedIn ou formulaire — votre profil est validé par l\'équipe C5 sous 48h.',
+    description: 'Import LinkedIn ou formulaire — votre profil est validé par l\'équipe APEBI sous 48h.',
   },
   {
     step: 2,

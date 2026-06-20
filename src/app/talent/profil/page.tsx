@@ -10,11 +10,11 @@ import { buttonVariants } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
 import { AdminStatusBadge } from '@/components/admin/admin-status-badge'
 import { AvailabilityBadge } from '@/components/shared/application-status-badge'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { TalentMatchingPanel } from '@/components/matching/matching-panel'
 import { toggleVisibility } from './actions'
 import { cn } from '@/lib/utils'
+import { AvatarUploader } from '@/components/talent/avatar-uploader'
+import { CvUploader } from '@/components/talent/cv-uploader'
 
 export const metadata: Metadata = {
   title: 'Mon Profil | APEBI TechTalent',
@@ -29,6 +29,7 @@ type TalentRow = {
   title: string | null
   bio: string | null
   avatar_url: string | null
+  cv_url: string | null
   city: string | null
   country: string
   linkedin_url: string | null
@@ -73,13 +74,6 @@ type TalentRow = {
 }
 
 // ── Helpers ──────────────────────────────────────────────────
-
-const AVATAR_COLORS = ['#3A4652', '#1E4D5C', '#2D4A3E', '#4A2D3E']
-function avatarColor(name: string): string {
-  let hash = 0
-  for (const c of name) hash = (hash * 31 + c.charCodeAt(0)) & 0xffff
-  return AVATAR_COLORS[hash % AVATAR_COLORS.length]
-}
 
 const SENIORITY_LABELS: Record<string, string> = {
   junior: 'Junior', mid: 'Confirmé', senior: 'Senior', lead: 'Lead / Expert',
@@ -167,7 +161,7 @@ export default async function TalentProfilPage() {
        city, country, linkedin_url, github_url, portfolio_url,
        years_experience, seniority_level, availability, job_type,
        remote_preference, expected_salary_range, visibility,
-       completeness_score, validation_status,
+       cv_url, completeness_score, validation_status,
        talent_skills (
          level,
          skills ( id, name, domains ( name_fr, color ) )
@@ -179,22 +173,7 @@ export default async function TalentProfilPage() {
     .maybeSingle<TalentRow>()
 
   // ── No profile → onboarding ──────────────────────────────
-  if (!talent) {
-    return (
-      <div className="flex min-h-dvh flex-col">
-        <Navbar />
-        <main className="flex flex-1 items-center justify-center px-4">
-          <EmptyState
-            icon={UserCircle}
-            title="Créez votre profil talent"
-            description="Complétez votre profil pour être visible auprès des entreprises membres APEBI."
-            action={{ label: 'Créer mon profil', href: '/talent/inscription' }}
-          />
-        </main>
-        <Footer />
-      </div>
-    )
-  }
+  if (!talent) redirect('/talent/inscription')
 
   // ── Derived data ─────────────────────────────────────────
   const fullName = `${talent.first_name} ${talent.last_name}`
@@ -222,92 +201,75 @@ export default async function TalentProfilPage() {
   const hasContent = talent.bio || skillsByDomain.size > 0 || experiences.length > 0 || educations.length > 0
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
+    <>
+      {/* ── Profile header card ─────────────────────────── */}
+      <div
+        className="mb-8 rounded-xl border p-5"
+        style={{ background: 'var(--apebi-bg-alt)', borderColor: 'var(--apebi-border)' }}
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
-      <main className="flex-1">
-        {/* ── Profile header ─────────────────────────────── */}
-        <div
-          className="border-b px-4 py-6 sm:px-6"
-          style={{ background: 'var(--apebi-bg-alt)', borderColor: 'var(--apebi-border)' }}
-        >
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          {/* Avatar + identity */}
+          <div className="flex items-start gap-4">
+            <AvatarUploader
+              currentUrl={talent.avatar_url}
+              fullName={fullName}
+              initials={initials}
+            />
 
-              {/* Avatar + identity */}
-              <div className="flex items-start gap-4">
-                {talent.avatar_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={talent.avatar_url}
-                    alt={fullName}
-                    className="size-16 shrink-0 rounded-2xl object-cover"
-                    style={{ border: '2px solid var(--apebi-border)' }}
-                  />
-                ) : (
-                  <div
-                    className="flex size-16 shrink-0 items-center justify-center rounded-2xl font-heading text-xl font-bold text-white"
-                    style={{ background: avatarColor(fullName) }}
-                    aria-hidden
-                  >
-                    {initials}
-                  </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-heading text-xl font-bold text-foreground">{fullName}</h1>
+                {talent.availability && (
+                  <AvailabilityBadge status={talent.availability} />
                 )}
-
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="font-heading text-xl font-bold text-foreground">{fullName}</h1>
-                    {talent.availability && (
-                      <AvailabilityBadge status={talent.availability} />
-                    )}
-                    {talent.validation_status !== 'approved' && (
-                      <AdminStatusBadge status={talent.validation_status} />
-                    )}
-                  </div>
-
-                  {talent.title && (
-                    <p className="mt-0.5 text-[13px] text-muted-foreground">{talent.title}</p>
-                  )}
-
-                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-muted-foreground">
-                    {talent.city && (
-                      <span className="flex items-center gap-1">
-                        <MapPin className="size-3" aria-hidden />
-                        {talent.city}
-                      </span>
-                    )}
-                    {talent.seniority_level && (
-                      <span>{SENIORITY_LABELS[talent.seniority_level] ?? talent.seniority_level}</span>
-                    )}
-                    {talent.years_experience != null && (
-                      <span>{talent.years_experience} an{talent.years_experience > 1 ? 's' : ''} d&apos;expérience</span>
-                    )}
-                  </div>
-                </div>
+                {talent.validation_status !== 'approved' && (
+                  <AdminStatusBadge status={talent.validation_status} />
+                )}
               </div>
 
-              {/* Edit CTA */}
-              <Link
-                href="/talent/profil/modifier"
-                className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'shrink-0 gap-1.5 text-xs')}
-              >
-                <Pencil className="size-3.5" aria-hidden />
-                Modifier mon profil
-              </Link>
-            </div>
+              {talent.title && (
+                <p className="mt-0.5 text-[13px] text-muted-foreground">{talent.title}</p>
+              )}
 
-            {/* Completeness bar */}
-            <div className="mt-5 max-w-sm">
-              <p className="mb-1.5 font-heading text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Complétude du profil
-              </p>
-              <CompletenessBar score={talent.completeness_score ?? 0} />
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-muted-foreground">
+                {talent.city && (
+                  <span className="flex items-center gap-1">
+                    <MapPin className="size-3" aria-hidden />
+                    {talent.city}
+                  </span>
+                )}
+                {talent.seniority_level && (
+                  <span>{SENIORITY_LABELS[talent.seniority_level] ?? talent.seniority_level}</span>
+                )}
+                {talent.years_experience != null && (
+                  <span>{talent.years_experience} an{talent.years_experience > 1 ? 's' : ''} d&apos;expérience</span>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Edit CTA */}
+          <Link
+            href="/talent/profil/modifier"
+            className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'shrink-0 gap-1.5 text-xs')}
+          >
+            <Pencil className="size-3.5" aria-hidden />
+            Modifier mon profil
+          </Link>
         </div>
 
-        {/* ── Body — two-column ─────────────────────────── */}
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_280px]">
+        {/* Completeness bar */}
+        <div className="mt-5 max-w-sm">
+          <p className="mb-1.5 font-heading text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Complétude du profil
+          </p>
+          <CompletenessBar score={talent.completeness_score ?? 0} />
+        </div>
+      </div>
+
+      {/* ── Body — two-column ─────────────────────────── */}
+      <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* ── Left — main content ───────────────────── */}
           <div className="min-w-0 space-y-8">
@@ -526,6 +488,11 @@ export default async function TalentProfilPage() {
               </SideCard>
             )}
 
+            {/* CV PDF */}
+            <SideCard title="Mon CV">
+              <CvUploader currentUrl={talent.cv_url} />
+            </SideCard>
+
             {/* Quick nav */}
             <SideCard title="Mon espace">
               <nav className="flex flex-col gap-1">
@@ -547,15 +514,12 @@ export default async function TalentProfilPage() {
           </aside>
         </div>
 
-        {/* ── Matching IA — offres recommandées ────────────── */}
-        {talent.validation_status === 'approved' && (
-          <div className="mx-auto mt-8 max-w-5xl">
-            <TalentMatchingPanel />
-          </div>
-        )}
-      </main>
-
-      <Footer />
-    </div>
+      {/* ── Matching IA — offres recommandées ────────────── */}
+      {talent.validation_status === 'approved' && (
+        <div className="mt-8">
+          <TalentMatchingPanel />
+        </div>
+      )}
+    </>
   )
 }

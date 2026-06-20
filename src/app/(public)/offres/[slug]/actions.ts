@@ -102,14 +102,19 @@ export async function applyToJob(
     if (jobFull && talentProfile) {
       const { data: members } = await supabase
         .from('company_members')
-        .select('user_id')
+        .select('user_id, notify_on_application')
         .eq('company_id', jobFull.company_id)
 
-      const recruiterIds = (members ?? []).map((m: { user_id: string }) => m.user_id)
-      if (recruiterIds.length > 0) {
+      const allMemberIds = (members ?? []).map((m) => m.user_id)
+      // Only email recruiters who opted in (default true — migration 016)
+      const notifyIds = (members ?? [])
+        .filter((m) => m.notify_on_application !== false)
+        .map((m) => m.user_id)
+
+      if (notifyIds.length > 0) {
         const { data: authUsers } = await adminClient.auth.admin.listUsers()
         const recruiterEmails = authUsers.users
-          .filter((u) => recruiterIds.includes(u.id) && !!u.email)
+          .filter((u) => notifyIds.includes(u.id) && !!u.email)
           .map((u) => u.email as string)
 
         await sendNewApplicationEmail({
@@ -118,6 +123,20 @@ export async function applyToJob(
           companyName: jobFull.company_profiles?.name ?? '',
           recruiterEmails,
         })
+      }
+
+      // NOT-04 — in-app notification for ALL recruiters (regardless of email pref)
+      if (allMemberIds.length > 0) {
+        const adminSupabase = createAdminClient()
+        await adminSupabase.from('notifications').insert(
+          allMemberIds.map((uid) => ({
+            user_id: uid,
+            type: 'new_application',
+            title: 'Nouvelle candidature',
+            body: `${talentProfile.first_name} ${talentProfile.last_name} a postulé à « ${jobFull.title} »`,
+            link: '/entreprise/candidatures?tab=a-traiter',
+          }))
+        )
       }
     }
   } catch (emailErr) {

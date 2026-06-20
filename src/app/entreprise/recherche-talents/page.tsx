@@ -3,10 +3,9 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Search, Users, SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { EmptyState } from '@/components/ui/empty-state'
 import { TalentCard, type TalentCardData } from '@/components/talent/talent-card'
+import { BookmarkTalentButton } from '@/components/company/bookmark-talent-button'
 
 export const metadata: Metadata = { title: 'Recherche de talents | APEBI TechTalent' }
 
@@ -80,26 +79,45 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
   if (availability) query = query.eq('availability', availability)
   if (remote)       query = query.eq('remote_preference', remote)
 
+  // ENG-10 — domain filter: resolve through skills → talent_skills join
+  // Short-circuits to empty result set when domain exists but has no matching talents
+  let domainForceEmpty = false
+
   if (domain) {
     const matchDomain = (allDomains as DomainRow[]).find((d) => d.code === domain)
-    if (matchDomain) {
+    if (!matchDomain) {
+      domainForceEmpty = true
+    } else {
       const { data: domainSkills } = await supabase
         .from('skills').select('id').eq('domain_id', matchDomain.id)
       const skillIds = (domainSkills ?? []).map((s: { id: string }) => s.id)
-      if (skillIds.length > 0) {
+
+      if (skillIds.length === 0) {
+        domainForceEmpty = true
+      } else {
         const { data: talentMatches } = await supabase
           .from('talent_skills').select('talent_id').in('skill_id', skillIds)
         const talentIds = [...new Set((talentMatches ?? []).map((t: { talent_id: string }) => t.talent_id))]
-        query = query.in('id', talentIds.length > 0 ? talentIds : ['__no_match__'])
-      } else {
-        query = query.in('id', ['__no_match__'])
+
+        if (talentIds.length === 0) {
+          domainForceEmpty = true
+        } else {
+          query = query.in('id', talentIds)
+        }
       }
-    } else {
-      query = query.in('id', ['__no_match__'])
     }
   }
 
-  const { data: rawTalents = [] } = await query.limit(50).returns<TalentRow[]>()
+  const { data: rawTalents = [] } = domainForceEmpty
+    ? { data: [] }
+    : await query.limit(50).returns<TalentRow[]>()
+
+  // Fetch saved talent IDs for this company (REC-03)
+  const { data: savedRows = [] } = await supabase
+    .from('saved_talents')
+    .select('talent_id')
+    .eq('company_id', member.company_id)
+  const savedTalentIds = new Set((savedRows ?? []).map((r: { talent_id: string }) => r.talent_id))
 
   // Map to TalentCardData
   const talents: TalentCardData[] = (rawTalents ?? []).map((t) => ({
@@ -118,10 +136,7 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
   const resultCount = talents.length
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1">
+      <>
         {/* ── Header + search ────────────────────────── */}
         <div
           className="border-b px-4 py-6 sm:px-6"
@@ -272,16 +287,21 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
               aria-label={`${resultCount} profil${resultCount > 1 ? 's' : ''} talents`}
             >
               {talents.map((talent) => (
-                <li key={talent.id}>
+                <li key={talent.id} className="relative">
                   <TalentCard {...talent} />
+                  <div className="absolute right-2 top-2">
+                    <BookmarkTalentButton
+                      talentId={talent.id}
+                      isSaved={savedTalentIds.has(talent.id)}
+                      size="sm"
+                    />
+                  </div>
                 </li>
               ))}
             </ul>
           )}
         </div>
-      </main>
+      </>
 
-      <Footer />
-    </div>
   )
 }

@@ -2,19 +2,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { Shield, Users, Building2, Briefcase, LayoutDashboard, ArrowLeft, Award, CalendarDays, GraduationCap, School } from 'lucide-react'
+import { Shield, ShieldCheck, ArrowLeft } from 'lucide-react'
 import { AdminSidebarNav } from '@/components/admin/admin-sidebar-nav'
-
-const NAV = [
-  { href: '/admin',             label: 'Dashboard',   icon: LayoutDashboard, exact: true },
-  { href: '/admin/talents',     label: 'Talents',     icon: Users },
-  { href: '/admin/entreprises', label: 'Entreprises', icon: Building2 },
-  { href: '/admin/offres',      label: 'Offres',      icon: Briefcase },
-  { href: '/admin/labels',      label: 'Labels',      icon: Award },
-  { href: '/admin/events',        label: 'Événements',  icon: CalendarDays },
-  { href: '/admin/formations',    label: 'Formations',  icon: GraduationCap },
-  { href: '/admin/institutions',  label: 'Institutions', icon: School },
-]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -23,6 +12,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const { data: isAdmin } = await supabase.rpc('is_admin')
   if (!isAdmin) redirect('/')
+
+  const isSuperAdmin = user.user_metadata?.role === 'SUPER_ADMIN'
 
   return (
     <div className="flex min-h-dvh flex-col" style={{ background: 'var(--apebi-bg-admin)' }}>
@@ -51,14 +42,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </span>
             <div
               className="flex items-center gap-1.5 rounded-full px-2.5 py-1"
-              style={{ background: 'var(--apebi-cyan-muted)', border: '1px solid rgba(0,175,210,0.3)' }}
+              style={{ background: isSuperAdmin ? 'rgba(139,92,246,0.15)' : 'var(--apebi-cyan-muted)', border: isSuperAdmin ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(0,175,210,0.3)' }}
             >
-              <Shield className="size-3" style={{ color: 'var(--apebi-cyan)' }} aria-hidden />
+              {isSuperAdmin
+                ? <ShieldCheck className="size-3" style={{ color: '#8B5CF6' }} aria-hidden />
+                : <Shield className="size-3" style={{ color: 'var(--apebi-cyan)' }} aria-hidden />
+              }
               <span
                 className="font-heading text-[11px] font-semibold"
-                style={{ color: 'var(--apebi-cyan)' }}
+                style={{ color: isSuperAdmin ? '#8B5CF6' : 'var(--apebi-cyan)' }}
               >
-                Admin C5
+                {isSuperAdmin ? 'Super Admin' : 'Admin APEBI'}
               </span>
             </div>
           </div>
@@ -85,7 +79,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           className="w-52 shrink-0 border-r py-8 pr-4"
           style={{ borderColor: 'var(--apebi-border)', background: 'var(--apebi-bg-admin)' }}
         >
-          <AdminSidebarNav items={NAV} />
+          <AdminSidebarNav superAdmin={isSuperAdmin} />
 
           {/* Admin info pill */}
           <div
@@ -93,7 +87,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             style={{ background: 'var(--apebi-bg-alt)', border: '1px solid var(--apebi-border)' }}
           >
             <p className="font-heading text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Commission C5
+              Formation & Tech Talents
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
               APEBI TechTalent · Back-office

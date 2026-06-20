@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Briefcase, MapPin, Clock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ApplicationStatusBadge } from '@/components/shared/application-status-badge'
 
@@ -78,11 +76,8 @@ export default async function CandidaturesPage() {
   }, {})
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1 px-4 py-8 sm:px-6">
-        <div className="mx-auto max-w-3xl">
+    <div className="px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-3xl">
 
           {/* Breadcrumb */}
           <Link
@@ -239,10 +234,7 @@ export default async function CandidaturesPage() {
               })}
             </ul>
           )}
-        </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   )
 }

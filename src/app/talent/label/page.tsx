@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Award, ShieldCheck, Clock, XCircle, ExternalLink, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { applyForTalentLabel } from './actions'
 
 export const metadata: Metadata = { title: 'Label APEBI TechTalent | Mon profil' }
@@ -47,11 +45,8 @@ export default async function TalentLabelPage() {
   const isRejected = lastApp?.status === 'rejected'
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1 px-4 py-10 sm:px-6">
-        <div className="mx-auto max-w-2xl">
+    <div className="px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-2xl">
           <Link
             href="/talent/profil"
             className="mb-6 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
@@ -115,7 +110,7 @@ export default async function TalentLabelPage() {
                 Candidature en cours d&apos;examen
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Votre dossier a été transmis à la Commission C5. Vous serez notifié de la décision.
+                Votre dossier a été transmis à la Commission Formation & Tech Talents. Vous serez notifié de la décision.
               </p>
             </div>
           ) : (
@@ -137,7 +132,7 @@ export default async function TalentLabelPage() {
                 <>
                   <p className="text-sm text-muted-foreground">
                     Votre profil est éligible. En candidatant, vous soumettez votre dossier à
-                    l&apos;examen de la Commission C5. Une fois approuvé, un badge vérifiable
+                    l&apos;examen de la Commission APEBI. Une fois approuvé, un badge vérifiable
                     (QR code) sera associé à votre profil.
                   </p>
                   <form action={applyForTalentLabel} className="mt-5">
@@ -160,7 +155,7 @@ export default async function TalentLabelPage() {
                       <span className={talent.validation_status === 'approved' ? 'text-[var(--color-success)]' : 'text-muted-foreground'}>
                         {talent.validation_status === 'approved' ? '✓' : '○'}
                       </span>
-                      <span className="text-foreground">Validé par l&apos;équipe C5</span>
+                      <span className="text-foreground">Validé par l&apos;équipe APEBI</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <span className={talent.completeness_score >= 70 ? 'text-[var(--color-success)]' : 'text-muted-foreground'}>
@@ -184,10 +179,7 @@ export default async function TalentLabelPage() {
               )}
             </div>
           )}
-        </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   )
 }

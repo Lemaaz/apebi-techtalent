@@ -5,8 +5,6 @@ import { Plus, Pencil, Eye, EyeOff, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { changeJobStatus, deleteJobPosting } from './[slug]/modifier/actions'
 
 export const metadata: Metadata = {
@@ -77,10 +75,7 @@ export default async function MesOffresPage() {
   const jobs: JobRow[] = rawJobs ?? []
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1 px-4 py-8 sm:px-6">
+      <div className="px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-4xl">
           <div className="mb-6 flex items-center justify-between">
             <h1 className="font-heading text-xl font-bold text-foreground">
@@ -228,9 +223,7 @@ export default async function MesOffresPage() {
             </ul>
           )}
         </div>
-      </main>
+      </div>
 
-      <Footer />
-    </div>
   )
 }

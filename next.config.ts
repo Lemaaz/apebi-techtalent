@@ -24,8 +24,8 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      // Scripts : self + Next.js inline + Google Fonts (pas d'unsafe-eval en prod)
-      "script-src 'self' 'unsafe-inline'",
+      // Scripts : self + Next.js inline + unsafe-eval en dev (React/Turbopack callstacks)
+      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}`,
       // Styles : self + Google Fonts + inline (Tailwind)
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // Fonts

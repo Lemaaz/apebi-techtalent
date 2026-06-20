@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-const MAX_SIZE_BYTES = 2 * 1024 * 1024 // 2 MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 // Allowlist explicite — empêche l'écriture dans des buckets arbitraires
-const ALLOWED_BUCKETS = ['avatars', 'logos'] as const
+const ALLOWED_BUCKETS = ['avatars', 'logos', 'resumes'] as const
 type AllowedBucket = (typeof ALLOWED_BUCKETS)[number]
+
+const BUCKET_CONFIG: Record<AllowedBucket, { types: string[]; maxBytes: number }> = {
+  avatars: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 2 * 1024 * 1024 },
+  logos:   { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 2 * 1024 * 1024 },
+  resumes: { types: ['application/pdf'],                        maxBytes: 5 * 1024 * 1024 },
+}
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
@@ -21,16 +25,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Bucket non autorisé' }, { status: 400 })
   }
   const bucket = bucketParam as AllowedBucket
+  const config = BUCKET_CONFIG[bucket]
 
   if (!file) return NextResponse.json({ error: 'Fichier manquant' }, { status: 400 })
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return NextResponse.json({ error: 'Format non supporté (JPEG, PNG ou WebP)' }, { status: 400 })
+  if (!config.types.includes(file.type)) {
+    const accepted = bucket === 'resumes' ? 'PDF uniquement' : 'JPEG, PNG ou WebP'
+    return NextResponse.json({ error: `Format non supporté (${accepted})` }, { status: 400 })
   }
-  if (file.size > MAX_SIZE_BYTES) {
-    return NextResponse.json({ error: 'Fichier trop volumineux (max 2 Mo)' }, { status: 400 })
+  if (file.size > config.maxBytes) {
+    const max = config.maxBytes / (1024 * 1024)
+    return NextResponse.json({ error: `Fichier trop volumineux (max ${max} Mo)` }, { status: 400 })
   }
 
-  const ext = file.name.split('.').pop() ?? 'jpg'
+  const ext = file.name.split('.').pop() ?? (bucket === 'resumes' ? 'pdf' : 'jpg')
   const path = `${user.id}/${Date.now()}.${ext}`
 
   const arrayBuffer = await file.arrayBuffer()

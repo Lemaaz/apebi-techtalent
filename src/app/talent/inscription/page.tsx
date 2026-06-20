@@ -1,7 +1,5 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { TalentInscriptionForm } from './_form'
 
 type DomainWithSkills = {
@@ -35,22 +33,16 @@ export default async function TalentInscriptionPage() {
     .returns<DomainWithSkills[]>()
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-      <main className="flex flex-1 items-start justify-center px-4 py-10">
-        <div className="w-full max-w-lg">
-          <div className="mb-8">
-            <h1 className="font-heading text-xl font-bold text-foreground">
-              Créez votre profil talent
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Renseignez votre profil pour être visible auprès des entreprises membres APEBI.
-            </p>
-          </div>
-          <TalentInscriptionForm domains={domains ?? []} />
-        </div>
-      </main>
-      <Footer />
+    <div className="w-full max-w-lg">
+      <div className="mb-8">
+        <h1 className="font-heading text-xl font-bold text-foreground">
+          Créez votre profil talent
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Renseignez votre profil pour être visible auprès des entreprises membres APEBI.
+        </p>
+      </div>
+      <TalentInscriptionForm domains={domains ?? []} />
     </div>
   )
 }

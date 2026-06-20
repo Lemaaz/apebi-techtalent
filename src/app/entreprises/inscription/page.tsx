@@ -43,7 +43,7 @@ export default async function EntrepriseInscriptionPage() {
               Inscrire mon entreprise
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Réservé aux membres APEBI. Votre inscription sera validée par l&apos;équipe C5.
+              Réservé aux membres APEBI. Votre inscription sera validée par l&apos;équipe APEBI.
             </p>
           </div>
 

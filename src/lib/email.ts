@@ -5,6 +5,17 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = process.env.EMAIL_FROM ?? 'noreply@techtalent-apebi.vercel.app'
 const FROM_NAME = process.env.EMAIL_FROM_NAME ?? 'APEBI TechTalent'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
+const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL ?? 'techtalent@apebi.ma'
+
+// ── HTML escaping — toujours appliquer sur les données utilisateur ───────────
+function esc(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
 
 // ── Base layout ──────────────────────────────────────────────
 
@@ -55,11 +66,11 @@ export async function sendNewApplicationEmail(params: {
   if (!isResendConfigured()) return
   const content = `
     <h1>Nouvelle candidature reçue</h1>
-    <p><strong>${params.talentName}</strong> a postulé à votre offre :</p>
-    <p class="badge">${params.jobTitle}</p>
+    <p><strong>${esc(params.talentName)}</strong> a postulé à votre offre :</p>
+    <p class="badge">${esc(params.jobTitle)}</p>
     <p>Consultez le profil et la lettre de motivation depuis votre dashboard recruteur.</p>
     <a href="${APP_URL}/entreprise/dashboard" class="btn">Voir la candidature</a>
-    <p style="margin-top:16px">Entreprise : <strong>${params.companyName}</strong></p>
+    <p style="margin-top:16px">Entreprise : <strong>${esc(params.companyName)}</strong></p>
   `
   const html = baseLayout('Nouvelle candidature', content)
   for (const email of params.recruiterEmails) {
@@ -113,8 +124,8 @@ export async function sendAccountStatusEmail(params: {
       : `${APP_URL}/entreprise/dashboard`
     const content = `
       <h1>Votre compte est activé !</h1>
-      <p>Bonjour <strong>${firstName}</strong>,</p>
-      <p>Votre ${params.role === 'talent' ? 'profil talent' : 'compte entreprise'} sur <strong>APEBI TechTalent</strong> a été validé par l'équipe C5.</p>
+      <p>Bonjour <strong>${esc(firstName)}</strong>,</p>
+      <p>Votre ${params.role === 'talent' ? 'profil talent' : 'compte entreprise'} sur <strong>APEBI TechTalent</strong> a été validé par l'équipe APEBI.</p>
       ${params.role === 'talent'
         ? "<p>Votre profil est maintenant visible auprès des entreprises membres APEBI. Vous pouvez commencer à postuler aux offres disponibles.</p>"
         : "<p>Vous pouvez désormais publier vos offres d'emploi et accéder au vivier de talents tech marocains.</p>"
@@ -130,10 +141,10 @@ export async function sendAccountStatusEmail(params: {
   } else {
     const content = `
       <h1>Mise à jour de votre demande</h1>
-      <p>Bonjour <strong>${firstName}</strong>,</p>
-      <p>Votre demande d'accès à APEBI TechTalent a été examinée par l'équipe C5.</p>
-      ${params.reason ? `<p>Motif : <em>${params.reason}</em></p>` : ''}
-      <p>Pour plus d'informations, contactez-nous à <a href="mailto:c5@apebi.ma" style="color:#00AFD2">c5@apebi.ma</a>.</p>
+      <p>Bonjour <strong>${esc(firstName)}</strong>,</p>
+      <p>Votre demande d'accès à APEBI TechTalent a été examinée par l'équipe APEBI.</p>
+      ${params.reason ? `<p>Motif : <em>${esc(params.reason)}</em></p>` : ''}
+      <p>Pour plus d'informations, contactez-nous à <a href="mailto:techtalent@apebi.ma" style="color:#00AFD2">techtalent@apebi.ma</a>.</p>
     `
     await resend.emails.send({
       from: `${FROM_NAME} <${FROM}>`,
@@ -158,30 +169,30 @@ export async function sendApplicationStatusEmail(params: {
   const messages: Record<string, { subject: string; body: string }> = {
     viewed: {
       subject: 'Votre candidature a été consultée',
-      body: `<p>Bonne nouvelle ! <strong>${params.companyName}</strong> a consulté votre candidature pour le poste de <strong>${params.jobTitle}</strong>.</p>`,
+      body: `<p>Bonne nouvelle ! <strong>${esc(params.companyName)}</strong> a consulté votre candidature pour le poste de <strong>${esc(params.jobTitle)}</strong>.</p>`,
     },
     shortlisted: {
       subject: 'Vous êtes présélectionné(e) !',
-      body: `<p>Félicitations ! <strong>${params.companyName}</strong> vous a présélectionné(e) pour <strong>${params.jobTitle}</strong>. Attendez-vous à être contacté(e) prochainement.</p>`,
+      body: `<p>Félicitations ! <strong>${esc(params.companyName)}</strong> vous a présélectionné(e) pour <strong>${esc(params.jobTitle)}</strong>. Attendez-vous à être contacté(e) prochainement.</p>`,
     },
     accepted: {
       subject: 'Votre candidature a été acceptée !',
-      body: `<p>Excellente nouvelle ! <strong>${params.companyName}</strong> a accepté votre candidature pour <strong>${params.jobTitle}</strong>.</p>`,
+      body: `<p>Excellente nouvelle ! <strong>${esc(params.companyName)}</strong> a accepté votre candidature pour <strong>${esc(params.jobTitle)}</strong>.</p>`,
     },
     rejected: {
       subject: 'Mise à jour de votre candidature',
-      body: `<p><strong>${params.companyName}</strong> n'a pas retenu votre candidature pour <strong>${params.jobTitle}</strong>. Continuez à explorer les offres disponibles !</p>`,
+      body: `<p><strong>${esc(params.companyName)}</strong> n'a pas retenu votre candidature pour <strong>${esc(params.jobTitle)}</strong>. Continuez à explorer les offres disponibles !</p>`,
     },
   }
 
   const msg = messages[params.status] ?? {
     subject: 'Mise à jour de votre candidature',
-    body: `<p>Votre candidature pour <strong>${params.jobTitle}</strong> chez <strong>${params.companyName}</strong> a été mise à jour.</p>`,
+    body: `<p>Votre candidature pour <strong>${esc(params.jobTitle)}</strong> chez <strong>${esc(params.companyName)}</strong> a été mise à jour.</p>`,
   }
 
   const content = `
-    <h1>${msg.subject}</h1>
-    <p>Bonjour <strong>${params.talentFirstName}</strong>,</p>
+    <h1>${esc(msg.subject)}</h1>
+    <p>Bonjour <strong>${esc(params.talentFirstName)}</strong>,</p>
     ${msg.body}
     <a href="${APP_URL}/talent/candidatures" class="btn">Voir mes candidatures</a>
   `
@@ -190,5 +201,64 @@ export async function sendApplicationStatusEmail(params: {
     to: params.talentEmail,
     subject: msg.subject,
     html: baseLayout(msg.subject, content),
+  })
+}
+
+// ── NOT-00 : Profil soumis → utilisateur (confirmation) ─────────────────────
+
+export async function sendProfileSubmittedEmail(params: {
+  toEmail: string
+  firstName: string
+  role: 'talent' | 'entreprise'
+}) {
+  if (!isResendConfigured()) return
+
+  const isEntreprise = params.role === 'entreprise'
+  const dashboardUrl = isEntreprise ? `${APP_URL}/entreprise/dashboard` : `${APP_URL}/talent/profil`
+
+  const content = `
+    <h1>Votre ${isEntreprise ? 'demande' : 'profil'} a bien été reçu !</h1>
+    <p>Bonjour <strong>${esc(params.firstName)}</strong>,</p>
+    <p>Merci d'avoir rejoint <strong>APEBI TechTalent</strong>. ${
+      isEntreprise
+        ? "Votre demande d'accès entreprise a été transmise à l'équipe APEBI pour validation."
+        : 'Votre profil talent a été soumis à l\'équipe APEBI pour validation.'
+    }</p>
+    <p>Nous vous informerons par email dès que votre compte sera validé (généralement sous 48–72 heures ouvrées).</p>
+    <a href="${dashboardUrl}" class="btn">Voir mon espace</a>
+    <p style="margin-top:16px;font-size:13px;color:#797979">Des questions ? Contactez-nous à <a href="mailto:techtalent@apebi.ma" style="color:#00AFD2">techtalent@apebi.ma</a></p>
+  `
+
+  await resend.emails.send({
+    from: `${FROM_NAME} <${FROM}>`,
+    to: params.toEmail,
+    subject: `Votre ${isEntreprise ? 'demande' : 'profil'} APEBI TechTalent est en cours de validation`,
+    html: baseLayout('Demande reçue', content),
+  })
+}
+
+// ── NOT-00b : Nouveau profil → admin APEBI (alerte validation) ───────────────
+
+export async function sendAdminNewProfileEmail(params: {
+  role: 'talent' | 'entreprise'
+  name: string
+  adminReviewUrl: string
+}) {
+  if (!isResendConfigured()) return
+
+  const label = params.role === 'talent' ? 'Nouveau talent' : 'Nouvelle entreprise'
+
+  const content = `
+    <h1>${label} en attente de validation</h1>
+    <p>Un nouveau ${params.role === 'talent' ? 'talent' : 'compte entreprise'} vient de s'inscrire sur APEBI TechTalent et attend votre validation :</p>
+    <p class="badge">${esc(params.name)}</p>
+    <a href="${esc(params.adminReviewUrl)}" class="btn">Examiner le profil</a>
+  `
+
+  await resend.emails.send({
+    from: `${FROM_NAME} <${FROM}>`,
+    to: ADMIN_EMAIL,
+    subject: `[TechTalent] ${label} à valider — ${params.name}`,
+    html: baseLayout(`${label} à valider`, content),
   })
 }

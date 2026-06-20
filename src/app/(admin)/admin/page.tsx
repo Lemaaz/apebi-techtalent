@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Users, Building2, Briefcase, Clock, TrendingUp, CheckCircle } from 'lucide-react'
+import { Users, Building2, Briefcase, Clock, TrendingUp, CheckCircle, Download } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 
@@ -194,6 +194,33 @@ export default async function AdminDashboardPage() {
               <p className="mt-1 text-[12px] text-muted-foreground">{desc}</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── Export CSV — ADM-07 ── */}
+      <section aria-labelledby="export-heading" className="mt-10">
+        <h2 id="export-heading" className="mb-3 text-overline">
+          Export CSV
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href="/api/admin/export?type=talents"
+            download
+            className="flex items-center gap-2 rounded-lg border px-4 py-2 font-heading text-[13px] font-semibold text-foreground transition-colors hover:border-[var(--apebi-cyan)] hover:text-[var(--apebi-cyan)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--apebi-cyan)]"
+            style={{ borderColor: 'var(--apebi-border)' }}
+          >
+            <Download className="size-4" aria-hidden />
+            Exporter les talents (.csv)
+          </a>
+          <a
+            href="/api/admin/export?type=offres"
+            download
+            className="flex items-center gap-2 rounded-lg border px-4 py-2 font-heading text-[13px] font-semibold text-foreground transition-colors hover:border-[var(--apebi-cyan)] hover:text-[var(--apebi-cyan)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--apebi-cyan)]"
+            style={{ borderColor: 'var(--apebi-border)' }}
+          >
+            <Download className="size-4" aria-hidden />
+            Exporter les offres (.csv)
+          </a>
         </div>
       </section>
     </div>

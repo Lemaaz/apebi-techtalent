@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Search } from 'lucide-react'
+import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Search, Bookmark, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { signOut } from '@/app/actions'
@@ -81,6 +81,28 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                     >
                       <Search className="size-4 text-muted-foreground" aria-hidden />
                       Recherche talents
+                    </Link>
+                  )}
+                  {user.role === 'entreprise' && (
+                    <Link
+                      href="/entreprise/favoris"
+                      onClick={() => setDropdownOpen(false)}
+                      role="menuitem"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted"
+                    >
+                      <Bookmark className="size-4 text-muted-foreground" aria-hidden />
+                      Talents favoris
+                    </Link>
+                  )}
+                  {user.role === 'talent' && (
+                    <Link
+                      href="/talent/parametres"
+                      onClick={() => setDropdownOpen(false)}
+                      role="menuitem"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted"
+                    >
+                      <Settings className="size-4 text-muted-foreground" aria-hidden />
+                      Paramètres
                     </Link>
                   )}
                   <form action={signOut}>

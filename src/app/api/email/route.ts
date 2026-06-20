@@ -67,7 +67,7 @@ function accountValidatedEmail(firstName: string, role: 'talent' | 'entreprise')
   const content = `
     <h1>Votre compte est activé !</h1>
     <p>Bonjour <strong>${esc(firstName)}</strong>,</p>
-    <p>Votre ${role === 'talent' ? 'profil talent' : 'compte entreprise'} sur <strong>APEBI TechTalent</strong> a été validé par l'équipe C5.</p>
+    <p>Votre ${role === 'talent' ? 'profil talent' : 'compte entreprise'} sur <strong>APEBI TechTalent</strong> a été validé par l'équipe APEBI.</p>
     ${role === 'talent'
       ? '<p>Votre profil est maintenant visible auprès des entreprises membres APEBI. Vous pouvez commencer à postuler aux offres disponibles.</p>'
       : '<p>Vous pouvez désormais publier vos offres d\'emploi et accéder au vivier de talents tech marocains.</p>'
@@ -81,9 +81,9 @@ function accountRejectedEmail(firstName: string, reason: string | null): string 
   const content = `
     <h1>Mise à jour de votre demande</h1>
     <p>Bonjour <strong>${esc(firstName)}</strong>,</p>
-    <p>Votre demande d'accès à APEBI TechTalent a été examinée par l'équipe C5.</p>
+    <p>Votre demande d'accès à APEBI TechTalent a été examinée par l'équipe APEBI.</p>
     ${reason ? `<p>Motif : <em>${esc(reason)}</em></p>` : ''}
-    <p>Pour plus d'informations ou pour soumettre une nouvelle demande, contactez-nous à <a href="mailto:c5@apebi.ma" style="color:#00AFD2">c5@apebi.ma</a>.</p>
+    <p>Pour plus d'informations ou pour soumettre une nouvelle demande, contactez-nous à <a href="mailto:techtalent@apebi.ma" style="color:#00AFD2">techtalent@apebi.ma</a>.</p>
   `
   return baseLayout('Mise à jour de votre demande', content)
 }

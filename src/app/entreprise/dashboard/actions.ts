@@ -32,6 +32,7 @@ export async function updateApplicationStatus(formData: FormData) {
   }
 
   revalidatePath('/entreprise/dashboard')
+  revalidatePath('/entreprise/candidatures')
 
   // NOT-03 — notify talent of status change (non-blocking)
   try {
@@ -62,6 +63,22 @@ export async function updateApplicationStatus(formData: FormData) {
           status,
         })
       }
+
+      // NOT-04 — in-app notification for the talent
+      const statusLabels: Record<string, string> = {
+        viewed: 'a consulté votre candidature',
+        shortlisted: 'vous a présélectionné(e)',
+        accepted: 'a accepté votre candidature',
+        rejected: 'n\'a pas retenu votre candidature',
+      }
+      const adminSupabase = createAdminClient()
+      await adminSupabase.from('notifications').insert({
+        user_id: app.talent_profiles.user_id,
+        type: 'application_status',
+        title: `Candidature : ${status === 'accepted' ? '🎉 Acceptée !' : status === 'shortlisted' ? '⭐ Présélectionné(e)' : 'Mise à jour'}`,
+        body: `${app.job_postings.company_profiles?.name ?? 'L\'entreprise'} ${statusLabels[status] ?? 'a mis à jour votre candidature'} pour « ${app.job_postings.title} »`,
+        link: '/talent/candidatures',
+      })
     }
   } catch (emailErr) {
     console.error('[dashboard/actions] status email error (non-blocking):', emailErr)

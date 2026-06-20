@@ -2,18 +2,27 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import type { LucideIcon } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, Briefcase, Award, CalendarDays, GraduationCap, School, ShieldCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-type NavItem = {
-  href: string
-  label: string
-  icon: LucideIcon
-  exact?: boolean
-}
+const NAV = [
+  { href: '/admin',             label: 'Dashboard',    icon: LayoutDashboard, exact: true },
+  { href: '/admin/talents',     label: 'Talents',      icon: Users },
+  { href: '/admin/entreprises', label: 'Entreprises',  icon: Building2 },
+  { href: '/admin/offres',      label: 'Offres',       icon: Briefcase },
+  { href: '/admin/labels',      label: 'Labels',       icon: Award },
+  { href: '/admin/events',      label: 'Événements',   icon: CalendarDays },
+  { href: '/admin/formations',  label: 'Formations',   icon: GraduationCap },
+  { href: '/admin/institutions',label: 'Institutions', icon: School },
+]
 
-export function AdminSidebarNav({ items }: { items: NavItem[] }) {
+const SUPER_NAV = [
+  { href: '/admin/super', label: 'Super Admin', icon: ShieldCheck, exact: false },
+]
+
+export function AdminSidebarNav({ superAdmin = false }: { superAdmin?: boolean }) {
   const pathname = usePathname()
+  const items = superAdmin ? [...NAV, ...SUPER_NAV] : NAV
 
   return (
     <nav aria-label="Navigation admin">

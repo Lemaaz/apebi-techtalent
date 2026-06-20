@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { EditProfileForm } from './_form'
 
 type DomainWithSkills = {
@@ -47,28 +45,22 @@ export default async function ModifierProfilPage() {
   )
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-      <main className="flex-1 px-4 py-8 sm:px-6">
-        <div className="mx-auto max-w-2xl">
-          <Link
-            href="/talent/profil"
-            className="mb-6 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="size-3.5" aria-hidden />
-            Retour au profil
-          </Link>
-          <h1 className="mb-8 font-heading text-xl font-bold text-foreground">
-            Modifier mon profil
-          </h1>
-          <EditProfileForm
-            talent={talent}
-            domains={domains ?? []}
-            currentSkillIds={currentSkillIds}
-          />
-        </div>
-      </main>
-      <Footer />
+    <div className="max-w-2xl">
+      <Link
+        href="/talent/profil"
+        className="mb-6 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeft className="size-3.5" aria-hidden />
+        Retour au profil
+      </Link>
+      <h1 className="mb-8 font-heading text-xl font-bold text-foreground">
+        Modifier mon profil
+      </h1>
+      <EditProfileForm
+        talent={talent}
+        domains={domains ?? []}
+        currentSkillIds={currentSkillIds}
+      />
     </div>
   )
 }

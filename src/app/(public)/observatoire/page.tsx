@@ -107,7 +107,7 @@ export default async function ObservatoirePage() {
           <div className="mx-auto max-w-5xl">
             <p className="inline-flex items-center gap-1.5 rounded-full bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
               <BarChart3 className="size-3.5" aria-hidden />
-              Observatoire des Talents · Axe A — Commission C5
+              Observatoire des Talents · Commission Formation & Tech Talents
             </p>
             <h1 className="mt-4 font-heading text-3xl font-bold text-white sm:text-4xl">
               Observatoire des Compétences Tech
@@ -131,7 +131,7 @@ export default async function ObservatoirePage() {
               </div>
               <div className="rounded-xl border border-white/8 bg-[#141414] px-4 py-3">
                 <p className="font-heading text-2xl font-bold text-white">{domains.length}</p>
-                <p className="text-xs text-white/45">Domaines C5</p>
+                <p className="text-xs text-white/45">Domaines tech</p>
               </div>
             </div>
           </div>
@@ -203,7 +203,7 @@ export default async function ObservatoirePage() {
                 Équilibre offre / vivier par domaine
               </h2>
               <p className="mb-5 text-xs text-white/45">
-                Les 6 domaines de compétences C5 — tension entre offres actives et talents disponibles.
+                Les 6 domaines de compétences tech — tension entre offres actives et talents disponibles.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {domains.map((d) => {

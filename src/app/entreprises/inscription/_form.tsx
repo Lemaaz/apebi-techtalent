@@ -254,7 +254,7 @@ export function CompanyRegistrationForm() {
 
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700">
             <strong>Validation APEBI requise.</strong> Votre demande sera examinée par l&apos;équipe
-            C5 avant activation. Vous recevrez un email de confirmation sous 48h.
+            APEBI avant activation. Vous recevrez un email de confirmation sous 48h.
           </div>
 
           {state.error && (

@@ -36,7 +36,7 @@ export default function ChoixRolePage() {
     startTransition(async () => {
       const supabase = createClient()
       await supabase.auth.updateUser({ data: { role: selected } })
-      router.push(selected === 'entreprise' ? '/entreprises/inscription' : '/talent/profil')
+      router.push(selected === 'entreprise' ? '/entreprises/inscription' : '/talent/inscription')
     })
   }
 

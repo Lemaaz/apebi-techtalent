@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Award, ShieldCheck, Clock, XCircle, ExternalLink, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { applyForCompanyLabel } from './actions'
 
 export const metadata: Metadata = { title: 'Label APEBI TechTalent | Mon entreprise' }
@@ -50,10 +48,7 @@ export default async function CompanyLabelPage() {
   const isRejected = lastApp?.status === 'rejected'
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1 px-4 py-10 sm:px-6">
+      <div className="px-4 py-10 sm:px-6">
         <div className="mx-auto max-w-2xl">
           <Link
             href="/entreprise/dashboard"
@@ -166,9 +161,7 @@ export default async function CompanyLabelPage() {
             </div>
           )}
         </div>
-      </main>
+      </div>
 
-      <Footer />
-    </div>
   )
 }

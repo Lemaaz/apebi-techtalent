@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Building2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 import { CompanyProfileForm } from './_form'
 
 export const metadata: Metadata = {
@@ -54,10 +52,7 @@ export default async function ModifierProfilEntreprisePage() {
   if (!company) redirect('/entreprise/dashboard')
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1">
+      <>
         {/* Header */}
         <div className="border-b border-border bg-muted/30 px-4 py-6 sm:px-6">
           <div className="mx-auto max-w-3xl">
@@ -109,9 +104,7 @@ export default async function ModifierProfilEntreprisePage() {
             </div>
           )}
         </div>
-      </main>
+      </>
 
-      <Footer />
-    </div>
   )
 }

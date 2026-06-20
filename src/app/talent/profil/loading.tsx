@@ -1,11 +1,6 @@
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
-
 export default function Loading() {
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-      <main className="flex-1">
+    <>
         {/* Header skeleton */}
         <div className="border-b border-border bg-muted/30 px-4 py-6 sm:px-6">
           <div className="mx-auto max-w-7xl">
@@ -51,8 +46,6 @@ export default function Loading() {
             <div className="h-24 animate-pulse rounded-xl bg-muted" />
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+    </>
   )
 }

@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { slugify } from '@/lib/utils'
+import { sendProfileSubmittedEmail, sendAdminNewProfileEmail } from '@/lib/email'
 
 const schema = z.object({
   name: z.string().min(2, 'Nom requis (2 caractères min)').max(100),
@@ -104,6 +105,25 @@ export async function createCompanyProfile(
       return { error: 'Votre compte est déjà associé à une entreprise.' }
     }
     return { error: "Erreur lors de la création de l'entreprise. Réessayez." }
+  }
+
+  // NOT-00 — confirmation à l'entreprise + alerte admin (non-bloquant)
+  try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
+    await Promise.all([
+      sendProfileSubmittedEmail({
+        toEmail: user.email!,
+        firstName: d.contact_full_name,
+        role: 'entreprise',
+      }),
+      sendAdminNewProfileEmail({
+        role: 'entreprise',
+        name: d.name,
+        adminReviewUrl: `${appUrl}/admin/entreprises`,
+      }),
+    ])
+  } catch (emailErr) {
+    console.error('[createCompanyProfile] email error (non-blocking):', emailErr)
   }
 
   redirect('/entreprise/dashboard?inscription=success')

@@ -8,8 +8,6 @@ import {
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
 
 type TalentRow = {
   id: string
@@ -183,10 +181,7 @@ export default async function TalentDetailRecruteurPage({
   )
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-
-      <main className="flex-1">
+    <>
         {/* Back */}
         <div className="border-b border-border px-4 py-3 sm:px-6">
           <div className="mx-auto max-w-7xl">
@@ -505,9 +500,6 @@ export default async function TalentDetailRecruteurPage({
             </div>
           </aside>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </>
   )
 }

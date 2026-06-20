@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { sendProfileSubmittedEmail, sendAdminNewProfileEmail } from '@/lib/email'
 
 const schema = z.object({
   first_name: z.string().min(1, 'Prénom requis').max(50),
@@ -99,6 +100,25 @@ export async function createTalentProfile(
           "Profil créé, mais erreur lors de l'enregistrement des compétences. Ajoutez-les depuis votre profil.",
       }
     }
+  }
+
+  // NOT-00 — confirmation au talent + alerte admin (non-bloquant)
+  try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
+    await Promise.all([
+      sendProfileSubmittedEmail({
+        toEmail: user.email!,
+        firstName: parsed.data.first_name,
+        role: 'talent',
+      }),
+      sendAdminNewProfileEmail({
+        role: 'talent',
+        name: `${parsed.data.first_name} ${parsed.data.last_name}`,
+        adminReviewUrl: `${appUrl}/admin/talents`,
+      }),
+    ])
+  } catch (emailErr) {
+    console.error('[createTalentProfile] email error (non-blocking):', emailErr)
   }
 
   redirect('/talent/profil')
