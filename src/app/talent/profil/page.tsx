@@ -2,22 +2,18 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import {
-  Globe,
-  Code2,
-  ExternalLink,
-  MapPin,
-  GraduationCap,
-  Briefcase,
-  Eye,
-  EyeOff,
-  UserCircle,
+  Globe, Code2, ExternalLink, MapPin, GraduationCap,
+  Briefcase, Eye, EyeOff, UserCircle, Award, Pencil,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
+import { EmptyState } from '@/components/ui/empty-state'
+import { AdminStatusBadge } from '@/components/admin/admin-status-badge'
+import { AvailabilityBadge } from '@/components/shared/application-status-badge'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { toggleVisibility } from './actions'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Mon Profil | APEBI TechTalent',
@@ -77,26 +73,15 @@ type TalentRow = {
 
 // ── Helpers ──────────────────────────────────────────────────
 
-const AVATAR_PALETTES = [
-  'bg-primary/10 text-primary',
-  'bg-[#3A4652]/10 text-[#3A4652]',
-  'bg-emerald-500/10 text-emerald-600',
-  'bg-violet-500/10 text-violet-600',
-  'bg-amber-500/10 text-amber-600',
-  'bg-rose-500/10 text-rose-600',
-] as const
-
+const AVATAR_COLORS = ['#3A4652', '#1E4D5C', '#2D4A3E', '#4A2D3E']
 function avatarColor(name: string): string {
   let hash = 0
   for (const c of name) hash = (hash * 31 + c.charCodeAt(0)) & 0xffff
-  return AVATAR_PALETTES[hash % AVATAR_PALETTES.length]
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length]
 }
 
-const AVAILABILITY_STYLES: Record<string, string> = {
-  Immédiate: 'bg-emerald-500/10 text-emerald-600',
-  '1 mois': 'bg-amber-500/10 text-amber-700',
-  '3 mois': 'bg-orange-500/10 text-orange-700',
-  'Non disponible': 'bg-muted text-muted-foreground',
+const SENIORITY_LABELS: Record<string, string> = {
+  junior: 'Junior', mid: 'Confirmé', senior: 'Senior', lead: 'Lead / Expert',
 }
 
 function formatDateRange(start: string, end: string | null, isCurrent: boolean): string {
@@ -107,26 +92,62 @@ function formatDateRange(start: string, end: string | null, isCurrent: boolean):
   return `${fmt(start)} – ${fmt(end)}`
 }
 
-// ── Sub-components ───────────────────────────────────────────
+// ── Completeness bar ─────────────────────────────────────────
 
 function CompletenessBar({ score }: { score: number }) {
   const color =
-    score >= 80 ? 'bg-emerald-500' : score >= 50 ? 'bg-primary' : 'bg-amber-500'
+    score >= 80
+      ? 'var(--color-success)'
+      : score >= 50
+        ? 'var(--apebi-cyan)'
+        : 'var(--color-warning)'
+
   return (
     <div className="flex items-center gap-3">
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+      <div
+        className="h-1.5 flex-1 overflow-hidden rounded-full"
+        style={{ background: 'var(--apebi-bg-alt)' }}
+        role="progressbar"
+        aria-valuenow={score}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`Complétude du profil : ${score}%`}
+      >
         <div
-          className={cn('h-full rounded-full transition-all', color)}
-          style={{ width: `${score}%` }}
-          role="progressbar"
-          aria-valuenow={score}
-          aria-valuemin={0}
-          aria-valuemax={100}
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${score}%`, background: color }}
         />
       </div>
-      <span className="shrink-0 text-xs font-medium tabular-nums text-muted-foreground">
+      <span className="shrink-0 font-heading text-[12px] font-semibold tabular-nums text-muted-foreground">
         {score}%
       </span>
+    </div>
+  )
+}
+
+// ── Section heading ───────────────────────────────────────────
+
+function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <h2
+      id={id}
+      className="mb-4 flex items-center gap-2 font-heading text-[15px] font-semibold text-foreground"
+    >
+      {children}
+    </h2>
+  )
+}
+
+// ── Sidebar card ─────────────────────────────────────────────
+
+function SideCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div
+      className="rounded-xl p-4"
+      style={{ background: 'white', border: '1px solid var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
+    >
+      <p className="mb-3 font-heading text-[13px] font-semibold text-foreground">{title}</p>
+      {children}
     </div>
   )
 }
@@ -135,9 +156,7 @@ function CompletenessBar({ score }: { score: number }) {
 
 export default async function TalentProfilPage() {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/connexion')
 
   const { data: talent } = await supabase
@@ -150,9 +169,7 @@ export default async function TalentProfilPage() {
        completeness_score, validation_status,
        talent_skills (
          level,
-         skills ( id, name,
-           domains ( name_fr, color )
-         )
+         skills ( id, name, domains ( name_fr, color ) )
        ),
        experiences ( id, company_name, title, description, start_date, end_date, is_current, location ),
        educations ( id, institution, degree, field, start_year, end_year, is_apebi_labeled )`,
@@ -160,29 +177,18 @@ export default async function TalentProfilPage() {
     .eq('user_id', user.id)
     .maybeSingle<TalentRow>()
 
-  // ── No profile yet → onboarding ──────────────────────────
+  // ── No profile → onboarding ──────────────────────────────
   if (!talent) {
     return (
       <div className="flex min-h-dvh flex-col">
         <Navbar />
         <main className="flex flex-1 items-center justify-center px-4">
-          <div className="mx-auto max-w-sm text-center">
-            <div className="mb-4 inline-flex size-14 items-center justify-center rounded-full bg-primary/10">
-              <UserCircle className="size-7 text-primary" aria-hidden />
-            </div>
-            <h1 className="font-heading text-lg font-semibold text-foreground">
-              Créez votre profil talent
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Complétez votre profil pour être visible auprès des entreprises membres APEBI.
-            </p>
-            <Link
-              href="/talent/inscription"
-              className={cn(buttonVariants({ size: 'sm' }), 'mt-6')}
-            >
-              Créer mon profil
-            </Link>
-          </div>
+          <EmptyState
+            icon={UserCircle}
+            title="Créez votre profil talent"
+            description="Complétez votre profil pour être visible auprès des entreprises membres APEBI."
+            action={{ label: 'Créer mon profil', href: '/talent/inscription' }}
+          />
         </main>
         <Footer />
       </div>
@@ -191,21 +197,14 @@ export default async function TalentProfilPage() {
 
   // ── Derived data ─────────────────────────────────────────
   const fullName = `${talent.first_name} ${talent.last_name}`
-  const initials =
-    `${talent.first_name[0] ?? ''}${talent.last_name[0] ?? ''}`.toUpperCase()
+  const initials = `${talent.first_name[0] ?? ''}${talent.last_name[0] ?? ''}`.toUpperCase()
 
-  // Group skills by domain
-  type DomainGroup = {
-    domainName: string
-    skills: Array<{ name: string; level: string | null }>
-  }
+  type DomainGroup = { domainName: string; skills: Array<{ name: string; level: string | null }> }
   const skillsByDomain = new Map<string, DomainGroup>()
   for (const ts of talent.talent_skills ?? []) {
     if (!ts.skills) continue
     const domainName = ts.skills.domains?.name_fr ?? 'Autres'
-    if (!skillsByDomain.has(domainName)) {
-      skillsByDomain.set(domainName, { domainName, skills: [] })
-    }
+    if (!skillsByDomain.has(domainName)) skillsByDomain.set(domainName, { domainName, skills: [] })
     skillsByDomain.get(domainName)!.skills.push({ name: ts.skills.name, level: ts.level })
   }
 
@@ -219,34 +218,36 @@ export default async function TalentProfilPage() {
     (a, b) => (b.end_year ?? 9999) - (a.end_year ?? 9999),
   )
 
-  const hasContent =
-    talent.bio || skillsByDomain.size > 0 || experiences.length > 0 || educations.length > 0
+  const hasContent = talent.bio || skillsByDomain.size > 0 || experiences.length > 0 || educations.length > 0
 
   return (
     <div className="flex min-h-dvh flex-col">
       <Navbar />
 
       <main className="flex-1">
-        {/* ── Header ────────────────────────────────── */}
-        <div className="border-b border-border bg-muted/30 px-4 py-6 sm:px-6">
+        {/* ── Profile header ─────────────────────────────── */}
+        <div
+          className="border-b px-4 py-6 sm:px-6"
+          style={{ background: 'var(--apebi-bg-alt)', borderColor: 'var(--apebi-border)' }}
+        >
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+
               {/* Avatar + identity */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 {talent.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={talent.avatar_url}
                     alt={fullName}
                     className="size-16 shrink-0 rounded-2xl object-cover"
+                    style={{ border: '2px solid var(--apebi-border)' }}
                   />
                 ) : (
                   <div
+                    className="flex size-16 shrink-0 items-center justify-center rounded-2xl font-heading text-xl font-bold text-white"
+                    style={{ background: avatarColor(fullName) }}
                     aria-hidden
-                    className={cn(
-                      'flex size-16 shrink-0 items-center justify-center rounded-2xl font-heading text-xl font-bold',
-                      avatarColor(fullName),
-                    )}
                   >
                     {initials}
                   </div>
@@ -256,105 +257,78 @@ export default async function TalentProfilPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="font-heading text-xl font-bold text-foreground">{fullName}</h1>
                     {talent.availability && (
-                      <span
-                        className={cn(
-                          'rounded-full px-2 py-0.5 text-[11px] font-medium',
-                          AVAILABILITY_STYLES[talent.availability] ??
-                            'bg-muted text-muted-foreground',
-                        )}
-                      >
-                        {talent.availability}
-                      </span>
+                      <AvailabilityBadge status={talent.availability} />
                     )}
-                    {talent.validation_status === 'pending' && (
-                      <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-700">
-                        En attente de validation
-                      </span>
-                    )}
-                    {talent.validation_status === 'rejected' && (
-                      <span className="rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-medium text-rose-600">
-                        Profil refusé
-                      </span>
+                    {talent.validation_status !== 'approved' && (
+                      <AdminStatusBadge status={talent.validation_status} />
                     )}
                   </div>
+
                   {talent.title && (
-                    <p className="mt-0.5 text-sm text-muted-foreground">{talent.title}</p>
+                    <p className="mt-0.5 text-[13px] text-muted-foreground">{talent.title}</p>
                   )}
-                  <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-muted-foreground">
                     {talent.city && (
-                      <>
+                      <span className="flex items-center gap-1">
                         <MapPin className="size-3" aria-hidden />
                         {talent.city}
-                      </>
+                      </span>
                     )}
                     {talent.seniority_level && (
-                      <>
-                        {talent.city && <span aria-hidden>·</span>}
-                        {talent.seniority_level}
-                      </>
+                      <span>{SENIORITY_LABELS[talent.seniority_level] ?? talent.seniority_level}</span>
                     )}
                     {talent.years_experience != null && (
-                      <>
-                        <span aria-hidden>·</span>
-                        {talent.years_experience} an{talent.years_experience > 1 ? 's' : ''}{' '}
-                        d&apos;expérience
-                      </>
+                      <span>{talent.years_experience} an{talent.years_experience > 1 ? 's' : ''} d&apos;expérience</span>
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
 
+              {/* Edit CTA */}
               <Link
                 href="/talent/profil/modifier"
-                className={cn(
-                  buttonVariants({ variant: 'outline', size: 'sm' }),
-                  'shrink-0 text-xs',
-                )}
+                className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'shrink-0 gap-1.5 text-xs')}
               >
+                <Pencil className="size-3.5" aria-hidden />
                 Modifier mon profil
               </Link>
             </div>
 
-            {/* Completeness */}
+            {/* Completeness bar */}
             <div className="mt-5 max-w-sm">
-              <p className="mb-1.5 text-xs text-muted-foreground">
+              <p className="mb-1.5 font-heading text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Complétude du profil
               </p>
-              <CompletenessBar score={talent.completeness_score} />
+              <CompletenessBar score={talent.completeness_score ?? 0} />
             </div>
           </div>
         </div>
 
-        {/* ── Body — two-column ─────────────────────── */}
+        {/* ── Body — two-column ─────────────────────────── */}
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_280px]">
-          {/* ── Left — main content ───────────────── */}
+
+          {/* ── Left — main content ───────────────────── */}
           <div className="min-w-0 space-y-8">
+
+            {/* Incomplete profile state */}
             {!hasContent && (
-              <div className="flex flex-col items-center rounded-xl border border-dashed border-border py-12 text-center">
-                <UserCircle className="mb-3 size-8 text-muted-foreground" aria-hidden />
-                <p className="text-sm font-medium text-foreground">Votre profil est incomplet</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Ajoutez votre bio, compétences et expériences pour maximiser vos chances.
-                </p>
-                <Link
-                  href="/talent/profil/modifier"
-                  className={cn(buttonVariants({ size: 'sm' }), 'mt-4 text-xs')}
-                >
-                  Compléter mon profil
-                </Link>
+              <div style={{ border: '2px dashed var(--apebi-border)', borderRadius: 12 }}>
+                <EmptyState
+                  icon={UserCircle}
+                  title="Votre profil est incomplet"
+                  description="Ajoutez votre bio, compétences et expériences pour maximiser vos chances d'être contacté."
+                  action={{ label: 'Compléter mon profil', href: '/talent/profil/modifier' }}
+                  compact
+                />
               </div>
             )}
 
             {/* Bio */}
             {talent.bio && (
               <section aria-labelledby="bio-heading">
-                <h2
-                  id="bio-heading"
-                  className="mb-3 font-heading text-base font-semibold text-foreground"
-                >
-                  À propos
-                </h2>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                <SectionHeading id="bio-heading">À propos</SectionHeading>
+                <p className="whitespace-pre-wrap text-[14px] leading-relaxed text-muted-foreground">
                   {talent.bio}
                 </p>
               </section>
@@ -363,25 +337,14 @@ export default async function TalentProfilPage() {
             {/* Skills */}
             {skillsByDomain.size > 0 && (
               <section aria-labelledby="skills-heading">
-                <h2
-                  id="skills-heading"
-                  className="mb-4 font-heading text-base font-semibold text-foreground"
-                >
-                  Compétences
-                </h2>
+                <SectionHeading id="skills-heading">Compétences</SectionHeading>
                 <div className="space-y-4">
                   {[...skillsByDomain.values()].map(({ domainName, skills }) => (
                     <div key={domainName}>
-                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        {domainName}
-                      </p>
+                      <p className="text-overline mb-2">{domainName}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {skills.map(({ name, level }) => (
-                          <span
-                            key={name}
-                            className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary"
-                            title={level ?? undefined}
-                          >
+                          <span key={name} className="badge-skill" title={level ?? undefined}>
                             {name}
                             {level && (
                               <span className="ml-1 opacity-60 text-[10px]">· {level}</span>
@@ -398,32 +361,30 @@ export default async function TalentProfilPage() {
             {/* Experiences */}
             {experiences.length > 0 && (
               <section aria-labelledby="exp-heading">
-                <h2
-                  id="exp-heading"
-                  className="mb-4 font-heading text-base font-semibold text-foreground"
-                >
-                  Expériences
-                </h2>
+                <SectionHeading id="exp-heading">Expériences</SectionHeading>
                 <ul className="space-y-5" role="list">
                   {experiences.map((exp) => (
-                    <li key={exp.id} className="relative border-l-2 border-border pl-4">
+                    <li
+                      key={exp.id}
+                      className="relative border-l-2 pl-4"
+                      style={{ borderColor: exp.is_current ? 'var(--apebi-cyan)' : 'var(--apebi-border)' }}
+                    >
                       {exp.is_current && (
                         <div
                           aria-hidden
-                          className="absolute -left-1 top-1.5 size-2 rounded-full bg-primary"
+                          className="absolute -left-[5px] top-1.5 size-2.5 rounded-full"
+                          style={{ background: 'var(--apebi-cyan)' }}
                         />
                       )}
-                      <p className="font-heading text-sm font-semibold text-foreground">
-                        {exp.title}
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
+                      <p className="font-heading text-[14px] font-semibold text-foreground">{exp.title}</p>
+                      <p className="mt-0.5 text-[12px] text-muted-foreground">
                         {exp.company_name}
                         {exp.location ? ` · ${exp.location}` : ''}
                         {' · '}
                         {formatDateRange(exp.start_date, exp.end_date, exp.is_current)}
                       </p>
                       {exp.description && (
-                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
                           {exp.description}
                         </p>
                       )}
@@ -433,37 +394,34 @@ export default async function TalentProfilPage() {
               </section>
             )}
 
-            {/* Educations */}
+            {/* Education */}
             {educations.length > 0 && (
               <section aria-labelledby="edu-heading">
-                <h2
-                  id="edu-heading"
-                  className="mb-4 font-heading text-base font-semibold text-foreground"
-                >
-                  Formation
-                </h2>
+                <SectionHeading id="edu-heading">Formation</SectionHeading>
                 <ul className="space-y-3" role="list">
                   {educations.map((edu) => (
                     <li key={edu.id} className="flex items-start gap-3">
-                      <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted">
-                        <GraduationCap className="size-4 text-muted-foreground" aria-hidden />
+                      <div
+                        className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg"
+                        style={{ background: 'var(--apebi-bg-alt)' }}
+                        aria-hidden
+                      >
+                        <GraduationCap className="size-4 text-muted-foreground" />
                       </div>
                       <div>
-                        <p className="font-heading text-sm font-semibold text-foreground">
-                          {edu.degree}
-                          {edu.field ? ` en ${edu.field}` : ''}
+                        <p className="font-heading text-[14px] font-semibold text-foreground">
+                          {edu.degree}{edu.field ? ` en ${edu.field}` : ''}
                           {edu.is_apebi_labeled && (
-                            <span className="ml-2 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-600">
+                            <span className="badge-approved ml-2">
+                              <Award className="size-3" aria-hidden />
                               APEBI Labellisé
                             </span>
                           )}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[12px] text-muted-foreground">
                           {edu.institution}
                           {edu.start_year || edu.end_year
-                            ? ` · ${edu.start_year ?? ''}${
-                                edu.end_year ? ` – ${edu.end_year}` : ''
-                              }`
+                            ? ` · ${edu.start_year ?? ''}${edu.end_year ? ` – ${edu.end_year}` : ''}`
                             : ''}
                         </p>
                       </div>
@@ -474,31 +432,27 @@ export default async function TalentProfilPage() {
             )}
           </div>
 
-          {/* ── Right — sidebar ───────────────────── */}
+          {/* ── Right — sidebar ───────────────────────── */}
           <aside className="space-y-4">
-            {/* Visibility card */}
-            <div className="rounded-xl border border-border bg-card p-4">
-              <p className="mb-1 font-heading text-sm font-semibold text-foreground">
-                Visibilité
-              </p>
-              <p className="mb-3 text-xs text-muted-foreground">
+
+            {/* Visibility toggle */}
+            <SideCard title="Visibilité">
+              <p className="mb-3 text-[12px] text-muted-foreground">
                 {talent.visibility
                   ? 'Votre profil est visible par les recruteurs APEBI.'
                   : 'Votre profil est masqué des recruteurs.'}
               </p>
               <div
-                className={cn(
-                  'mb-3 flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium',
+                className="mb-3 flex items-center gap-1.5 rounded-lg px-3 py-2 font-heading text-[12px] font-semibold"
+                style={
                   talent.visibility
-                    ? 'bg-emerald-500/10 text-emerald-600'
-                    : 'bg-muted text-muted-foreground',
-                )}
+                    ? { background: 'var(--color-success-muted)', color: 'var(--color-success-text)' }
+                    : { background: 'var(--apebi-bg-alt)', color: 'var(--apebi-text-muted)' }
+                }
               >
-                {talent.visibility ? (
-                  <Eye className="size-3.5" aria-hidden />
-                ) : (
-                  <EyeOff className="size-3.5" aria-hidden />
-                )}
+                {talent.visibility
+                  ? <Eye className="size-3.5" aria-hidden />
+                  : <EyeOff className="size-3.5" aria-hidden />}
                 {talent.visibility ? 'Profil visible' : 'Profil masqué'}
               </div>
               <form action={toggleVisibility}>
@@ -506,145 +460,89 @@ export default async function TalentProfilPage() {
                 <button
                   type="submit"
                   className={cn(
-                    buttonVariants({
-                      variant: talent.visibility ? 'outline' : 'default',
-                      size: 'sm',
-                    }),
+                    buttonVariants({ variant: talent.visibility ? 'outline' : 'default', size: 'sm' }),
                     'w-full gap-1.5 text-xs',
                   )}
                 >
-                  {talent.visibility ? (
-                    <>
-                      <EyeOff className="size-3.5" aria-hidden />
-                      Masquer mon profil
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="size-3.5" aria-hidden />
-                      Activer la visibilité
-                    </>
-                  )}
+                  {talent.visibility
+                    ? <><EyeOff className="size-3.5" aria-hidden />Masquer mon profil</>
+                    : <><Eye className="size-3.5" aria-hidden />Activer la visibilité</>}
                 </button>
               </form>
-            </div>
+            </SideCard>
 
             {/* Preferences */}
-            {(talent.remote_preference ||
-              talent.expected_salary_range ||
-              (talent.job_type && talent.job_type.length > 0)) && (
-              <div className="rounded-xl border border-border bg-card p-4">
-                <p className="mb-3 font-heading text-sm font-semibold text-foreground">
-                  Préférences
-                </p>
-                <dl className="space-y-2.5 text-xs">
+            {(talent.remote_preference || talent.expected_salary_range || (talent.job_type?.length ?? 0) > 0) && (
+              <SideCard title="Préférences">
+                <dl className="space-y-3 text-[12px]">
                   {talent.remote_preference && (
                     <div>
                       <dt className="text-muted-foreground">Mode de travail</dt>
-                      <dd className="mt-0.5 font-medium text-foreground">
-                        {talent.remote_preference}
-                      </dd>
+                      <dd className="mt-0.5 font-medium text-foreground">{talent.remote_preference}</dd>
                     </div>
                   )}
                   {talent.expected_salary_range && (
                     <div>
                       <dt className="text-muted-foreground">Salaire souhaité</dt>
-                      <dd className="mt-0.5 font-medium text-foreground">
-                        {talent.expected_salary_range}
-                      </dd>
+                      <dd className="mt-0.5 font-medium text-foreground">{talent.expected_salary_range}</dd>
                     </div>
                   )}
                   {talent.job_type && talent.job_type.length > 0 && (
                     <div>
-                      <dt className="mb-1 text-muted-foreground">Contrats recherchés</dt>
+                      <dt className="mb-1.5 text-muted-foreground">Contrats recherchés</dt>
                       <dd className="flex flex-wrap gap-1">
                         {talent.job_type.map((t) => (
-                          <span
-                            key={t}
-                            className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground"
-                          >
-                            {t}
-                          </span>
+                          <span key={t} className="badge-contract">{t}</span>
                         ))}
                       </dd>
                     </div>
                   )}
                 </dl>
-              </div>
+              </SideCard>
             )}
 
             {/* External links */}
             {(talent.linkedin_url || talent.github_url || talent.portfolio_url) && (
-              <div className="rounded-xl border border-border bg-card p-4">
-                <p className="mb-3 font-heading text-sm font-semibold text-foreground">Liens</p>
+              <SideCard title="Liens">
                 <div className="flex flex-col gap-2">
-                  {talent.linkedin_url && (
+                  {[
+                    { url: talent.linkedin_url, label: 'LinkedIn',  icon: ExternalLink },
+                    { url: talent.github_url,   label: 'GitHub',    icon: Code2 },
+                    { url: talent.portfolio_url, label: 'Portfolio', icon: Globe },
+                  ].filter(({ url }) => !!url).map(({ url, label, icon: Icon }) => (
                     <a
-                      href={talent.linkedin_url}
+                      key={label}
+                      href={url!}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={cn(
-                        buttonVariants({ variant: 'outline', size: 'sm' }),
-                        'justify-start gap-1.5 text-xs',
-                      )}
+                      className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'justify-start gap-1.5 text-xs')}
                     >
-                      <ExternalLink className="size-3.5" aria-hidden />
-                      LinkedIn
+                      <Icon className="size-3.5" aria-hidden />
+                      {label}
                     </a>
-                  )}
-                  {talent.github_url && (
-                    <a
-                      href={talent.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn(
-                        buttonVariants({ variant: 'outline', size: 'sm' }),
-                        'justify-start gap-1.5 text-xs',
-                      )}
-                    >
-                      <Code2 className="size-3.5" aria-hidden />
-                      GitHub
-                    </a>
-                  )}
-                  {talent.portfolio_url && (
-                    <a
-                      href={talent.portfolio_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn(
-                        buttonVariants({ variant: 'outline', size: 'sm' }),
-                        'justify-start gap-1.5 text-xs',
-                      )}
-                    >
-                      <Globe className="size-3.5" aria-hidden />
-                      Portfolio
-                    </a>
-                  )}
+                  ))}
                 </div>
-              </div>
+              </SideCard>
             )}
 
             {/* Quick nav */}
-            <div className="rounded-xl border border-border bg-card p-4">
-              <p className="mb-3 font-heading text-sm font-semibold text-foreground">
-                Mon espace
-              </p>
+            <SideCard title="Mon espace">
               <nav className="flex flex-col gap-1">
-                <Link
-                  href="/talent/candidatures"
-                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Briefcase className="size-3.5" aria-hidden />
-                  Mes candidatures
-                </Link>
-                <Link
-                  href="/offres"
-                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Briefcase className="size-3.5" aria-hidden />
-                  Voir les offres
-                </Link>
+                {[
+                  { href: '/talent/candidatures', label: 'Mes candidatures', icon: Briefcase },
+                  { href: '/offres', label: 'Voir les offres', icon: Briefcase },
+                ].map(({ href, label, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-[var(--apebi-bg-alt)] hover:text-foreground"
+                  >
+                    <Icon className="size-3.5" aria-hidden />
+                    {label}
+                  </Link>
+                ))}
               </nav>
-            </div>
+            </SideCard>
           </aside>
         </div>
       </main>

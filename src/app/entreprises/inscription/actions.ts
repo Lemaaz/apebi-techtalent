@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { slugify } from '@/lib/utils'
 
 const schema = z.object({
   name: z.string().min(2, 'Nom requis (2 caractères min)').max(100),
@@ -31,18 +32,6 @@ const schema = z.object({
 })
 
 export type CreateCompanyState = { error: string | null }
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .slice(0, 60)
-}
 
 export async function createCompanyProfile(
   _: CreateCompanyState,
@@ -95,41 +84,26 @@ export async function createCompanyProfile(
 
   const slug = existingSlug ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug
 
-  // Create company_profile
-  // NOTE: apebi_member_since is string | null in DB schema
-  const { data: company, error: companyError } = await supabase
-    .from('company_profiles')
-    .insert({
-      name: d.name,
-      slug,
-      sector: d.sector,
-      city: d.city,
-      website_url: d.website_url || null,
-      linkedin_url: d.linkedin_url || null,
-      description: d.description,
-      company_size: d.company_size,
-      apebi_member_since: d.apebi_member_since || null,
-      validation_status: 'pending',
-    })
-    .select('id')
-    .single()
-
-  if (companyError || !company) {
-    return { error: "Erreur lors de la création de l'entreprise. Réessayez." }
-  }
-
-  // Create company_member for the registrant
-  const { error: memberError } = await supabase.from('company_members').insert({
-    company_id: company.id,
-    user_id: user.id,
-    role_in_company: d.contact_role ?? 'Recruteur',
-    full_name: d.contact_full_name,
+  // Atomic creation via RPC (fixes race condition — company + member in one transaction)
+  const { error: rpcError } = await supabase.rpc('create_company_with_member', {
+    p_name: d.name,
+    p_slug: slug,
+    p_sector: d.sector,
+    p_city: d.city ?? undefined,
+    p_website_url: d.website_url || undefined,
+    p_linkedin_url: d.linkedin_url || undefined,
+    p_description: d.description ?? undefined,
+    p_company_size: d.company_size ?? undefined,
+    p_apebi_member_since: d.apebi_member_since ?? undefined,
+    p_contact_full_name: d.contact_full_name,
+    p_contact_role: d.contact_role ?? undefined,
   })
 
-  if (memberError) {
-    // Rollback company
-    await supabase.from('company_profiles').delete().eq('id', company.id)
-    return { error: "Erreur lors de la création du compte recruteur. Réessayez." }
+  if (rpcError) {
+    if (rpcError.message.includes('already_member')) {
+      return { error: 'Votre compte est déjà associé à une entreprise.' }
+    }
+    return { error: "Erreur lors de la création de l'entreprise. Réessayez." }
   }
 
   redirect('/entreprise/dashboard?inscription=success')

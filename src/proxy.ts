@@ -1,9 +1,10 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED_TALENT_ROUTES = ['/talent']
-const PROTECTED_RECRUITER_ROUTES = ['/entreprise']
-const PROTECTED_ADMIN_ROUTES = ['/admin']
+// Trailing slash ensures /entreprises (public) is never caught by /entreprise (private)
+const PROTECTED_TALENT_ROUTES = ['/talent/']
+const PROTECTED_RECRUITER_ROUTES = ['/entreprise/']
+const PROTECTED_ADMIN_ROUTES = ['/admin', '/admin/']
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })

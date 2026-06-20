@@ -2,6 +2,7 @@
 'use client'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,7 +11,8 @@ import { updatePassword, type UpdatePasswordState } from './actions'
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
-    <button type="submit" disabled={pending} className={cn(buttonVariants(), 'w-full')}>
+    <button type="submit" disabled={pending} className={cn(buttonVariants(), 'w-full gap-2')}>
+      {pending && <Loader2 className="size-4 animate-spin" aria-hidden />}
       {pending ? 'Enregistrement…' : 'Mettre à jour le mot de passe'}
     </button>
   )
@@ -64,9 +66,14 @@ export function UpdatePasswordForm() {
         </div>
 
         {state.error && (
-          <p role="alert" className="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600">
-            {state.error}
-          </p>
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-lg px-3 py-2.5 text-sm"
+            style={{ background: 'var(--color-error-muted)', color: 'var(--color-error-text)', border: '1px solid var(--color-error)' }}
+          >
+            <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
+            <span>{state.error}</span>
+          </div>
         )}
 
         <SubmitButton />

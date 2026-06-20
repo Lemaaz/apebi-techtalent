@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard } from 'lucide-react'
+import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { signOut } from '@/app/actions'
@@ -31,7 +31,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               onKeyDown={(e) => { if (e.key === 'Escape') setDropdownOpen(false) }}
-              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-muted"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-foreground hover:bg-muted"
               aria-expanded={dropdownOpen}
               aria-label={`Menu de ${user.email}`}
             >
@@ -63,7 +63,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                     href={dashboardHref}
                     onClick={() => setDropdownOpen(false)}
                     role="menuitem"
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted"
                   >
                     {user.role === 'entreprise' ? (
                       <LayoutDashboard className="size-4 text-muted-foreground" aria-hidden />
@@ -72,6 +72,17 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                     )}
                     {dashboardLabel}
                   </Link>
+                  {user.role === 'entreprise' && (
+                    <Link
+                      href="/entreprise/recherche-talents"
+                      onClick={() => setDropdownOpen(false)}
+                      role="menuitem"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-muted"
+                    >
+                      <Search className="size-4 text-muted-foreground" aria-hidden />
+                      Recherche talents
+                    </Link>
+                  )}
                   <form action={signOut}>
                     <button
                       type="submit"

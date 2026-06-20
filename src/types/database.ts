@@ -633,6 +633,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_company_with_member: {
+        Args: {
+          p_apebi_member_since?: string
+          p_city?: string
+          p_company_size?: string
+          p_contact_full_name?: string
+          p_contact_role?: string
+          p_description?: string
+          p_linkedin_url?: string
+          p_name: string
+          p_sector: string
+          p_slug: string
+          p_website_url?: string
+        }
+        Returns: Json
+      }
       is_admin: { Args: never; Returns: boolean }
       is_company_member: { Args: { company_uuid: string }; Returns: boolean }
     }

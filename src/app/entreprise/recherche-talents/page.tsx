@@ -1,0 +1,287 @@
+import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { Search, Users, SlidersHorizontal } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { Navbar } from '@/components/layout/navbar'
+import { Footer } from '@/components/layout/footer'
+import { EmptyState } from '@/components/ui/empty-state'
+import { TalentCard, type TalentCardData } from '@/components/talent/talent-card'
+
+export const metadata: Metadata = { title: 'Recherche de talents | APEBI TechTalent' }
+
+type DomainRow = { id: string; code: string; name_fr: string }
+
+type TalentRow = {
+  id: string
+  first_name: string
+  last_name: string
+  title: string | null
+  city: string | null
+  seniority_level: string | null
+  availability: string | null
+  avatar_url: string | null
+  talent_skills: Array<{ skills: { name: string } | null }>
+}
+
+type SearchParams = Promise<{
+  q?: string
+  seniority?: string
+  availability?: string
+  remote?: string
+  domain?: string
+}>
+
+const SENIORITY_OPTIONS = ['Junior', 'Mid', 'Senior', 'Lead', 'Expert']
+const AVAILABILITY_OPTIONS = [
+  { value: 'Immédiate',      label: 'Disponible' },
+  { value: '1 mois',         label: 'Dans 1 mois' },
+  { value: '3 mois',         label: 'Dans 3 mois' },
+]
+const REMOTE_OPTIONS = ['Full remote', 'Hybride', 'Présentiel']
+
+const SELECT_CLS =
+  'rounded-lg border bg-card px-3 py-2 font-sans text-[13px] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)] focus:border-[var(--apebi-cyan)] cursor-pointer'
+
+export default async function RechercheTalentsPage({ searchParams }: { searchParams: SearchParams }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/connexion')
+
+  const { data: member } = await supabase
+    .from('company_members')
+    .select('company_id')
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (!member) redirect('/entreprise/dashboard')
+
+  const { q, seniority, availability, remote, domain } = await searchParams
+
+  const { data: allDomains = [] } = await supabase
+    .from('domains')
+    .select('id, code, name_fr')
+    .order('name_fr')
+
+  // ── Build talent query ───────────────────────────────────
+  let query = supabase
+    .from('talent_profiles')
+    .select(
+      `id, first_name, last_name, title, city, seniority_level,
+       availability, avatar_url,
+       talent_skills ( skills ( name ) )`,
+    )
+    .eq('validation_status', 'approved')
+    .eq('visibility', true)
+    .order('created_at', { ascending: false })
+
+  if (q)            query = query.ilike('title', `%${q}%`)
+  if (seniority)    query = query.eq('seniority_level', seniority)
+  if (availability) query = query.eq('availability', availability)
+  if (remote)       query = query.eq('remote_preference', remote)
+
+  if (domain) {
+    const matchDomain = (allDomains as DomainRow[]).find((d) => d.code === domain)
+    if (matchDomain) {
+      const { data: domainSkills } = await supabase
+        .from('skills').select('id').eq('domain_id', matchDomain.id)
+      const skillIds = (domainSkills ?? []).map((s: { id: string }) => s.id)
+      if (skillIds.length > 0) {
+        const { data: talentMatches } = await supabase
+          .from('talent_skills').select('talent_id').in('skill_id', skillIds)
+        const talentIds = [...new Set((talentMatches ?? []).map((t: { talent_id: string }) => t.talent_id))]
+        query = query.in('id', talentIds.length > 0 ? talentIds : ['__no_match__'])
+      } else {
+        query = query.in('id', ['__no_match__'])
+      }
+    } else {
+      query = query.in('id', ['__no_match__'])
+    }
+  }
+
+  const { data: rawTalents = [] } = await query.limit(50).returns<TalentRow[]>()
+
+  // Map to TalentCardData
+  const talents: TalentCardData[] = (rawTalents ?? []).map((t) => ({
+    id: t.id,
+    first_name: t.first_name,
+    last_name: t.last_name,
+    title: t.title,
+    city: t.city,
+    avatar_url: t.avatar_url,
+    skills: (t.talent_skills ?? []).map((ts) => ts.skills?.name).filter(Boolean) as string[],
+    availability: t.availability,
+    seniority_level: t.seniority_level,
+  }))
+
+  const hasFilters = !!(q || seniority || availability || remote || domain)
+  const resultCount = talents.length
+
+  return (
+    <div className="flex min-h-dvh flex-col">
+      <Navbar />
+
+      <main className="flex-1">
+        {/* ── Header + search ────────────────────────── */}
+        <div
+          className="border-b px-4 py-6 sm:px-6"
+          style={{ background: 'var(--apebi-bg-alt)', borderColor: 'var(--apebi-border)' }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <p className="text-overline mb-1">Espace recruteur</p>
+                <h1 className="font-heading text-xl font-semibold text-foreground">
+                  Recherche de talents
+                </h1>
+              </div>
+              <Link
+                href="/entreprise/dashboard"
+                className="font-heading text-[12px] font-medium text-muted-foreground hover:text-foreground"
+              >
+                ← Dashboard
+              </Link>
+            </div>
+
+            <form method="GET" className="flex flex-col gap-3">
+              {/* Search bar */}
+              <div className="relative">
+                <Search
+                  className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden
+                />
+                <input
+                  name="q"
+                  defaultValue={q}
+                  placeholder="Titre, technologie, rôle…"
+                  className="w-full rounded-lg border bg-card py-2.5 pl-9 pr-4 font-sans text-[14px] transition-colors focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]"
+                  style={{ borderColor: 'var(--apebi-border)' }}
+                  aria-label="Rechercher un talent"
+                />
+              </div>
+
+              {/* Filters row */}
+              <div className="flex flex-wrap items-center gap-2">
+                <SlidersHorizontal className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+
+                {(allDomains as DomainRow[]).length > 0 && (
+                  <select
+                    name="domain"
+                    defaultValue={domain ?? ''}
+                    className={SELECT_CLS}
+                    style={{ borderColor: domain ? 'var(--apebi-cyan)' : 'var(--apebi-border)' }}
+                    aria-label="Filtrer par domaine"
+                  >
+                    <option value="">Tous les domaines</option>
+                    {(allDomains as DomainRow[]).map((d) => (
+                      <option key={d.code} value={d.code}>{d.name_fr}</option>
+                    ))}
+                  </select>
+                )}
+
+                <select
+                  name="seniority"
+                  defaultValue={seniority ?? ''}
+                  className={SELECT_CLS}
+                  style={{ borderColor: seniority ? 'var(--apebi-cyan)' : 'var(--apebi-border)' }}
+                  aria-label="Filtrer par niveau"
+                >
+                  <option value="">Tous les niveaux</option>
+                  {SENIORITY_OPTIONS.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+
+                <select
+                  name="availability"
+                  defaultValue={availability ?? ''}
+                  className={SELECT_CLS}
+                  style={{ borderColor: availability ? 'var(--apebi-cyan)' : 'var(--apebi-border)' }}
+                  aria-label="Filtrer par disponibilité"
+                >
+                  <option value="">Toute disponibilité</option>
+                  {AVAILABILITY_OPTIONS.map(({ value, label }) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+
+                <select
+                  name="remote"
+                  defaultValue={remote ?? ''}
+                  className={SELECT_CLS}
+                  style={{ borderColor: remote ? 'var(--apebi-cyan)' : 'var(--apebi-border)' }}
+                  aria-label="Filtrer par mode de travail"
+                >
+                  <option value="">Tout mode de travail</option>
+                  {REMOTE_OPTIONS.map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+
+                <button
+                  type="submit"
+                  className="rounded-lg px-4 py-2 font-heading text-[13px] font-semibold text-white transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--apebi-cyan)]"
+                  style={{ background: 'var(--apebi-cyan)' }}
+                >
+                  Rechercher
+                </button>
+
+                {hasFilters && (
+                  <Link
+                    href="/entreprise/recherche-talents"
+                    className="rounded-lg border px-3 py-2 font-heading text-[13px] font-medium text-muted-foreground transition-colors hover:bg-card"
+                    style={{ borderColor: 'var(--apebi-border)' }}
+                  >
+                    Réinitialiser
+                  </Link>
+                )}
+              </div>
+            </form>
+
+            {/* Result count */}
+            <p className="mt-3 font-sans text-[12px] text-muted-foreground">
+              <span className="font-semibold text-foreground">{resultCount}</span>{' '}
+              profil{resultCount !== 1 ? 's' : ''} disponible{resultCount !== 1 ? 's' : ''}
+              {hasFilters && ' (filtrés)'}
+            </p>
+          </div>
+        </div>
+
+        {/* ── Results grid ──────────────────────────── */}
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+          {talents.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title={hasFilters ? 'Aucun profil trouvé' : 'Aucun profil disponible'}
+              description={
+                hasFilters
+                  ? 'Essayez des filtres moins restrictifs ou réinitialisez la recherche.'
+                  : 'Les profils talents validés apparaîtront ici.'
+              }
+              action={
+                hasFilters
+                  ? { label: 'Réinitialiser les filtres', href: '/entreprise/recherche-talents' }
+                  : undefined
+              }
+              variant={hasFilters ? 'search' : 'default'}
+            />
+          ) : (
+            <ul
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              role="list"
+              aria-label={`${resultCount} profil${resultCount > 1 ? 's' : ''} talents`}
+            >
+              {talents.map((talent) => (
+                <li key={talent.id}>
+                  <TalentCard {...talent} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}

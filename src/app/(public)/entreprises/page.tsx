@@ -6,6 +6,7 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { CompanyCard } from '@/components/company/company-card'
 import { CompanyFilters } from '@/components/company/company-filters'
+import { EmptyState } from '@/components/ui/empty-state'
 
 // ── Metadata ─────────────────────────────────────────────────
 
@@ -82,26 +83,6 @@ async function fetchCompanies(params: {
   return data ?? []
 }
 
-// ── Empty state ───────────────────────────────────────────────
-
-function EmptyState({ filtered }: { filtered: boolean }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-muted">
-        <Building2 className="size-7 text-muted-foreground" aria-hidden />
-      </div>
-      <p className="font-heading text-sm font-semibold text-foreground">
-        {filtered ? 'Aucune entreprise trouvée' : 'Aucune entreprise pour le moment'}
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">
-        {filtered
-          ? "Essayez d'autres filtres ou effacez la recherche."
-          : "Les entreprises membres APEBI apparaîtront ici une fois validées."}
-      </p>
-    </div>
-  )
-}
-
 // ── Page ─────────────────────────────────────────────────────
 
 export default async function EntreprisesPage({
@@ -125,16 +106,14 @@ export default async function EntreprisesPage({
 
       <main className="flex-1">
         {/* ── Header + filters ───────────────────── */}
-        <div className="border-b border-border bg-muted/30 px-4 py-6 sm:px-6">
+        <div className="border-b border-white/8 bg-[#0F0F0F] px-4 py-6 sm:px-6">
           <div className="mx-auto max-w-7xl">
-            <h1 className="font-heading text-xl font-semibold text-foreground">
+            <h1 className="font-heading text-xl font-semibold text-white">
               Entreprises membres APEBI
             </h1>
 
-            {/* CompanyFilters is a Client Component — wrap in Suspense to avoid
-                SSR mismatch from useSearchParams */}
             <div className="mt-4">
-              <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-muted" />}>
+              <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-white/10" />}>
                 <CompanyFilters total={companies.length} />
               </Suspense>
             </div>
@@ -144,7 +123,16 @@ export default async function EntreprisesPage({
         {/* ── Company grid ───────────────────────── */}
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
           {companies.length === 0 ? (
-            <EmptyState filtered={hasFilters} />
+            <EmptyState
+              icon={Building2}
+              title={hasFilters ? 'Aucune entreprise trouvée' : 'Aucune entreprise pour le moment'}
+              description={
+                hasFilters
+                  ? "Essayez d'autres filtres ou effacez la recherche."
+                  : 'Les entreprises membres APEBI apparaîtront ici une fois validées.'
+              }
+              action={hasFilters ? { label: 'Effacer les filtres', href: '/entreprises' } : undefined}
+            />
           ) : (
             <ul
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"

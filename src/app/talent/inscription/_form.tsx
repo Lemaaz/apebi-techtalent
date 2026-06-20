@@ -2,11 +2,12 @@
 
 import { useState, useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { ChevronRight, ChevronLeft, Check, Loader2 } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Check, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { StepIndicator } from '@/components/ui/step-indicator'
 import { createTalentProfile, type CreateProfileState } from './actions'
 
 type DomainWithSkills = {
@@ -51,34 +52,11 @@ function SubmitButton() {
   )
 }
 
-function StepIndicator({ current }: { current: 1 | 2 | 3 }) {
-  return (
-    <div className="mb-6 flex items-center gap-2" aria-label="Étapes">
-      {([1, 2, 3] as const).map((s) => (
-        <div key={s} className="flex items-center gap-2">
-          <div
-            className={cn(
-              'flex size-6 items-center justify-center rounded-full text-[11px] font-semibold',
-              s < current
-                ? 'bg-primary text-white'
-                : s === current
-                  ? 'bg-primary/10 text-primary ring-2 ring-primary'
-                  : 'bg-muted text-muted-foreground',
-            )}
-          >
-            {s < current ? <Check className="size-3" /> : s}
-          </div>
-          {s < 3 && (
-            <div
-              className={cn('h-px w-8', s < current ? 'bg-primary' : 'bg-border')}
-              aria-hidden
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
+const INSCRIPTION_STEPS = [
+  { label: 'Identité',     description: 'Prénom, nom, titre' },
+  { label: 'Compétences',  description: 'Technologies et domaines' },
+  { label: 'Préférences',  description: 'Disponibilité et liens' },
+]
 
 export function TalentInscriptionForm({ domains }: { domains: DomainWithSkills[] }) {
   const [step, setStep] = useState<1 | 2 | 3>(1)
@@ -107,7 +85,7 @@ export function TalentInscriptionForm({ domains }: { domains: DomainWithSkills[]
   if (step === 1) {
     return (
       <div>
-        <StepIndicator current={1} />
+        <StepIndicator steps={INSCRIPTION_STEPS} currentStep={0} className="mb-6" />
         <h2 className="mb-5 font-heading text-base font-semibold text-foreground">
           Votre identité
         </h2>
@@ -191,7 +169,7 @@ export function TalentInscriptionForm({ domains }: { domains: DomainWithSkills[]
   if (step === 2) {
     return (
       <div>
-        <StepIndicator current={2} />
+        <StepIndicator steps={INSCRIPTION_STEPS} currentStep={1} className="mb-6" />
         <h2 className="mb-1 font-heading text-base font-semibold text-foreground">
           Vos compétences
         </h2>
@@ -257,7 +235,7 @@ export function TalentInscriptionForm({ domains }: { domains: DomainWithSkills[]
   // ── Step 3: Préférences — le <form> réel ──────────────────────
   return (
     <div>
-      <StepIndicator current={3} />
+      <StepIndicator steps={INSCRIPTION_STEPS} currentStep={2} className="mb-6" />
       <h2 className="mb-5 font-heading text-base font-semibold text-foreground">
         Préférences &amp; liens
       </h2>
@@ -350,9 +328,14 @@ export function TalentInscriptionForm({ domains }: { domains: DomainWithSkills[]
         </div>
 
         {state.error && (
-          <p role="alert" className="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600">
-            {state.error}
-          </p>
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-lg px-3 py-2.5 text-sm"
+            style={{ background: 'var(--color-error-muted)', color: 'var(--color-error-text)', border: '1px solid var(--color-error)' }}
+          >
+            <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
+            <span>{state.error}</span>
+          </div>
         )}
 
         <div className="flex items-center justify-between pt-2">

@@ -24,7 +24,7 @@ export default async function ModifierProfilPage() {
   const { data: talent } = await supabase
     .from('talent_profiles')
     .select(
-      `id, first_name, last_name, title, bio, city, years_experience, seniority_level,
+      `id, avatar_url, first_name, last_name, title, bio, city, years_experience, seniority_level,
        availability, remote_preference, expected_salary_range, job_type,
        linkedin_url, github_url, portfolio_url,
        talent_skills ( skill_id ),

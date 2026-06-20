@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { slugify } from '@/lib/utils'
 
 const schema = z.object({
   title: z.string().min(3, 'Titre requis (3 car. min)').max(120),
@@ -13,25 +14,13 @@ const schema = z.object({
   city: z.string().max(80).optional(),
   remote_policy: z.enum(['Full remote', 'Hybride', 'Présentiel']).optional(),
   salary_range: z.string().max(60).optional(),
-  closes_at: z.string().optional(),
+  closes_at: z.coerce.date().optional(),
   skill_ids: z.array(z.string().uuid()).optional(),
   required_skill_ids: z.array(z.string().uuid()).optional(),
   publish_now: z.boolean().default(false),
 })
 
 export type CreateJobState = { error: string | null }
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .slice(0, 60)
-}
 
 export async function createJobPosting(
   _: CreateJobState,
@@ -96,7 +85,7 @@ export async function createJobPosting(
       city: d.city ?? null,
       remote_policy: d.remote_policy ?? null,
       salary_range: d.salary_range ?? null,
-      closes_at: d.closes_at ? new Date(d.closes_at).toISOString() : null,
+      closes_at: d.closes_at ? d.closes_at.toISOString() : null,
       status: d.publish_now ? 'active' : 'draft',
       published_at: d.publish_now ? now : null,
     })

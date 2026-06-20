@@ -134,7 +134,7 @@ export default function AProposPage() {
               d&apos;affaires agrégé de plus de 30 milliards de dirhams.
             </p>
             <a
-              href="https://apebi.ma"
+              href="https://apebi.org.ma/"
               target="_blank"
               rel="noopener noreferrer"
               className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-6 gap-1.5')}

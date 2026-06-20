@@ -3,7 +3,8 @@
 import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { sendNewApplicationEmail } from '@/lib/email'
 
 const schema = z.object({
   job_id: z.string().uuid('Offre invalide'),
@@ -82,6 +83,46 @@ export async function applyToJob(
     .eq('id', job.id)
 
   revalidatePath(`/offres`)
+
+  // NOT-02 — email au(x) recruteur(s) de l'entreprise
+  try {
+    const adminClient = createAdminClient()
+    const { data: jobFull } = await supabase
+      .from('job_postings')
+      .select('title, company_id, company_profiles(name)')
+      .eq('id', parsed.data.job_id)
+      .maybeSingle<{ title: string; company_id: string; company_profiles: { name: string } | null }>()
+
+    const { data: talentProfile } = await supabase
+      .from('talent_profiles')
+      .select('first_name, last_name')
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    if (jobFull && talentProfile) {
+      const { data: members } = await supabase
+        .from('company_members')
+        .select('user_id')
+        .eq('company_id', jobFull.company_id)
+
+      const recruiterIds = (members ?? []).map((m: { user_id: string }) => m.user_id)
+      if (recruiterIds.length > 0) {
+        const { data: authUsers } = await adminClient.auth.admin.listUsers()
+        const recruiterEmails = authUsers.users
+          .filter((u) => recruiterIds.includes(u.id) && !!u.email)
+          .map((u) => u.email as string)
+
+        await sendNewApplicationEmail({
+          talentName: `${talentProfile.first_name} ${talentProfile.last_name}`,
+          jobTitle: jobFull.title,
+          companyName: jobFull.company_profiles?.name ?? '',
+          recruiterEmails,
+        })
+      }
+    }
+  } catch (emailErr) {
+    console.error('[applyToJob] email error (non-blocking):', emailErr)
+  }
 
   return { error: null, success: true }
 }

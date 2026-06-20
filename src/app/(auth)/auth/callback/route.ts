@@ -30,7 +30,12 @@ export async function GET(request: Request) {
   // Pas de next → confirmation email → rediriger selon le rôle
   const { data: { user } } = await supabase.auth.getUser()
   const role = user?.user_metadata?.role as string | undefined
-  const destination = role === 'entreprise' ? '/entreprise/dashboard' : '/talent/profil'
 
+  // OAuth sans rôle défini → onboarding obligatoire (bug A2)
+  if (!role) {
+    return NextResponse.redirect(`${origin}/onboarding/choix-role`)
+  }
+
+  const destination = role === 'entreprise' ? '/entreprise/dashboard' : '/talent/profil'
   return NextResponse.redirect(`${origin}${destination}`)
 }

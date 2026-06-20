@@ -1,7 +1,6 @@
 // src/components/jobs/job-card.tsx
 import Link from 'next/link'
-import { MapPin, Clock, Wifi } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { MapPin, Wifi, Clock } from 'lucide-react'
 
 export type JobCardData = {
   id: string
@@ -31,105 +30,113 @@ function timeAgo(dateStr: string): string {
   return `Il y a ${Math.floor(diffDays / 30)} mois`
 }
 
-function CompanyInitials({ name }: { name: string }) {
+function CompanyAvatar({ name, logoUrl }: { name: string; logoUrl: string | null }) {
   const initials = name
     .split(/\s+/)
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('')
+
   return (
-    <div
-      aria-hidden
-      className="flex size-full items-center justify-center font-heading text-sm font-semibold text-primary"
-    >
-      {initials}
+    <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#00AFD2]/10">
+      {logoUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logoUrl} alt="" className="size-full object-contain" />
+      ) : (
+        <span className="font-heading text-xs font-semibold text-[#00AFD2]">{initials}</span>
+      )}
     </div>
   )
 }
 
+const CONTRACT_COLORS: Record<string, string> = {
+  CDI: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  CDD: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  Freelance: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  Stage: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  Alternance: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
+}
+
 export function JobCard({ job }: { job: JobCardData }) {
+  const contractCls =
+    CONTRACT_COLORS[job.contract_type] ??
+    'bg-white/5 text-white/60 border-white/10'
+
   return (
-    <Link href={`/offres/${job.slug}`}>
-      <Card className="h-full transition-all hover:shadow-sm hover:ring-1 hover:ring-primary/20">
-        <CardContent className="pt-5">
-          {/* Company row */}
-          <div className="mb-3 flex items-center gap-2.5">
-            <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
-              {job.company.logo_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={job.company.logo_url}
-                  alt={`Logo ${job.company.name}`}
-                  className="size-full object-contain"
-                />
-              ) : (
-                <CompanyInitials name={job.company.name} />
-              )}
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-xs text-muted-foreground">{job.company.name}</p>
-              <p className="truncate text-[11px] text-muted-foreground/70">{job.company.sector}</p>
-            </div>
-          </div>
-
-          {/* Title */}
-          <p className="font-heading text-sm font-semibold text-foreground line-clamp-2">
-            {job.title}
-          </p>
-
-          {/* Meta */}
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-            <span className="rounded-full bg-muted px-2 py-0.5 font-medium text-foreground">
-              {job.contract_type}
-            </span>
-            {job.seniority_level && <span>{job.seniority_level}</span>}
-            {job.city && (
-              <span className="flex items-center gap-0.5">
-                <MapPin className="size-3" aria-hidden />
-                {job.city}
-              </span>
-            )}
-            {job.remote_policy && (
-              <span className="flex items-center gap-0.5">
-                <Wifi className="size-3" aria-hidden />
-                {job.remote_policy}
-              </span>
+    <Link href={`/offres/${job.slug}`} className="group block h-full">
+      <article className="flex h-full flex-col rounded-xl border border-white/8 bg-[#141414] p-5 transition-all hover:border-[#00AFD2]/40 hover:bg-[#161616]">
+        {/* Company row */}
+        <div className="mb-3 flex items-center gap-2.5">
+          <CompanyAvatar name={job.company.name} logoUrl={job.company.logo_url} />
+          <div className="min-w-0">
+            <p className="truncate text-xs font-medium text-white/80">{job.company.name}</p>
+            {job.company.sector && (
+              <p className="truncate text-[11px] text-white/40">{job.company.sector}</p>
             )}
           </div>
+        </div>
 
-          {/* Skills */}
-          {job.skills.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1">
-              {job.skills.slice(0, 4).map((skill) => (
-                <span
-                  key={skill}
-                  className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] text-primary"
-                >
-                  {skill}
-                </span>
-              ))}
-              {job.skills.length > 4 && (
-                <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                  +{job.skills.length - 4}
-                </span>
-              )}
-            </div>
+        {/* Title */}
+        <p className="font-heading text-sm font-semibold leading-snug text-white line-clamp-2 group-hover:text-[#00AFD2] transition-colors">
+          {job.title}
+        </p>
+
+        {/* Meta badges */}
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+          <span
+            className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${contractCls}`}
+          >
+            {job.contract_type}
+          </span>
+          {job.seniority_level && (
+            <span className="text-xs text-white/50">{job.seniority_level}</span>
           )}
-
-          {/* Footer */}
-          <div className="mt-3 flex items-center justify-between">
-            {job.salary_range ? (
-              <span className="text-[11px] font-medium text-emerald-600">{job.salary_range}</span>
-            ) : (
-              <span />
-            )}
-            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-              <Clock className="size-3" aria-hidden />
-              {timeAgo(job.created_at)}
+          {job.city && (
+            <span className="flex items-center gap-0.5 text-xs text-white/50">
+              <MapPin className="size-3" aria-hidden />
+              {job.city}
             </span>
+          )}
+          {job.remote_policy && (
+            <span className="flex items-center gap-0.5 text-xs text-white/50">
+              <Wifi className="size-3" aria-hidden />
+              {job.remote_policy}
+            </span>
+          )}
+        </div>
+
+        {/* Skills */}
+        {job.skills.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {job.skills.slice(0, 4).map((skill) => (
+              <span
+                key={skill}
+                className="inline-flex items-center rounded-full border border-[#00AFD2]/20 bg-[#00AFD2]/8 px-2 py-0.5 text-[10px] font-medium text-[#00AFD2]"
+              >
+                {skill}
+              </span>
+            ))}
+            {job.skills.length > 4 && (
+              <span className="inline-flex items-center rounded-full border border-white/8 bg-white/5 px-2 py-0.5 text-[10px] text-white/40">
+                +{job.skills.length - 4}
+              </span>
+            )}
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        {/* Footer */}
+        <div className="mt-auto flex items-center justify-between pt-3">
+          {job.salary_range ? (
+            <span className="text-[11px] font-semibold text-emerald-400">{job.salary_range}</span>
+          ) : (
+            <span />
+          )}
+          <span className="flex items-center gap-1 text-[11px] text-white/35">
+            <Clock className="size-3" aria-hidden />
+            {timeAgo(job.created_at)}
+          </span>
+        </div>
+      </article>
     </Link>
   )
 }

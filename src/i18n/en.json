@@ -1,0 +1,85 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "apply": "Apply",
+    "view": "View",
+    "share": "Share",
+    "required": "Required field",
+    "optional": "Optional"
+  },
+  "nav": {
+    "companies": "Companies",
+    "jobs": "Job listings",
+    "about": "About",
+    "signin": "Sign in",
+    "signup": "Sign up",
+    "dashboard": "Dashboard",
+    "profile": "My profile",
+    "logout": "Log out"
+  },
+  "landing": {
+    "hero_title": "Connect with the tech talent building Morocco's digital future",
+    "hero_subtitle": "The official APEBI platform connecting member companies with Moroccan tech talent.",
+    "cta_hire": "I'm hiring",
+    "cta_work": "I'm looking for a job",
+    "stats_companies": "member companies",
+    "stats_talents": "talent profiles",
+    "stats_jobs": "active listings",
+    "how_it_works": "How it works",
+    "for_companies": "For companies",
+    "for_talents": "For talents"
+  },
+  "company": {
+    "member_badge": "APEBI Member",
+    "label_badge": "APEBI TechTalent Label",
+    "active_jobs": "active listings",
+    "all_jobs": "View all listings",
+    "spontaneous": "Spontaneous application",
+    "size": "Size",
+    "sector": "Sector",
+    "city": "City",
+    "member_since": "Member since"
+  },
+  "job": {
+    "apply": "Apply",
+    "save": "Save",
+    "contract": "Contract",
+    "location": "Location",
+    "remote": "Remote",
+    "salary": "Salary",
+    "level": "Level",
+    "skills": "Required skills",
+    "posted": "Posted on",
+    "closes": "Closes on",
+    "applications": "applications"
+  },
+  "talent": {
+    "availability": "Availability",
+    "experience": "years of experience",
+    "skills": "Skills",
+    "complete_profile": "Complete profile",
+    "profile_visibility": "Profile visibility",
+    "profile_visible": "Profile visible to recruiters",
+    "profile_hidden": "Profile hidden"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "sent": "Sent",
+    "viewed": "Viewed",
+    "shortlisted": "Shortlisted",
+    "accepted": "Accepted",
+    "active": "Active",
+    "closed": "Closed"
+  }
+}

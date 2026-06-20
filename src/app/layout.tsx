@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Poppins, Hind } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -33,16 +35,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <body className={`${poppins.variable} ${hind.variable} font-hind antialiased`}>
-        {children}
-        <Toaster position="bottom-right" richColors />
+    <html lang={locale} suppressHydrationWarning>
+      <body className={`${poppins.variable} ${hind.variable} font-sans antialiased`}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+          <Toaster position="bottom-right" richColors />
+        </NextIntlClientProvider>
       </body>
     </html>
   )

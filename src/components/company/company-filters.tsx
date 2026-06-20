@@ -4,15 +4,6 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useTransition, useCallback } from 'react'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
-// ── Static filter options ────────────────────────────────────
 
 const SECTORS = [
   'Cloud & Infrastructure',
@@ -34,8 +25,6 @@ const SIZES = [
   { value: '201-500', label: '201 – 500 employés' },
   { value: '500+', label: '500+ employés' },
 ] as const
-
-// ── Helpers ──────────────────────────────────────────────────
 
 function useFilters() {
   const router = useRouter()
@@ -75,7 +64,8 @@ function useFilters() {
   return { current, push, reset, hasFilters, isPending }
 }
 
-// ── Component ────────────────────────────────────────────────
+const SELECT_CLASS =
+  'h-8 rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-sm text-white appearance-none focus:border-[#00AFD2]/50 focus:outline-none focus:ring-2 focus:ring-[#00AFD2]/30'
 
 export function CompanyFilters({ total }: { total: number }) {
   const { current, push, reset, hasFilters, isPending } = useFilters()
@@ -94,7 +84,7 @@ export function CompanyFilters({ total }: { total: number }) {
         <label className="relative flex flex-1 min-w-48 items-center">
           <span className="sr-only">Rechercher une entreprise</span>
           <Search
-            className="pointer-events-none absolute left-3 size-4 text-muted-foreground"
+            className="pointer-events-none absolute left-3 size-4 text-white/40"
             aria-hidden
           />
           <input
@@ -110,47 +100,39 @@ export function CompanyFilters({ total }: { total: number }) {
               const val = e.target.value.trim()
               if (val !== current.q) push({ q: val })
             }}
-            className="h-8 w-full rounded-lg border border-input bg-transparent py-2 pl-9 pr-3 text-sm placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="h-8 w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/35 focus:border-[#00AFD2]/50 focus:outline-none focus:ring-2 focus:ring-[#00AFD2]/30"
           />
         </label>
 
         {/* Sector select */}
-        <Select
-          value={current.sector || undefined}
-          onValueChange={(val) => push({ sector: val ?? '' })}
-        >
-          <SelectTrigger className="w-52">
-            <SlidersHorizontal className="size-3.5 text-muted-foreground" aria-hidden />
-            <SelectValue placeholder="Tous secteurs" />
-          </SelectTrigger>
-          <SelectContent>
-            {/* null item to clear */}
-            <SelectItem value="">Tous secteurs</SelectItem>
+        <div className="relative flex items-center">
+          <SlidersHorizontal
+            className="pointer-events-none absolute left-2.5 size-3.5 text-white/40"
+            aria-hidden
+          />
+          <select
+            value={current.sector}
+            onChange={(e) => push({ sector: e.target.value })}
+            className={cn(SELECT_CLASS, 'pl-8 pr-8 w-52')}
+          >
+            <option className="bg-[#1a1a1a] text-white" value="">Tous secteurs</option>
             {SECTORS.map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
-              </SelectItem>
+              <option key={s} className="bg-[#1a1a1a] text-white" value={s}>{s}</option>
             ))}
-          </SelectContent>
-        </Select>
+          </select>
+        </div>
 
         {/* Size select */}
-        <Select
-          value={current.size || undefined}
-          onValueChange={(val) => push({ size: val ?? '' })}
+        <select
+          value={current.size}
+          onChange={(e) => push({ size: e.target.value })}
+          className={cn(SELECT_CLASS, 'pr-8 w-44')}
         >
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="Toute taille" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">Toute taille</SelectItem>
-            {SIZES.map(({ value, label }) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          <option className="bg-[#1a1a1a] text-white" value="">Toute taille</option>
+          {SIZES.map(({ value, label }) => (
+            <option key={value} className="bg-[#1a1a1a] text-white" value={value}>{label}</option>
+          ))}
+        </select>
 
         {/* Label toggle */}
         <button
@@ -159,8 +141,8 @@ export function CompanyFilters({ total }: { total: number }) {
           className={cn(
             'inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-colors',
             current.label
-              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20'
-              : 'border-border bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
+              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+              : 'border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white',
           )}
           aria-pressed={current.label}
         >
@@ -172,7 +154,7 @@ export function CompanyFilters({ total }: { total: number }) {
           <button
             type="button"
             onClick={reset}
-            className="flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-white/40 hover:bg-white/8 hover:text-white"
           >
             <X className="size-3.5" aria-hidden />
             Effacer
@@ -181,7 +163,7 @@ export function CompanyFilters({ total }: { total: number }) {
       </div>
 
       {/* Results count */}
-      <p className="mt-3 text-xs text-muted-foreground">
+      <p className="mt-3 text-xs text-white/40">
         {total} entreprise{total !== 1 ? 's' : ''}
         {hasFilters ? ' trouvée' + (total !== 1 ? 's' : '') : ''}
       </p>

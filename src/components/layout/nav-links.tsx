@@ -1,16 +1,18 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-
-const NAV_LINKS = [
-  { href: '/entreprises', label: 'Entreprises' },
-  { href: '/offres', label: "Offres d'emploi" },
-  { href: '/a-propos', label: 'À propos' },
-]
 
 export function NavLinks({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname()
+  const t = useTranslations('nav')
+
+  const NAV_LINKS = [
+    { href: '/entreprises', label: t('companies') },
+    { href: '/offres', label: t('jobs') },
+    { href: '/a-propos', label: t('about') },
+  ]
 
   if (mobile) {
     return (

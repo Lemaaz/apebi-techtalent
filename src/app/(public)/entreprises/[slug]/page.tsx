@@ -13,8 +13,6 @@ import {
   Briefcase,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { JobListItem, type JobListItemData } from '@/components/company/job-list-item'
@@ -119,7 +117,7 @@ function CompanyInitials({ name }: { name: string }) {
   return (
     <div
       aria-hidden
-      className="flex size-full items-center justify-center font-heading text-xl font-semibold text-primary"
+      className="flex size-full items-center justify-center font-heading text-xl font-semibold text-[#00AFD2]"
     >
       {initials}
     </div>
@@ -139,15 +137,15 @@ function SizeLabel(size: string | null) {
 
 function EmptyJobs() {
   return (
-    <div className="flex flex-col items-center rounded-xl border border-dashed border-border py-10 text-center">
-      <Briefcase className="mb-3 size-8 text-muted-foreground" aria-hidden />
-      <p className="font-heading text-sm font-semibold text-foreground">Aucune offre en ce moment</p>
-      <p className="mt-1 text-xs text-muted-foreground">
+    <div className="flex flex-col items-center rounded-xl border border-dashed border-white/15 py-10 text-center">
+      <Briefcase className="mb-3 size-8 text-white/25" aria-hidden />
+      <p className="font-heading text-sm font-semibold text-white">Aucune offre en ce moment</p>
+      <p className="mt-1 text-xs text-white/45">
         Consultez toutes les offres de l&apos;écosystème APEBI.
       </p>
       <Link
         href="/offres"
-        className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-4 text-xs')}
+        className="mt-4 inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
       >
         Voir toutes les offres
       </Link>
@@ -163,7 +161,6 @@ export default async function EntreprisePage({ params }: { params: Params }) {
 
   if (!company) notFound()
 
-  // Map raw job data to JobListItemData
   const jobs: JobListItemData[] = (company.job_postings ?? []).map((j) => ({
     id: j.id,
     title: j.title,
@@ -203,11 +200,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
         />
 
         {/* ── Company header ──────────────────────── */}
-        <div className="border-b border-border bg-background px-4 pb-6 sm:px-6">
+        <div className="border-b border-white/8 bg-[#0F0F0F] px-4 pb-6 sm:px-6">
           <div className="mx-auto max-w-7xl">
 
             {/* Logo — overlaps banner */}
-            <div className="-mt-7 mb-4 size-14 overflow-hidden rounded-xl border-2 border-background bg-background shadow-sm">
+            <div className="-mt-7 mb-4 size-14 overflow-hidden rounded-xl border-2 border-[#0F0F0F] bg-[#141414] shadow-sm">
               {company.logo_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -224,15 +221,15 @@ export default async function EntreprisePage({ params }: { params: Params }) {
               {/* Name + meta */}
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="font-heading text-xl font-bold text-foreground">{company.name}</h1>
+                  <h1 className="font-heading text-xl font-bold text-white">{company.name}</h1>
                   {company.is_featured && (
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                    <span className="rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-[11px] font-medium text-[#00AFD2]">
                       En vedette
                     </span>
                   )}
                 </div>
 
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm text-white/50">
                   {company.sector}
                   {company.city ? ` · ${company.city}` : ''}
                   {sizeLabel ? ` · ${sizeLabel}` : ''}
@@ -241,25 +238,25 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 {/* Badges */}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {company.apebi_member_since && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
                       <Check className="size-3" aria-hidden />
                       Membre APEBI{memberYear ? ` depuis ${memberYear}` : ''}
                     </span>
                   )}
                   {company.has_techtalent_label && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
                       <Award className="size-3" aria-hidden />
                       Label APEBI TechTalent
                     </span>
                   )}
                   {company.city && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/8 px-3 py-1 text-xs text-white/50">
                       <MapPin className="size-3" aria-hidden />
                       {company.city}, {company.country}
                     </span>
                   )}
                   {sizeLabel && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/8 px-3 py-1 text-xs text-white/50">
                       <Users className="size-3" aria-hidden />
                       {sizeLabel}
                     </span>
@@ -274,10 +271,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                     href={company.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={cn(
-                      buttonVariants({ variant: 'outline', size: 'sm' }),
-                      'gap-1.5 text-xs',
-                    )}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     <Globe className="size-3.5" aria-hidden />
                     Site web
@@ -288,10 +282,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                     href={company.linkedin_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={cn(
-                      buttonVariants({ variant: 'outline', size: 'sm' }),
-                      'gap-1.5 text-xs',
-                    )}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     <ExternalLink className="size-3.5" aria-hidden />
                     LinkedIn
@@ -311,7 +302,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
             {/* Back link */}
             <Link
               href="/entreprises"
-              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-1 text-xs text-white/45 hover:text-white"
             >
               <ArrowLeft className="size-3.5" aria-hidden />
               Toutes les entreprises
@@ -321,11 +312,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
               <section aria-labelledby="about-heading">
                 <h2
                   id="about-heading"
-                  className="mb-3 font-heading text-base font-semibold text-foreground"
+                  className="mb-3 font-heading text-base font-semibold text-white"
                 >
                   À propos
                 </h2>
-                <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                <p className="text-sm leading-relaxed text-white/55 whitespace-pre-wrap">
                   {company.description}
                 </p>
               </section>
@@ -335,20 +326,20 @@ export default async function EntreprisePage({ params }: { params: Params }) {
               <section aria-labelledby="culture-heading">
                 <h2
                   id="culture-heading"
-                  className="mb-3 font-heading text-base font-semibold text-foreground"
+                  className="mb-3 font-heading text-base font-semibold text-white"
                 >
                   Culture &amp; valeurs
                 </h2>
-                <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                <p className="text-sm leading-relaxed text-white/55 whitespace-pre-wrap">
                   {company.culture}
                 </p>
               </section>
             )}
 
             {!company.description && !company.culture && (
-              <div className="flex flex-col items-center rounded-xl border border-dashed border-border py-12 text-center">
-                <Building2 className="mb-3 size-8 text-muted-foreground" aria-hidden />
-                <p className="text-sm text-muted-foreground">
+              <div className="flex flex-col items-center rounded-xl border border-dashed border-white/15 py-12 text-center">
+                <Building2 className="mb-3 size-8 text-white/25" aria-hidden />
+                <p className="text-sm text-white/45">
                   Cette entreprise n&apos;a pas encore complété sa présentation.
                 </p>
               </div>
@@ -359,11 +350,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
           <aside aria-labelledby="jobs-heading">
             <h2
               id="jobs-heading"
-              className="mb-4 font-heading text-base font-semibold text-foreground"
+              className="mb-4 font-heading text-base font-semibold text-white"
             >
               Offres actives
               {jobs.length > 0 && (
-                <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                <span className="ml-2 rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-xs font-medium text-[#00AFD2]">
                   {jobs.length}
                 </span>
               )}
