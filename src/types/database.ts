@@ -399,6 +399,117 @@ export type Database = {
           },
         ]
       }
+      training_institutions: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_apebi_partner: boolean | null
+          logo_url: string | null
+          name: string
+          slug: string
+          status: string | null
+          type: string
+          website_url: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_apebi_partner?: boolean | null
+          logo_url?: string | null
+          name: string
+          slug: string
+          status?: string | null
+          type?: string
+          website_url?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_apebi_partner?: boolean | null
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          status?: string | null
+          type?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      training_programs: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          domain_id: string | null
+          duration_text: string | null
+          id: string
+          institution_id: string | null
+          is_featured: boolean | null
+          level: string | null
+          modality: string | null
+          price_range: string | null
+          slug: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          url_inscription: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          domain_id?: string | null
+          duration_text?: string | null
+          id?: string
+          institution_id?: string | null
+          is_featured?: boolean | null
+          level?: string | null
+          modality?: string | null
+          price_range?: string | null
+          slug: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          url_inscription?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          domain_id?: string | null
+          duration_text?: string | null
+          id?: string
+          institution_id?: string | null
+          is_featured?: boolean | null
+          level?: string | null
+          modality?: string | null
+          price_range?: string | null
+          slug?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          url_inscription?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_programs_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "domains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_programs_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "training_institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_postings: {
         Row: {
           applications_count: number | null
