@@ -6,9 +6,10 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { JobFilters } from '@/components/jobs/job-filters'
 import { JobCard, type JobCardData } from '@/components/jobs/job-card'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export const metadata: Metadata = {
-  title: "Offres d'emploi | APEBI TechTalent",
+  title: "Offres d'emploi",
   description: "Toutes les offres d'emploi tech des entreprises membres APEBI au Maroc.",
 }
 
@@ -60,7 +61,10 @@ async function fetchJobs(params: {
   if (params.q) {
     query = query.ilike('title', `%${params.q}%`)
   }
-  if (params.contract) {
+  if (params.contract === 'missions') {
+    // Pseudo-filtre "Missions" = Freelance OU Consulting
+    query = query.in('contract_type', ['Freelance', 'Consulting'])
+  } else if (params.contract) {
     query = query.eq('contract_type', params.contract)
   }
   if (params.remote) {
@@ -96,23 +100,6 @@ async function fetchJobs(params: {
   )
 }
 
-function EmptyState({ filtered }: { filtered: boolean }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-muted">
-        <Briefcase className="size-7 text-muted-foreground" aria-hidden />
-      </div>
-      <p className="font-heading text-sm font-semibold text-foreground">
-        {filtered ? 'Aucune offre trouvée' : 'Aucune offre pour le moment'}
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">
-        {filtered
-          ? "Essayez d'autres filtres."
-          : 'Les offres des entreprises membres APEBI apparaîtront ici.'}
-      </p>
-    </div>
-  )
-}
 
 export default async function OffresPage({ searchParams }: { searchParams: SearchParams }) {
   const { q, contract, remote, seniority } = await searchParams
@@ -121,16 +108,19 @@ export default async function OffresPage({ searchParams }: { searchParams: Searc
   const jobs = await fetchJobs({ q, contract, remote, seniority })
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col bg-[#0F0F0F]">
       <Navbar />
       <main className="flex-1">
         {/* Header + filters */}
-        <div className="border-b border-border bg-muted/30 px-4 py-6 sm:px-6">
+        <div className="border-b border-white/8 px-4 py-8 sm:px-6">
           <div className="mx-auto max-w-7xl">
-            <h1 className="mb-4 font-heading text-xl font-semibold text-foreground">
+            <h1 className="mb-1 font-heading text-2xl font-bold text-white">
               Offres d&apos;emploi
             </h1>
-            <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-muted" />}>
+            <p className="mb-5 text-sm text-white/45">
+              Les opportunités tech des entreprises membres APEBI
+            </p>
+            <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-white/5" />}>
               <JobFilters total={jobs.length} />
             </Suspense>
           </div>
@@ -139,7 +129,16 @@ export default async function OffresPage({ searchParams }: { searchParams: Searc
         {/* Job grid */}
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
           {jobs.length === 0 ? (
-            <EmptyState filtered={hasFilters} />
+            <EmptyState
+              icon={Briefcase}
+              title={hasFilters ? 'Aucune offre trouvée' : 'Aucune offre pour le moment'}
+              description={
+                hasFilters
+                  ? "Essayez d'autres filtres ou supprimez vos critères de recherche."
+                  : 'Les offres des entreprises membres APEBI apparaîtront ici.'
+              }
+              action={hasFilters ? { label: 'Réinitialiser les filtres', href: '/offres' } : undefined}
+            />
           ) : (
             <ul
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
@@ -147,7 +146,7 @@ export default async function OffresPage({ searchParams }: { searchParams: Searc
               aria-label="Liste des offres"
             >
               {jobs.map((job) => (
-                <li key={job.id}>
+                <li key={job.id} className="flex">
                   <JobCard job={job} />
                 </li>
               ))}

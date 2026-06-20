@@ -4,6 +4,7 @@
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { Check, Loader2, Trash2, Plus } from 'lucide-react'
+import { ImageUpload } from '@/components/ui/image-upload'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -59,6 +60,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
 }
 
 type TalentData = {
+  avatar_url: string | null
   first_name: string
   last_name: string
   title: string | null
@@ -118,6 +120,14 @@ export function EditProfileForm({
       {/* ── Informations générales ── */}
       <SectionCard title="Informations générales">
         <form action={profileAction} className="space-y-4">
+          <ImageUpload
+            bucket="avatars"
+            fieldName="avatar_url"
+            currentUrl={talent.avatar_url}
+            label="Photo de profil"
+            hint="JPEG, PNG ou WebP — max 2 Mo"
+            shape="square"
+          />
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-foreground">
@@ -236,6 +246,48 @@ export function EditProfileForm({
                   {type}
                 </label>
               ))}
+            </div>
+          </div>
+
+          {/* ── Section Freelance (visible si Freelance coché) ── */}
+          <div className="rounded-lg border border-dashed border-border p-4 space-y-3">
+            <p className="text-xs font-semibold text-foreground">
+              Missions freelance{' '}
+              <span className="font-normal text-muted-foreground">(remplir si vous recherchez des missions)</span>
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-foreground">TJM min (MAD/jour)</label>
+                <Input
+                  name="tjm_min"
+                  type="number"
+                  min={0}
+                  step={50}
+                  defaultValue={(talent as TalentData & { tjm_min?: number | null }).tjm_min ?? ''}
+                  placeholder="ex : 1 500"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-foreground">TJM max (MAD/jour)</label>
+                <Input
+                  name="tjm_max"
+                  type="number"
+                  min={0}
+                  step={50}
+                  defaultValue={(talent as TalentData & { tjm_max?: number | null }).tjm_max ?? ''}
+                  placeholder="ex : 2 500"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-foreground">Durée de mission souhaitée (semaines)</label>
+              <Input
+                name="mission_duration_weeks"
+                type="number"
+                min={1}
+                defaultValue={(talent as TalentData & { mission_duration_weeks?: number | null }).mission_duration_weeks ?? ''}
+                placeholder="ex : 12 (= 3 mois)"
+              />
             </div>
           </div>
 

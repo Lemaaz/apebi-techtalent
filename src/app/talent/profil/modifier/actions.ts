@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/server'
 // ── Update profile info ───────────────────────────────────────
 
 const profileSchema = z.object({
+  avatar_url: z.string().url().optional().or(z.literal('')),
   first_name: z.string().min(1, 'Prénom requis').max(50),
   last_name: z.string().min(1, 'Nom requis').max(50),
   title: z.string().max(100).optional(),
@@ -23,6 +24,9 @@ const profileSchema = z.object({
     .optional(),
   remote_preference: z.enum(['Full remote', 'Hybride', 'Présentiel']).optional(),
   expected_salary_range: z.string().max(50).optional(),
+  tjm_min: z.coerce.number().int().min(0).optional().nullable(),
+  tjm_max: z.coerce.number().int().min(0).optional().nullable(),
+  mission_duration_weeks: z.coerce.number().int().min(1).optional().nullable(),
   linkedin_url: z
     .string()
     .url('URL invalide')
@@ -58,6 +62,7 @@ export async function updateTalentProfile(
   const job_type = formData.getAll('job_type') as string[]
 
   const parsed = profileSchema.safeParse({
+    avatar_url: (formData.get('avatar_url') as string) || undefined,
     first_name: formData.get('first_name'),
     last_name: formData.get('last_name'),
     title: formData.get('title') || undefined,
@@ -68,6 +73,9 @@ export async function updateTalentProfile(
     availability: formData.get('availability') || undefined,
     remote_preference: formData.get('remote_preference') || undefined,
     expected_salary_range: formData.get('expected_salary_range') || undefined,
+    tjm_min: formData.get('tjm_min') || undefined,
+    tjm_max: formData.get('tjm_max') || undefined,
+    mission_duration_weeks: formData.get('mission_duration_weeks') || undefined,
     linkedin_url: (formData.get('linkedin_url') as string) ?? '',
     github_url: (formData.get('github_url') as string) ?? '',
     portfolio_url: (formData.get('portfolio_url') as string) ?? '',
@@ -77,9 +85,16 @@ export async function updateTalentProfile(
     return { error: parsed.error.issues[0]?.message ?? 'Données invalides', success: false }
   }
 
+  const { avatar_url, ...rest } = parsed.data
+  const updatePayload = {
+    ...rest,
+    job_type: job_type.length > 0 ? job_type : null,
+    ...(avatar_url !== undefined ? { avatar_url: avatar_url || null } : {}),
+  }
+
   const { error } = await supabase
     .from('talent_profiles')
-    .update({ ...parsed.data, job_type: job_type.length > 0 ? job_type : null })
+    .update(updatePayload)
     .eq('user_id', user.id)
 
   if (error) {
