@@ -46,7 +46,7 @@ export async function createEvent(
 
   const parsed = EventSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message, success: false }
+    return { error: parsed.error.issues[0]?.message ?? 'Données invalides', success: false }
   }
 
   const payload = {

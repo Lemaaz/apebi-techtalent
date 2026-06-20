@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { createJobPosting, type CreateJobState } from './actions'
 
-const CONTRACT_TYPES = ['CDI', 'CDD', 'Freelance', 'Stage', 'Alternance'] as const
+const CONTRACT_TYPES = ['CDI', 'CDD', 'Freelance', 'Consulting', 'Stage', 'Alternance'] as const
+const MISSION_TYPES = new Set<string>(['Freelance', 'Consulting'])
 const SENIORITY_LEVELS = ['Junior', 'Mid', 'Senior', 'Lead'] as const
 const REMOTE_OPTIONS = ['Full remote', 'Hybride', 'Présentiel'] as const
 
@@ -38,6 +39,8 @@ function selectCls() {
 
 export function JobPostingForm({ skillGroups }: { skillGroups: SkillGroup[] }) {
   const [state, action] = useActionState<CreateJobState, FormData>(createJobPosting, { error: null })
+  const [contractType, setContractType] = useState('')
+  const isMission = MISSION_TYPES.has(contractType)
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set())
   const [requiredSkills, setRequiredSkills] = useState<Set<string>>(new Set())
 
@@ -87,7 +90,13 @@ export function JobPostingForm({ skillGroups }: { skillGroups: SkillGroup[] }) {
           <label className="mb-1.5 block text-xs font-medium text-foreground">
             Type de contrat <span className="text-rose-500">*</span>
           </label>
-          <select name="contract_type" required className={selectCls()}>
+          <select
+            name="contract_type"
+            required
+            value={contractType}
+            onChange={(e) => setContractType(e.target.value)}
+            className={selectCls()}
+          >
             <option value="">Sélectionner…</option>
             {CONTRACT_TYPES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -120,9 +129,12 @@ export function JobPostingForm({ skillGroups }: { skillGroups: SkillGroup[] }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1.5 block text-xs font-medium text-foreground">
-            Fourchette salariale
+            {isMission ? 'TJM / Budget journalier' : 'Fourchette salariale'}
           </label>
-          <Input name="salary_range" placeholder="15 000–20 000 MAD / mois" />
+          <Input
+            name="salary_range"
+            placeholder={isMission ? 'ex : 1 500 MAD/jour' : '15 000–20 000 MAD / mois'}
+          />
         </div>
         <div>
           <label className="mb-1.5 block text-xs font-medium text-foreground">
@@ -131,6 +143,19 @@ export function JobPostingForm({ skillGroups }: { skillGroups: SkillGroup[] }) {
           <Input name="closes_at" type="date" />
         </div>
       </div>
+
+      {/* Mission duration — visible uniquement pour Freelance / Consulting */}
+      {isMission && (
+        <div>
+          <label className="mb-1.5 block text-xs font-medium text-foreground">
+            Durée de la mission
+          </label>
+          <Input
+            name="mission_duration"
+            placeholder="ex : 3 mois, 6 mois renouvelable, durée indéterminée"
+          />
+        </div>
+      )}
 
       {/* Description */}
       <div>

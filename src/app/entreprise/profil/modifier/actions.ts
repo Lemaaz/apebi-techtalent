@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import type { TablesUpdate } from '@/types/database'
 
 const schema = z.object({
   logo_url: z.string().url().optional().or(z.literal('')),
@@ -60,7 +61,7 @@ export async function updateCompanyProfile(
   }
 
   const d = parsed.data
-  const payload: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  const payload: TablesUpdate<'company_profiles'> = { updated_at: new Date().toISOString() }
 
   if (d.logo_url !== undefined) payload.logo_url = d.logo_url || null
   if (d.banner_url !== undefined) payload.banner_url = d.banner_url || null

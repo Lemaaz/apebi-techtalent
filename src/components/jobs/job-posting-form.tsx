@@ -8,7 +8,8 @@ import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-const CONTRACT_TYPES = ['CDI', 'CDD', 'Freelance', 'Stage', 'Alternance'] as const
+const CONTRACT_TYPES = ['CDI', 'CDD', 'Freelance', 'Consulting', 'Stage', 'Alternance'] as const
+const MISSION_TYPES = new Set<string>(['Freelance', 'Consulting'])
 const SENIORITY_LEVELS = ['Junior', 'Mid', 'Senior', 'Lead'] as const
 const REMOTE_OPTIONS = ['Full remote', 'Hybride', 'Présentiel'] as const
 
@@ -25,6 +26,7 @@ export type JobFormDefaults = {
   city?: string | null
   remote_policy?: string | null
   salary_range?: string | null
+  mission_duration?: string | null
   closes_at?: string | null
   selectedSkillIds?: string[]
   requiredSkillIds?: string[]
@@ -67,6 +69,9 @@ export function JobPostingForm({
   extraActions?: React.ReactNode
 }) {
   const [state, formAction] = useActionState<ActionState, FormData>(action, { error: null })
+  const [contractType, setContractType] = useState(defaults.contract_type ?? '')
+  const isMission = MISSION_TYPES.has(contractType)
+
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(
     new Set(defaults.selectedSkillIds ?? []),
   )
@@ -126,7 +131,8 @@ export function JobPostingForm({
           <select
             name="contract_type"
             required
-            defaultValue={defaults.contract_type ?? ''}
+            value={contractType}
+            onChange={(e) => setContractType(e.target.value)}
             className={selectCls()}
           >
             <option value="">Sélectionner…</option>
@@ -178,10 +184,12 @@ export function JobPostingForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-xs font-medium text-foreground">Salaire</label>
+          <label className="mb-1.5 block text-xs font-medium text-foreground">
+            {isMission ? 'TJM / Budget journalier' : 'Salaire'}
+          </label>
           <Input
             name="salary_range"
-            placeholder="15 000–20 000 MAD"
+            placeholder={isMission ? 'ex : 1 500 MAD/jour' : '15 000–20 000 MAD/mois'}
             defaultValue={defaults.salary_range ?? ''}
           />
         </div>
@@ -196,6 +204,19 @@ export function JobPostingForm({
           />
         </div>
       </div>
+
+      {isMission && (
+        <div>
+          <label className="mb-1.5 block text-xs font-medium text-foreground">
+            Durée de la mission
+          </label>
+          <Input
+            name="mission_duration"
+            placeholder="ex : 3 mois, 6 mois renouvelable, durée indéterminée"
+            defaultValue={defaults.mission_duration ?? ''}
+          />
+        </div>
+      )}
 
       <div>
         <label className="mb-1.5 block text-xs font-medium text-foreground">

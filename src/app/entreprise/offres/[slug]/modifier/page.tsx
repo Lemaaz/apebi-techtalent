@@ -32,6 +32,7 @@ type JobDetail = {
   city: string | null
   remote_policy: string | null
   salary_range: string | null
+  mission_duration: string | null
   closes_at: string | null
   status: string
   job_skills: JobSkillRow[]
@@ -62,7 +63,7 @@ export default async function ModifierOffrePage({ params }: { params: Params }) 
     .from('job_postings')
     .select(
       `id, title, description, contract_type, seniority_level, city, remote_policy,
-       salary_range, closes_at, status,
+       salary_range, mission_duration, closes_at, status,
        job_skills ( skill_id, is_required )`,
     )
     .eq('slug', slug)
@@ -122,6 +123,7 @@ export default async function ModifierOffrePage({ params }: { params: Params }) 
                 city: job.city,
                 remote_policy: job.remote_policy,
                 salary_range: job.salary_range,
+                mission_duration: job.mission_duration,
                 closes_at: job.closes_at,
                 selectedSkillIds,
                 requiredSkillIds,

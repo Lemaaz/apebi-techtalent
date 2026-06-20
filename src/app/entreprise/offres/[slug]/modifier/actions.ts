@@ -9,11 +9,12 @@ const updateSchema = z.object({
   job_id: z.string().uuid(),
   title: z.string().min(3).max(120),
   description: z.string().min(50).max(5000),
-  contract_type: z.enum(['CDI', 'CDD', 'Freelance', 'Stage', 'Alternance']),
+  contract_type: z.enum(['CDI', 'CDD', 'Freelance', 'Consulting', 'Stage', 'Alternance']),
   seniority_level: z.enum(['Junior', 'Mid', 'Senior', 'Lead']).optional(),
   city: z.string().max(80).optional(),
   remote_policy: z.enum(['Full remote', 'Hybride', 'Présentiel']).optional(),
   salary_range: z.string().max(60).optional(),
+  mission_duration: z.string().max(80).optional(),
   closes_at: z.string().optional(),
 })
 
@@ -66,6 +67,7 @@ export async function updateJobPosting(
     city: (formData.get('city') as string) || undefined,
     remote_policy: (formData.get('remote_policy') as string) || undefined,
     salary_range: (formData.get('salary_range') as string) || undefined,
+    mission_duration: (formData.get('mission_duration') as string) || undefined,
     closes_at: (formData.get('closes_at') as string) || undefined,
   })
 
@@ -85,6 +87,7 @@ export async function updateJobPosting(
       city: d.city ?? null,
       remote_policy: d.remote_policy ?? null,
       salary_range: d.salary_range ?? null,
+      mission_duration: d.mission_duration ?? null,
       closes_at: d.closes_at ? new Date(d.closes_at).toISOString() : null,
     })
     .eq('id', jobId)
