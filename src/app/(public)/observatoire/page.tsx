@@ -33,7 +33,7 @@ type DomainRow = {
 async function fetchObservatoire() {
   const supabase = await createClient()
 
-  const [demand, supply, geo, domains] = await Promise.all([
+  const [demand, supply, geo, domains, activeJobs] = await Promise.all([
     supabase
       .from('mv_skills_demand')
       .select('name, domain_code, demand_count')
@@ -57,6 +57,12 @@ async function fetchObservatoire() {
       .select('code, name_fr, active_jobs, approved_talents')
       .order('code', { ascending: true })
       .returns<DomainRow[]>(),
+    // Comptage direct des offres actives (indépendant du domain_id) —
+    // lisible par anon via la policy public_read_active_jobs.
+    supabase
+      .from('job_postings')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'active'),
   ])
 
   if (demand.error || supply.error || geo.error || domains.error) {
@@ -71,11 +77,12 @@ async function fetchObservatoire() {
     supply: supply.data ?? [],
     geo: geo.data ?? [],
     domains: domains.data ?? [],
+    activeJobsCount: activeJobs.count ?? 0,
   }
 }
 
 export default async function ObservatoirePage() {
-  const { demand, supply, geo, domains } = await fetchObservatoire()
+  const { demand, supply, geo, domains, activeJobsCount } = await fetchObservatoire()
 
   const hasData =
     demand.length > 0 || supply.length > 0 || geo.length > 0 || domains.some((d) => d.active_jobs > 0 || d.approved_talents > 0)
@@ -85,10 +92,10 @@ export default async function ObservatoirePage() {
   const maxGeo = Math.max(1, ...geo.map((g) => g.talent_count))
 
   // Indicateurs globaux
-  const totalActiveJobs = domains.reduce((acc, d) => acc + d.active_jobs, 0)
-  const totalTalents = Math.max(...geo.map((g) => g.talent_count), 0) > 0
-    ? geo.reduce((acc, g) => acc + g.talent_count, 0)
-    : 0
+  // Offres actives : comptage direct (indépendant du domain_id sur les offres).
+  const totalActiveJobs = activeJobsCount
+  // Talents : somme des talents validés répartis par ville (proxy lisible par anon).
+  const totalTalents = geo.reduce((acc, g) => acc + g.talent_count, 0)
 
   return (
     <div className="flex min-h-dvh flex-col">
