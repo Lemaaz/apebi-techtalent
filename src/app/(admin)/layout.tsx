@@ -60,10 +60,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {/* Back to site */}
           <Link
             href="/"
-            className="flex items-center gap-1.5 font-heading text-[12px] font-medium transition-colors"
+            className="flex items-center gap-1.5 font-heading text-[12px] font-medium transition-colors hover:text-white"
             style={{ color: 'rgba(255,255,255,0.5)' }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'white' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.5)' }}
           >
             <ArrowLeft className="size-3.5" aria-hidden />
             Site public
