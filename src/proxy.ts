@@ -47,7 +47,9 @@ export async function proxy(request: NextRequest) {
 
   // ── Auth page guard ────────────────────────────────────────
   if (user && (pathname === '/connexion' || pathname === '/inscription')) {
-    const role = user.user_metadata?.role as string | undefined
+    const appRole = (user as any)?.app_metadata?.role as string | undefined
+    const userRole = user?.user_metadata?.role as string | undefined
+    const role = appRole === 'SUPER_ADMIN' || appRole === 'ADMIN' ? appRole : userRole
     const url = request.nextUrl.clone()
     url.pathname = role === 'entreprise' ? '/entreprise/dashboard' : '/talent/dashboard'
     return NextResponse.redirect(url)

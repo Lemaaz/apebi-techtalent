@@ -1,6 +1,6 @@
 'use server'
 
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function promoteToAdmin(formData: FormData): Promise<{ error?: string; success?: string }> {
@@ -19,7 +19,7 @@ export async function promoteToAdmin(formData: FormData): Promise<{ error?: stri
   if (!target) return { error: 'Aucun utilisateur trouvé avec cet email.' }
 
   // Check not already SUPER_ADMIN
-  if (target.user_metadata?.role === 'SUPER_ADMIN') {
+  if (target.user_metadata?.role === 'SUPER_ADMIN' || (target as any).app_metadata?.role === 'SUPER_ADMIN') {
     return { error: 'Cet utilisateur est déjà Super Admin.' }
   }
 
@@ -39,6 +39,14 @@ export async function createCompanyDirect(
   _prev: { error?: string; success?: string } | undefined,
   formData: FormData,
 ): Promise<{ error?: string; success?: string }> {
+  // Verify caller is SUPER_ADMIN
+  const anonClient = await createClient()
+  const { data: { user: caller } } = await anonClient.auth.getUser()
+  const callerAppRole = (caller as any)?.app_metadata?.role as string | undefined
+  if (!caller || callerAppRole !== 'SUPER_ADMIN') {
+    return { error: 'Accès refusé — Super Admin uniquement.' }
+  }
+
   const supabase = await createAdminClient()
   const name = (formData.get('name') as string)?.trim()
   const email = (formData.get('email') as string)?.trim().toLowerCase()

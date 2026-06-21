@@ -45,6 +45,13 @@ export async function validateTalent(talentId: string, action: 'approved' | 'rej
 }
 
 export async function deactivateTalent(talentId: string): Promise<{ error?: string }> {
+  // Verify caller is admin
+  const anonClient = await createClient()
+  const { data: { user: caller } } = await anonClient.auth.getUser()
+  if (!caller) return { error: 'Non authentifié.' }
+  const { data: isAdmin } = await anonClient.rpc('is_admin')
+  if (!isAdmin) return { error: 'Accès refusé.' }
+
   const supabase = createAdminClient()
   const { error } = await supabase
     .from('talent_profiles')
