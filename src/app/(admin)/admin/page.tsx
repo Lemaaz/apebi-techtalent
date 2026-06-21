@@ -6,8 +6,41 @@ import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 
 export const metadata: Metadata = { title: 'Dashboard — Admin' }
 
+// ── Weekly candidatures helper ───────────────────────────────────────────────
+
+type WeekBucket = { label: string; shortLabel: string; count: number }
+
+function buildWeeklyBuckets(rows: { created_at: string }[]): WeekBucket[] {
+  const now = new Date()
+  // 4 buckets: current week + 3 previous weeks (most recent first)
+  const buckets: WeekBucket[] = Array.from({ length: 4 }, (_, i) => {
+    const end = new Date(now)
+    end.setDate(end.getDate() - i * 7)
+    const start = new Date(end)
+    start.setDate(start.getDate() - 7)
+    return {
+      label: i === 0 ? 'Cette semaine' : `Il y a ${i} sem.`,
+      shortLabel: i === 0 ? 'S0' : `S-${i}`,
+      start,
+      end,
+      count: 0,
+    } as WeekBucket & { start: Date; end: Date }
+  })
+
+  for (const row of rows) {
+    const d = new Date(row.created_at)
+    for (const b of buckets as (WeekBucket & { start: Date; end: Date })[]) {
+      if (d >= b.start && d < b.end) { b.count++; break }
+    }
+  }
+
+  return buckets.reverse() // oldest → newest (left to right)
+}
+
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
+
+  const since30d = new Date(Date.now() - 30 * 86_400_000).toISOString()
 
   const [
     { count: talentsPending },
@@ -17,6 +50,7 @@ export default async function AdminDashboardPage() {
     { count: totalCompanies },
     { count: talentsApproved },
     { count: companiesApproved },
+    { data: recentApplications },
   ] = await Promise.all([
     supabase.from('talent_profiles').select('*', { count: 'exact', head: true }).eq('validation_status', 'pending'),
     supabase.from('company_profiles').select('*', { count: 'exact', head: true }).eq('validation_status', 'pending'),
@@ -25,7 +59,13 @@ export default async function AdminDashboardPage() {
     supabase.from('company_profiles').select('*', { count: 'exact', head: true }),
     supabase.from('talent_profiles').select('*', { count: 'exact', head: true }).eq('validation_status', 'approved'),
     supabase.from('company_profiles').select('*', { count: 'exact', head: true }).eq('validation_status', 'approved'),
+    supabase.from('applications').select('created_at').gte('created_at', since30d),
   ])
+
+  const weeklyBuckets = buildWeeklyBuckets(
+    (recentApplications ?? []).filter((r): r is { created_at: string } => r.created_at !== null)
+  )
+  const maxWeekCount = Math.max(...weeklyBuckets.map((b) => b.count), 1)
 
   const pendingTotal = (talentsPending ?? 0) + (companiesPending ?? 0)
 
@@ -194,6 +234,65 @@ export default async function AdminDashboardPage() {
               <p className="mt-1 text-[12px] text-muted-foreground">{desc}</p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── Candidatures par semaine — ADM-08 ── */}
+      <section aria-labelledby="chart-heading" className="mt-10">
+        <h2 id="chart-heading" className="mb-3 text-overline">
+          Candidatures — 30 derniers jours
+        </h2>
+        <div
+          className="rounded-xl border p-6"
+          style={{ background: 'white', border: '1px solid var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
+        >
+          {/* Bars */}
+          <div className="flex items-end justify-around gap-4" style={{ height: '120px' }}>
+            {weeklyBuckets.map((bucket) => {
+              const pct = maxWeekCount > 0 ? (bucket.count / maxWeekCount) * 100 : 0
+              const barH = Math.max(pct, bucket.count > 0 ? 4 : 0) // min visible height when count > 0
+              return (
+                <div key={bucket.label} className="flex flex-1 flex-col items-center gap-2">
+                  <span
+                    className="font-heading text-[11px] font-semibold tabular-nums"
+                    style={{ color: bucket.count > 0 ? 'var(--apebi-cyan)' : 'var(--apebi-text-muted)' }}
+                  >
+                    {bucket.count}
+                  </span>
+                  <div className="flex w-full items-end" style={{ height: '80px' }}>
+                    <div
+                      className="w-full rounded-t-md transition-all"
+                      style={{
+                        height: `${barH}%`,
+                        minHeight: bucket.count > 0 ? '4px' : '2px',
+                        background: bucket.count > 0
+                          ? 'linear-gradient(to top, var(--apebi-cyan), color-mix(in srgb, var(--apebi-cyan) 60%, white))'
+                          : 'var(--apebi-border)',
+                      }}
+                      role="img"
+                      aria-label={`${bucket.label} : ${bucket.count} candidature${bucket.count !== 1 ? 's' : ''}`}
+                    />
+                  </div>
+                  <span className="text-center font-sans text-[11px] text-muted-foreground leading-tight">
+                    {bucket.label}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Total */}
+          <div
+            className="mt-4 flex items-center justify-between border-t pt-4"
+            style={{ borderColor: 'var(--apebi-border)' }}
+          >
+            <p className="font-sans text-[12px] text-muted-foreground">
+              Total sur 30 jours
+            </p>
+            <p className="font-heading text-[15px] font-bold text-foreground tabular-nums">
+              {weeklyBuckets.reduce((s, b) => s + b.count, 0)} candidatures
+            </p>
+          </div>
         </div>
       </section>
 
