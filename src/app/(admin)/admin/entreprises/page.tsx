@@ -7,7 +7,7 @@ import { AdminTable, AdminTableAction, type AdminTableColumn } from '@/component
 import { AdminStatusBadge } from '@/components/admin/admin-status-badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Building2 } from 'lucide-react'
-import { validateCompany } from './actions'
+import { validateCompany, deactivateCompany } from './actions'
 
 export const metadata: Metadata = { title: 'Entreprises — Admin' }
 
@@ -227,6 +227,16 @@ export default async function AdminEntreprisesPage({ searchParams }: { searchPar
                 }}
               >
                 <AdminTableAction label="Remettre" variant="reset" />
+              </form>
+            )}
+            {row.validation_status === 'approved' && (
+              <form
+                action={async () => {
+                  'use server'
+                  await deactivateCompany(row.id)
+                }}
+              >
+                <AdminTableAction label="Désactiver" variant="reject" />
               </form>
             )}
           </>

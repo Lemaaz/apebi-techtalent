@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendAccountStatusEmail } from '@/lib/email'
 
 export async function validateCompany(companyId: string, action: 'approved' | 'rejected' | 'pending', note?: string) {
@@ -41,4 +41,15 @@ export async function validateCompany(companyId: string, action: 'approved' | 'r
       console.error('[validateCompany] email error (non-blocking):', emailErr)
     }
   }
+}
+
+export async function deactivateCompany(companyId: string): Promise<{ error?: string }> {
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from('company_profiles')
+    .update({ validation_status: 'rejected' })
+    .eq('id', companyId)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/entreprises')
+  return {}
 }

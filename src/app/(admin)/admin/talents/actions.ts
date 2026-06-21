@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendAccountStatusEmail } from '@/lib/email'
 
 export async function validateTalent(talentId: string, action: 'approved' | 'rejected' | 'pending', note?: string) {
@@ -42,4 +42,15 @@ export async function validateTalent(talentId: string, action: 'approved' | 'rej
       console.error('[validateTalent] email error (non-blocking):', emailErr)
     }
   }
+}
+
+export async function deactivateTalent(talentId: string): Promise<{ error?: string }> {
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from('talent_profiles')
+    .update({ validation_status: 'rejected', visibility: false })
+    .eq('id', talentId)
+  if (error) return { error: error.message }
+  revalidatePath('/admin/talents')
+  return {}
 }

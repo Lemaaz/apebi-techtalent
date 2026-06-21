@@ -6,7 +6,7 @@ import { AdminTable, AdminTableAction, type AdminTableColumn } from '@/component
 import { AdminStatusBadge } from '@/components/admin/admin-status-badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Users } from 'lucide-react'
-import { validateTalent } from './actions'
+import { validateTalent, deactivateTalent } from './actions'
 
 export const metadata: Metadata = { title: 'Talents — Admin' }
 
@@ -212,6 +212,16 @@ export default async function AdminTalentsPage({ searchParams }: { searchParams:
                 }}
               >
                 <AdminTableAction label="Remettre" variant="reset" />
+              </form>
+            )}
+            {row.validation_status === 'approved' && (
+              <form
+                action={async () => {
+                  'use server'
+                  await deactivateTalent(row.id)
+                }}
+              >
+                <AdminTableAction label="Désactiver" variant="reject" />
               </form>
             )}
           </>
