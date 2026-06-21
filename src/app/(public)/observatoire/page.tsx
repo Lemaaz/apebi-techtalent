@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { BarChart3, TrendingUp, Users, MapPin, Scale, Info } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -39,27 +39,31 @@ type DomainRow = {
 
 async function fetchObservatoire() {
   const supabase = await createClient()
+  // Les vues matérialisées mv_* ne sont PAS exposées à l'API Data (accès anon/
+  // authenticated révoqué — A0-3 : anti ré-identification + seuil de représentativité
+  // contournable). Lecture côté serveur via le client service-role uniquement.
+  const admin = createAdminClient()
 
   const [demand, supply, geo, domains, activeJobs, approvedTalentsCount] = await Promise.all([
-    supabase
+    admin
       .from('mv_skills_demand')
       .select('name, domain_code, demand_count')
       .order('demand_count', { ascending: false })
       .limit(10)
       .returns<SkillDemandRow[]>(),
-    supabase
+    admin
       .from('mv_skills_supply')
       .select('name, domain_code, supply_count')
       .order('supply_count', { ascending: false })
       .limit(10)
       .returns<SkillSupplyRow[]>(),
-    supabase
+    admin
       .from('mv_geo_distribution')
       .select('city, talent_count')
       .order('talent_count', { ascending: false })
       .limit(12)
       .returns<GeoRow[]>(),
-    supabase
+    admin
       .from('mv_domain_activity')
       .select('code, name_fr, active_jobs, approved_talents')
       .order('code', { ascending: true })
