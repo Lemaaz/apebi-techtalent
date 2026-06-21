@@ -75,6 +75,9 @@ export default async function TalentDashboardPage() {
     .eq('user_id', user.id)
     .maybeSingle<TalentRow>()
 
+  const role = user.user_metadata?.role as string | undefined
+  if (role === 'SUPER_ADMIN' || role === 'ADMIN') redirect('/admin')
+  if (role === 'entreprise') redirect('/entreprise/dashboard')
   if (!talent) redirect('/talent/inscription')
 
   // Parallel data fetches

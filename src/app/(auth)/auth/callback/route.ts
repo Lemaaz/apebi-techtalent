@@ -36,6 +36,9 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/onboarding/choix-role`)
   }
 
-  const destination = role === 'entreprise' ? '/entreprise/dashboard' : '/talent/profil'
+  const destination =
+    role === 'SUPER_ADMIN' || role === 'ADMIN' ? '/admin'
+    : role === 'entreprise' ? '/entreprise/dashboard'
+    : '/talent/profil'
   return NextResponse.redirect(`${origin}${destination}`)
 }

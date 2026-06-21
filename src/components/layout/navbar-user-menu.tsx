@@ -19,8 +19,13 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
-  const dashboardHref = user?.role === 'entreprise' ? '/entreprise/dashboard' : '/talent/profil'
-  const dashboardLabel = user?.role === 'entreprise' ? 'Dashboard' : 'Mon profil'
+  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN'
+  const dashboardHref = isAdmin ? '/admin'
+    : user?.role === 'entreprise' ? '/entreprise/dashboard'
+    : '/talent/profil'
+  const dashboardLabel = isAdmin ? 'Back-office'
+    : user?.role === 'entreprise' ? 'Dashboard'
+    : 'Mon profil'
 
   return (
     <>

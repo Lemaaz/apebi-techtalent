@@ -22,12 +22,15 @@ export async function signIn(
   const role = user?.user_metadata?.role as string | undefined
 
   // Validate redirect to prevent open redirect
+  const defaultDest =
+    role === 'SUPER_ADMIN' || role === 'ADMIN' ? '/admin'
+    : role === 'entreprise' ? '/entreprise/dashboard'
+    : '/talent/profil'
+
   const safeRedirect =
     redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')
       ? redirectTo
-      : role === 'entreprise'
-        ? '/entreprise/dashboard'
-        : '/talent/profil'
+      : defaultDest
 
   redirect(safeRedirect)
 }

@@ -154,6 +154,10 @@ export default async function TalentProfilPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/connexion')
 
+  const role = user.user_metadata?.role as string | undefined
+  if (role === 'SUPER_ADMIN' || role === 'ADMIN') redirect('/admin')
+  if (role === 'entreprise') redirect('/entreprise/dashboard')
+
   const { data: talent } = await supabase
     .from('talent_profiles')
     .select(
