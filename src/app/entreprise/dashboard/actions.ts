@@ -84,3 +84,20 @@ export async function updateApplicationStatus(formData: FormData) {
     console.error('[dashboard/actions] status email error (non-blocking):', emailErr)
   }
 }
+
+export async function saveRecruiterNote(applicationId: string, note: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Non authentifié.' }
+
+  // RLS "recruiter_update_applications" enforces company ownership
+  const { error } = await supabase
+    .from('applications')
+    .update({ recruiter_note: note.trim() || null })
+    .eq('id', applicationId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/entreprise/candidatures')
+  revalidatePath('/entreprise/dashboard')
+  return {}
+}

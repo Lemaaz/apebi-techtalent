@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 import { ApplicationStatusBadge, ApplicationStatusActions } from '@/components/shared/application-status-badge'
 import { updateApplicationStatus } from '@/app/entreprise/dashboard/actions'
+import { RecruiterNoteForm } from '@/components/company/recruiter-note-form'
 
 export const metadata: Metadata = { title: 'Candidatures | APEBI TechTalent' }
 
@@ -17,6 +18,7 @@ type ApplicationRow = {
   talent_id: string
   status: string
   created_at: string
+  recruiter_note: string | null
   talent_profiles: { first_name: string; last_name: string; title: string | null; avatar_url: string | null } | null
   job_postings: { title: string; slug: string } | null
 }
@@ -130,7 +132,7 @@ export default async function CandidaturesPage({
   // Fetch page of applications for active tab
   const baseQuery = supabase
     .from('applications')
-    .select(`id, talent_id, status, created_at,
+    .select(`id, talent_id, status, created_at, recruiter_note,
              talent_profiles ( first_name, last_name, title, avatar_url ),
              job_postings ( title, slug )`)
     .in('job_id', jobIds)
@@ -229,51 +231,57 @@ export default async function CandidaturesPage({
             return (
               <li
                 key={app.id}
-                className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-[var(--apebi-bg-alt)]"
+                className="flex flex-col gap-2 px-4 py-3.5 transition-colors hover:bg-[var(--apebi-bg-alt)]"
                 style={i < applications.length - 1 ? { borderBottom: '1px solid var(--apebi-border)' } : undefined}
               >
-                {/* Left: avatar + info */}
-                <Link
-                  href={`/entreprise/talents/${app.talent_id}`}
-                  className="group flex min-w-0 flex-1 items-center gap-3"
-                >
-                  {talent?.avatar_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={talent.avatar_url}
-                      alt=""
-                      className="size-9 shrink-0 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div
-                      aria-hidden
-                      className="flex size-9 shrink-0 items-center justify-center rounded-full font-heading text-[11px] font-bold text-white"
-                      style={{ background: avatarColor(fullName) }}
-                    >
-                      {initials}
+                {/* Top row: avatar + info | status + actions */}
+                <div className="flex items-center justify-between gap-3">
+                  {/* Left: avatar + info */}
+                  <Link
+                    href={`/entreprise/talents/${app.talent_id}`}
+                    className="group flex min-w-0 flex-1 items-center gap-3"
+                  >
+                    {talent?.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={talent.avatar_url}
+                        alt=""
+                        className="size-9 shrink-0 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div
+                        aria-hidden
+                        className="flex size-9 shrink-0 items-center justify-center rounded-full font-heading text-[11px] font-bold text-white"
+                        style={{ background: avatarColor(fullName) }}
+                      >
+                        {initials}
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="truncate font-heading text-[13px] font-semibold text-foreground group-hover:text-[var(--apebi-cyan)] group-hover:underline">
+                        {fullName}
+                      </p>
+                      <p className="truncate text-[11px] text-muted-foreground">
+                        {app.job_postings?.title ?? '—'}
+                        {talent?.title ? ` · ${talent.title}` : ''}
+                        {' · '}{timeAgo(app.created_at)}
+                      </p>
                     </div>
-                  )}
-                  <div className="min-w-0">
-                    <p className="truncate font-heading text-[13px] font-semibold text-foreground group-hover:text-[var(--apebi-cyan)] group-hover:underline">
-                      {fullName}
-                    </p>
-                    <p className="truncate text-[11px] text-muted-foreground">
-                      {app.job_postings?.title ?? '—'}
-                      {talent?.title ? ` · ${talent.title}` : ''}
-                      {' · '}{timeAgo(app.created_at)}
-                    </p>
-                  </div>
-                </Link>
+                  </Link>
 
-                {/* Right: status + actions */}
-                <div className="flex shrink-0 flex-col items-end gap-1">
-                  <ApplicationStatusBadge status={app.status} recruiterView />
-                  <ApplicationStatusActions
-                    applicationId={app.id}
-                    status={app.status}
-                    action={updateApplicationStatus}
-                  />
+                  {/* Right: status + actions */}
+                  <div className="flex shrink-0 flex-col items-end gap-1">
+                    <ApplicationStatusBadge status={app.status} recruiterView />
+                    <ApplicationStatusActions
+                      applicationId={app.id}
+                      status={app.status}
+                      action={updateApplicationStatus}
+                    />
+                  </div>
                 </div>
+
+                {/* Bottom: recruiter note */}
+                <RecruiterNoteForm applicationId={app.id} initialNote={app.recruiter_note} />
               </li>
             )
           })}
