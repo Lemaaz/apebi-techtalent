@@ -85,6 +85,8 @@ export async function createCompanyDirect(
     .from('company_members')
     .insert({ user_id: userId, company_id: company.id, full_name: name, role_in_company: role })
   if (memberError) {
+    await supabase.auth.admin.deleteUser(userId)
+    await supabase.from('company_profiles').delete().eq('id', company.id)
     return { error: 'Erreur liaison membre : ' + memberError.message }
   }
 
