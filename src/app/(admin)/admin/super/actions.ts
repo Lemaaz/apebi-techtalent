@@ -33,3 +33,62 @@ export async function promoteToAdmin(formData: FormData): Promise<{ error?: stri
   revalidatePath('/admin/super')
   return { success: `${email} a été promu Admin APEBI avec succès.` }
 }
+
+export async function createCompanyDirect(
+  _prev: { error?: string; success?: string } | undefined,
+  formData: FormData,
+): Promise<{ error?: string; success?: string }> {
+  const supabase = await createAdminClient()
+  const name = (formData.get('name') as string)?.trim()
+  const email = (formData.get('email') as string)?.trim().toLowerCase()
+  const password = (formData.get('password') as string)
+  const role = (formData.get('role_in_company') as string)?.trim() || 'Administrateur'
+
+  if (!name || !email || !password) return { error: 'Tous les champs sont requis.' }
+
+  // 1. Créer le compte auth
+  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { role: 'entreprise' },
+  })
+  if (authError) return { error: 'Erreur création compte : ' + authError.message }
+
+  const userId = authData.user.id
+
+  // 2. Générer un slug unique
+  let slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  const { data: existing } = await supabase
+    .from('company_profiles')
+    .select('id')
+    .eq('slug', slug)
+    .maybeSingle()
+  if (existing) {
+    slug = slug + '-' + Math.random().toString(36).slice(2, 6)
+  }
+
+  // 3. Créer le profil entreprise
+  const { data: company, error: companyError } = await supabase
+    .from('company_profiles')
+    .insert({ name, slug, country: 'Maroc', validation_status: 'approved' })
+    .select('id')
+    .single()
+  if (companyError) {
+    // Supprimer l'utilisateur auth créé si le profil échoue
+    await supabase.auth.admin.deleteUser(userId)
+    return { error: 'Erreur création profil : ' + companyError.message }
+  }
+
+  // 4. Lier l'utilisateur à l'entreprise
+  const { error: memberError } = await supabase
+    .from('company_members')
+    .insert({ user_id: userId, company_id: company.id, full_name: name, role_in_company: role })
+  if (memberError) {
+    return { error: 'Erreur liaison membre : ' + memberError.message }
+  }
+
+  revalidatePath('/admin/super')
+  revalidatePath('/admin/entreprises')
+  return { success: `Entreprise "${name}" créée et validée. Compte recruteur : ${email}` }
+}

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { ShieldCheck, Users, Key, AlertTriangle } from 'lucide-react'
+import { ShieldCheck, Users, Key, AlertTriangle, Building2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 import { PromoteAdminForm } from './_form'
+import { CreateCompanyForm } from './_create-company-form'
 
 export const metadata: Metadata = { title: 'Super Admin | APEBI TechTalent' }
 
@@ -92,6 +93,24 @@ export default async function SuperAdminPage() {
           L&apos;utilisateur devra se reconnecter pour que les changements prennent effet.
         </p>
         <PromoteAdminForm />
+      </div>
+
+      {/* Create company section */}
+      <div
+        className="mb-6 rounded-2xl p-6"
+        style={{ background: 'white', border: '1px solid var(--apebi-border)' }}
+      >
+        <div className="mb-4 flex items-center gap-2">
+          <Building2 className="size-4" style={{ color: '#00AFD2' }} aria-hidden />
+          <h2 className="font-heading text-base font-semibold text-foreground">
+            Créer une entreprise APEBI
+          </h2>
+        </div>
+        <p className="mb-4 text-[13px] text-muted-foreground">
+          Onboardez directement une entreprise membre APEBI sans passer par le flux d&apos;inscription
+          public. Le profil est créé validé et le compte recruteur est immédiatement actif.
+        </p>
+        <CreateCompanyForm />
       </div>
 
       {/* Platform identity section */}
