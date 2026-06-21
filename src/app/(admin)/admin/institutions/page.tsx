@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Building2, Plus, Trash2, Award } from 'lucide-react'
+import { Building2, Plus, Trash2, Award, Pencil } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AdminPageHeader } from '@/components/admin/admin-page-header'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -141,6 +141,14 @@ export default async function AdminInstitutionsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
+                    <div className="flex items-center gap-1">
+                    <Link
+                      href={`/admin/institutions/${inst.id}/modifier`}
+                      title="Modifier"
+                      className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-[var(--apebi-cyan-muted)] hover:text-[var(--apebi-cyan)]"
+                    >
+                      <Pencil className="size-3.5" aria-hidden />
+                    </Link>
                     <form action={deleteInstitution}>
                       <input type="hidden" name="id" value={inst.id} />
                       <button
@@ -151,6 +159,7 @@ export default async function AdminInstitutionsPage() {
                         <Trash2 className="size-3.5" aria-hidden />
                       </button>
                     </form>
+                    </div>
                   </td>
                 </tr>
               ))}

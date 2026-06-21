@@ -86,6 +86,52 @@ export async function deleteFormation(formData: FormData) {
   revalidatePath('/formation')
 }
 
+export async function updateFormation(
+  _: FormationState,
+  formData: FormData,
+): Promise<FormationState> {
+  const supabase = await requireAdmin()
+  const id = formData.get('id') as string
+  if (!id) return { error: 'ID manquant.' }
+
+  const parsed = schema.safeParse({
+    title: formData.get('title'),
+    description: (formData.get('description') as string) || undefined,
+    institution_id: (formData.get('institution_id') as string) || undefined,
+    domain_id: (formData.get('domain_id') as string) || undefined,
+    level: formData.get('level') ?? 'Tous niveaux',
+    modality: formData.get('modality') ?? 'Présentiel',
+    duration_text: (formData.get('duration_text') as string) || undefined,
+    price_range: (formData.get('price_range') as string) || undefined,
+    url_inscription: (formData.get('url_inscription') as string) || undefined,
+    is_featured: formData.get('is_featured') === 'true',
+    status: formData.get('status') ?? 'active',
+  })
+
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides' }
+
+  const d = parsed.data
+  const { error } = await supabase.from('training_programs').update({
+    title: d.title,
+    description: d.description ?? null,
+    institution_id: d.institution_id || null,
+    domain_id: d.domain_id || null,
+    level: d.level,
+    modality: d.modality,
+    duration_text: d.duration_text ?? null,
+    price_range: d.price_range ?? null,
+    url_inscription: d.url_inscription || null,
+    is_featured: d.is_featured,
+    status: d.status,
+  }).eq('id', id)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/formations')
+  revalidatePath('/formation')
+  redirect('/admin/formations')
+}
+
 export async function toggleFeatured(formData: FormData) {
   const supabase = await requireAdmin()
   const id = formData.get('id') as string

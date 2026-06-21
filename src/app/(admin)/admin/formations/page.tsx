@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { GraduationCap, Star, Plus, Trash2 } from 'lucide-react'
+import { GraduationCap, Star, Plus, Trash2, Pencil } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AdminPageHeader } from '@/components/admin/admin-page-header'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -152,6 +152,14 @@ export default async function AdminFormationsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
+                        {/* Edit */}
+                        <Link
+                          href={`/admin/formations/${p.id}/modifier`}
+                          title="Modifier"
+                          className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-[var(--apebi-cyan-muted)] hover:text-[var(--apebi-cyan)]"
+                        >
+                          <Pencil className="size-3.5" aria-hidden />
+                        </Link>
                         {/* Toggle featured */}
                         <form action={toggleFeatured}>
                           <input type="hidden" name="id" value={p.id} />

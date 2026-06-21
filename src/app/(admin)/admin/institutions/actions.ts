@@ -66,6 +66,44 @@ export async function createInstitution(
   redirect('/admin/institutions')
 }
 
+export async function updateInstitution(
+  _: InstitutionState,
+  formData: FormData,
+): Promise<InstitutionState> {
+  const supabase = await requireAdmin()
+  const id = formData.get('id') as string
+  if (!id) return { error: 'ID manquant.' }
+
+  const parsed = schema.safeParse({
+    name: formData.get('name'),
+    type: formData.get('type') ?? 'autre',
+    description: (formData.get('description') as string) || undefined,
+    website_url: (formData.get('website_url') as string) || undefined,
+    city: (formData.get('city') as string) || undefined,
+    is_apebi_partner: formData.get('is_apebi_partner') === 'true',
+    status: formData.get('status') ?? 'active',
+  })
+
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides' }
+
+  const d = parsed.data
+  const { error } = await supabase.from('training_institutions').update({
+    name: d.name,
+    type: d.type,
+    description: d.description ?? null,
+    website_url: d.website_url || null,
+    city: d.city ?? null,
+    is_apebi_partner: d.is_apebi_partner,
+    status: d.status,
+  }).eq('id', id)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/institutions')
+  revalidatePath('/formation')
+  redirect('/admin/institutions')
+}
+
 export async function deleteInstitution(formData: FormData) {
   const supabase = await requireAdmin()
   const id = formData.get('id') as string
