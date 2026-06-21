@@ -16,6 +16,8 @@ import { createClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { JobListItem, type JobListItemData } from '@/components/company/job-list-item'
+import { computeApebiScore } from '@/lib/apebi-score'
+import { ApebiScoreBadge } from '@/components/company/apebi-score-badge'
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -178,6 +180,12 @@ export default async function EntreprisePage({ params }: { params: Params }) {
   const memberYear = company.apebi_member_since
     ? new Date(company.apebi_member_since).getFullYear()
     : null
+  const apebiScore = computeApebiScore({
+    apebi_member_since: company.apebi_member_since,
+    has_techtalent_label: company.has_techtalent_label,
+    logo_url: company.logo_url,
+    activeJobCount: jobs.length,
+  })
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -346,8 +354,13 @@ export default async function EntreprisePage({ params }: { params: Params }) {
             )}
           </div>
 
-          {/* ── Right : Jobs ──────────────────────── */}
-          <aside aria-labelledby="jobs-heading">
+          {/* ── Right : Score + Jobs ──────────────── */}
+          <aside aria-labelledby="jobs-heading" className="space-y-6">
+
+            {/* Score APEBI Employeur */}
+            <ApebiScoreBadge score={apebiScore} variant="full" />
+
+            <div>
             <h2
               id="jobs-heading"
               className="mb-4 font-heading text-base font-semibold text-white"
@@ -371,6 +384,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 ))}
               </ul>
             )}
+            </div>
           </aside>
 
         </div>

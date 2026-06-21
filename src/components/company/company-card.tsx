@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { Check, MapPin, Award } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { computeApebiScore } from '@/lib/apebi-score'
+import { ApebiScoreBadge } from './apebi-score-badge'
 
 const AVATAR_PALETTES = [
   'bg-[#00AFD2]/10 text-[#00AFD2]',
@@ -43,6 +45,7 @@ interface CompanyCardProps {
 export function CompanyCard({ company, jobCount }: CompanyCardProps) {
   const { name, slug, sector, city, logo_url, has_techtalent_label, apebi_member_since } = company
   const colour = avatarColour(name)
+  const score = computeApebiScore({ apebi_member_since, has_techtalent_label, logo_url, activeJobCount: jobCount })
 
   return (
     <Link
@@ -96,6 +99,13 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
             </span>
           )}
         </div>
+
+        {/* Score APEBI */}
+        {score.level > 0 && (
+          <div className="mb-3">
+            <ApebiScoreBadge score={score} variant="compact" />
+          </div>
+        )}
 
         {/* Footer */}
         <div className="mt-auto flex items-center justify-between">
