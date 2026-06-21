@@ -13,7 +13,7 @@ export default async function SuperAdminPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/connexion')
 
-  const isSuperAdmin = user.user_metadata?.role === 'SUPER_ADMIN'
+  const isSuperAdmin = (user as any).app_metadata?.role === 'SUPER_ADMIN'
   if (!isSuperAdmin) redirect('/admin')
 
   // Fetch admin users list (users with role=ADMIN in metadata)

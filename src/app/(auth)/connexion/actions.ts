@@ -19,7 +19,9 @@ export async function signIn(
   if (error) return { error: translateAuthError(error.message) }
 
   const { data: { user } } = await supabase.auth.getUser()
-  const role = user?.user_metadata?.role as string | undefined
+  const userMeta = user?.user_metadata?.role as string | undefined
+  const appMeta = (user as any)?.app_metadata?.role as string | undefined
+  const role = appMeta === 'SUPER_ADMIN' || appMeta === 'ADMIN' ? appMeta : userMeta
 
   // Validate redirect to prevent open redirect
   const defaultDest =

@@ -22,10 +22,12 @@ export async function DashboardNavbar() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  const appRole = user ? ((user as any).app_metadata?.role as string | undefined) : undefined
+  const userRole = user ? (user.user_metadata?.role as string | undefined) : undefined
   const userInfo = user
     ? {
         email: user.email ?? '',
-        role: (user.user_metadata?.role as string) ?? 'talent',
+        role: appRole ?? userRole ?? 'talent',
         initials: (user.email ?? '?').slice(0, 2).toUpperCase(),
       }
     : null

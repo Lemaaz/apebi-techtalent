@@ -29,7 +29,9 @@ export async function GET(request: Request) {
 
   // Pas de next → confirmation email → rediriger selon le rôle
   const { data: { user } } = await supabase.auth.getUser()
-  const role = user?.user_metadata?.role as string | undefined
+  const userRole = user?.user_metadata?.role as string | undefined
+  const appRole = (user as any)?.app_metadata?.role as string | undefined
+  const role = appRole === 'SUPER_ADMIN' || appRole === 'ADMIN' ? appRole : userRole
 
   // OAuth sans rôle défini → onboarding obligatoire (bug A2)
   if (!role) {

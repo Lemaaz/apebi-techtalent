@@ -26,6 +26,7 @@ export async function promoteToAdmin(formData: FormData): Promise<{ error?: stri
   // Promote to ADMIN
   const { error: updateError } = await supabase.auth.admin.updateUserById(target.id, {
     user_metadata: { ...target.user_metadata, role: 'ADMIN' },
+    app_metadata: { ...(target.app_metadata ?? {}), role: 'ADMIN' },
   })
 
   if (updateError) return { error: 'Erreur lors de la promotion : ' + updateError.message }

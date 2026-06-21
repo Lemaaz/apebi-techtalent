@@ -13,7 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { data: isAdmin } = await supabase.rpc('is_admin')
   if (!isAdmin) redirect('/')
 
-  const isSuperAdmin = user.user_metadata?.role === 'SUPER_ADMIN'
+  const isSuperAdmin = (user as any).app_metadata?.role === 'SUPER_ADMIN'
 
   return (
     <div className="flex min-h-dvh flex-col" style={{ background: 'var(--apebi-bg-admin)' }}>

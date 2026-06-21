@@ -154,7 +154,8 @@ export default async function TalentProfilPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/connexion')
 
-  const role = user.user_metadata?.role as string | undefined
+  const appRole = (user as any).app_metadata?.role as string | undefined
+  const role = appRole === 'SUPER_ADMIN' || appRole === 'ADMIN' ? appRole : (user.user_metadata?.role as string | undefined)
   if (role === 'SUPER_ADMIN' || role === 'ADMIN') redirect('/admin')
   if (role === 'entreprise') redirect('/entreprise/dashboard')
 
