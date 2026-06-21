@@ -74,11 +74,30 @@ export async function deleteAccount(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/connexion')
 
-  // Delete talent profile first (cascades to related data via FK)
+  const adminClient = await createAdminClient()
+
+  // Purge Storage files (RGPD — droit à l'effacement).
+  // Les fichiers sont organisés par user.id/ dans chaque bucket.
+  // Erreurs non bloquantes : le compte est supprimé même si Storage échoue.
+  for (const bucket of ['resumes', 'avatars'] as const) {
+    try {
+      const { data: files } = await adminClient.storage.from(bucket).list(user.id)
+      if (files && files.length > 0) {
+        const paths = files.map((f) => `${user.id}/${f.name}`)
+        const { error: rmErr } = await adminClient.storage.from(bucket).remove(paths)
+        if (rmErr) {
+          console.error(`[deleteAccount] Storage remove failed — bucket=${bucket} user=${user.id}`, rmErr.message)
+        }
+      }
+    } catch (e) {
+      console.error(`[deleteAccount] Storage list failed — bucket=${bucket} user=${user.id}`, e)
+    }
+  }
+
+  // Delete talent profile (cascades to related data via FK)
   await supabase.from('talent_profiles').delete().eq('user_id', user.id)
 
   // Delete auth user via service role
-  const adminClient = createAdminClient()
   const { error } = await adminClient.auth.admin.deleteUser(user.id)
   if (error) return { error: 'Erreur lors de la suppression. Contactez le support.' }
 

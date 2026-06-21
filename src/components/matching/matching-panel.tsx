@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Sparkles, Loader2, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
+import { Sparkles, Loader2, ChevronDown, ChevronUp, ExternalLink, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { ScoreBadge, ScoreBar } from './score-badge'
@@ -43,8 +43,13 @@ export function JobMatchingPanel({ jobId }: { jobId: string }) {
         >
           <Sparkles className="size-4" style={{ color: '#00AFD2' }} aria-hidden />
         </div>
-        <div>
-          <p className="font-heading text-sm font-semibold text-white">Matching IA</p>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <p className="font-heading text-sm font-semibold text-white">Matching IA</p>
+            <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-400">
+              En calibration
+            </span>
+          </div>
           <p className="text-[11px] text-white/40">Analyse des profils par Claude</p>
         </div>
       </div>
@@ -112,7 +117,14 @@ export function JobMatchingPanel({ jobId }: { jobId: string }) {
 
 function TalentMatchItem({ result }: { result: TalentMatchResult }) {
   const [expanded, setExpanded] = useState(false)
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null)
   const { talent, score, points_forts, points_attention } = result
+
+  function sendFeedback(value: 'up' | 'down') {
+    setFeedback(value)
+    // Calibration signal — persistance V1.1
+    console.info('[matching-feedback]', { talent_id: talent.id, score, feedback: value })
+  }
 
   return (
     <li className="rounded-xl border border-white/8 bg-white/3 p-3">
@@ -191,12 +203,37 @@ function TalentMatchItem({ result }: { result: TalentMatchResult }) {
               </ul>
             </div>
           )}
-          <Link
-            href={`/entreprise/talents/${talent.id}`}
-            className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#00AFD2] hover:opacity-80"
-          >
-            Voir le profil complet <ExternalLink className="size-3" aria-hidden />
-          </Link>
+          <div className="mt-3 flex items-center justify-between">
+            <Link
+              href={`/entreprise/talents/${talent.id}`}
+              className="inline-flex items-center gap-1 text-[11px] text-[#00AFD2] hover:opacity-80"
+            >
+              Voir le profil complet <ExternalLink className="size-3" aria-hidden />
+            </Link>
+            {feedback === null ? (
+              <div className="flex items-center gap-1" title="Ce matching est-il pertinent ?">
+                <span className="text-[10px] text-white/25">Pertinent ?</span>
+                <button
+                  onClick={() => sendFeedback('up')}
+                  className="rounded p-1 text-white/25 hover:text-emerald-400 transition-colors"
+                  aria-label="Oui, pertinent"
+                >
+                  <ThumbsUp className="size-3.5" aria-hidden />
+                </button>
+                <button
+                  onClick={() => sendFeedback('down')}
+                  className="rounded p-1 text-white/25 hover:text-rose-400 transition-colors"
+                  aria-label="Non, pas pertinent"
+                >
+                  <ThumbsDown className="size-3.5" aria-hidden />
+                </button>
+              </div>
+            ) : (
+              <span className="text-[10px] text-white/30">
+                {feedback === 'up' ? '✓ Merci' : '✓ Signal envoyé'}
+              </span>
+            )}
+          </div>
         </div>
       )}
     </li>
@@ -228,8 +265,13 @@ export function TalentMatchingPanel() {
     <div className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center gap-2.5">
         <Sparkles className="size-5 text-primary" aria-hidden />
-        <div>
-          <p className="font-heading text-sm font-semibold">Offres recommandées par l&apos;IA</p>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <p className="font-heading text-sm font-semibold">Offres recommandées par l&apos;IA</p>
+            <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600">
+              En calibration
+            </span>
+          </div>
           <p className="text-[11px] text-muted-foreground">Matchées sur votre profil par Claude</p>
         </div>
       </div>
@@ -292,7 +334,13 @@ export function TalentMatchingPanel() {
 
 function JobMatchItem({ result }: { result: JobMatchResult }) {
   const [expanded, setExpanded] = useState(false)
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null)
   const { job, score, points_forts, points_attention } = result
+
+  function sendFeedback(value: 'up' | 'down') {
+    setFeedback(value)
+    console.info('[matching-feedback]', { job_id: job.id, score, feedback: value })
+  }
 
   return (
     <li className="rounded-xl border border-border bg-background/50 p-3">
@@ -362,12 +410,37 @@ function JobMatchItem({ result }: { result: JobMatchResult }) {
               </ul>
             </div>
           )}
-          <Link
-            href={`/offres/${job.slug}`}
-            className="mt-2 inline-flex items-center gap-1 text-[11px] text-primary hover:opacity-80"
-          >
-            Voir l&apos;offre complète <ExternalLink className="size-3" aria-hidden />
-          </Link>
+          <div className="mt-3 flex items-center justify-between">
+            <Link
+              href={`/offres/${job.slug}`}
+              className="inline-flex items-center gap-1 text-[11px] text-primary hover:opacity-80"
+            >
+              Voir l&apos;offre complète <ExternalLink className="size-3" aria-hidden />
+            </Link>
+            {feedback === null ? (
+              <div className="flex items-center gap-1" title="Ce matching est-il pertinent ?">
+                <span className="text-[10px] text-muted-foreground">Pertinent ?</span>
+                <button
+                  onClick={() => sendFeedback('up')}
+                  className="rounded p-1 text-muted-foreground hover:text-emerald-500 transition-colors"
+                  aria-label="Oui, pertinent"
+                >
+                  <ThumbsUp className="size-3.5" aria-hidden />
+                </button>
+                <button
+                  onClick={() => sendFeedback('down')}
+                  className="rounded p-1 text-muted-foreground hover:text-rose-500 transition-colors"
+                  aria-label="Non, pas pertinent"
+                >
+                  <ThumbsDown className="size-3.5" aria-hidden />
+                </button>
+              </div>
+            ) : (
+              <span className="text-[10px] text-muted-foreground">
+                {feedback === 'up' ? '✓ Merci' : '✓ Signal envoyé'}
+              </span>
+            )}
+          </div>
         </div>
       )}
     </li>

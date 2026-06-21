@@ -12,6 +12,13 @@ import { StatBar } from '@/components/observatoire/stat-bar'
 //
 // ⚠️ Requiert l'application des migrations 004-008 + `supabase gen types`
 //    pour que les vues mv_* soient typées et lisibles.
+//
+// Seuil de représentativité (décision CEO review 21/06/2026) :
+// les données ne sont affichées qu'à partir de 200 talents validés ET 100 offres actives.
+// En dessous, la page affiche un message "données en cours de collecte".
+const THRESHOLD_TALENTS = 200
+const THRESHOLD_JOBS = 100
+
 export const revalidate = 3600
 
 export const metadata: Metadata = {
@@ -33,7 +40,7 @@ type DomainRow = {
 async function fetchObservatoire() {
   const supabase = await createClient()
 
-  const [demand, supply, geo, domains, activeJobs] = await Promise.all([
+  const [demand, supply, geo, domains, activeJobs, approvedTalentsCount] = await Promise.all([
     supabase
       .from('mv_skills_demand')
       .select('name, domain_code, demand_count')
@@ -63,6 +70,12 @@ async function fetchObservatoire() {
       .from('job_postings')
       .select('id', { count: 'exact', head: true })
       .eq('status', 'active'),
+    // Comptage réel des talents validés pour le seuil de représentativité.
+    // Distinct du proxy geo (sum(talent_count)) qui peut être incomplet.
+    supabase
+      .from('talent_profiles')
+      .select('id', { count: 'exact', head: true })
+      .eq('validation_status', 'approved'),
   ])
 
   if (demand.error || supply.error || geo.error || domains.error) {
@@ -78,22 +91,21 @@ async function fetchObservatoire() {
     geo: geo.data ?? [],
     domains: domains.data ?? [],
     activeJobsCount: activeJobs.count ?? 0,
+    approvedTalentsCount: approvedTalentsCount.count ?? 0,
   }
 }
 
 export default async function ObservatoirePage() {
-  const { demand, supply, geo, domains, activeJobsCount } = await fetchObservatoire()
+  const { demand, supply, geo, domains, activeJobsCount, approvedTalentsCount } = await fetchObservatoire()
 
-  const hasData =
-    demand.length > 0 || supply.length > 0 || geo.length > 0 || domains.some((d) => d.active_jobs > 0 || d.approved_talents > 0)
+  // Seuil de représentativité — données masquées tant qu'il n'y a pas assez de signaux
+  const totalActiveJobs = activeJobsCount
+  const isAboveThreshold = approvedTalentsCount >= THRESHOLD_TALENTS && totalActiveJobs >= THRESHOLD_JOBS
 
   const maxDemand = Math.max(1, ...demand.map((d) => d.demand_count))
   const maxSupply = Math.max(1, ...supply.map((s) => s.supply_count))
   const maxGeo = Math.max(1, ...geo.map((g) => g.talent_count))
 
-  // Indicateurs globaux
-  // Offres actives : comptage direct (indépendant du domain_id sur les offres).
-  const totalActiveJobs = activeJobsCount
   // Talents : somme des talents validés répartis par ville (proxy lisible par anon).
   const totalTalents = geo.reduce((acc, g) => acc + g.talent_count, 0)
 
@@ -137,13 +149,23 @@ export default async function ObservatoirePage() {
           </div>
         </section>
 
-        {!hasData ? (
+        {!isAboveThreshold ? (
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <EmptyState
-              icon={BarChart3}
-              title="Données insuffisantes pour le moment"
-              description="L'Observatoire se construit à mesure que les talents et les entreprises rejoignent la plateforme. Les premières tendances apparaîtront dès les premières inscriptions validées."
-            />
+            <div className="rounded-2xl border border-white/8 bg-[#141414] p-8 text-center">
+              <Info className="mx-auto mb-4 size-10 text-white/20" aria-hidden />
+              <h2 className="font-heading text-lg font-semibold text-white">
+                Données en cours de collecte
+              </h2>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/45">
+                L&apos;Observatoire sera activé dès que la plateforme atteindra{' '}
+                <strong className="text-white/70">{THRESHOLD_TALENTS} talents validés</strong> et{' '}
+                <strong className="text-white/70">{THRESHOLD_JOBS} offres actives</strong>.
+                Ces seuils garantissent la représentativité des données publiées par l&apos;APEBI.
+              </p>
+              <p className="mt-4 text-xs text-white/25">
+                Actuellement : {approvedTalentsCount} talent{approvedTalentsCount !== 1 ? 's' : ''} validé{approvedTalentsCount !== 1 ? 's' : ''} · {totalActiveJobs} offre{totalActiveJobs !== 1 ? 's' : ''} active{totalActiveJobs !== 1 ? 's' : ''}
+              </p>
+            </div>
           </div>
         ) : (
           <div className="mx-auto max-w-5xl space-y-12 px-4 py-12 sm:px-6">
