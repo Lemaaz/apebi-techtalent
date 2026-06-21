@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { signIn, type SignInState } from './actions'
+import { GoogleOAuthButton } from '@/components/auth/google-oauth-button'
+import { AuthDivider } from '@/components/auth/auth-divider'
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -37,6 +39,9 @@ export function ConnexionForm({
           Accédez à votre espace APEBI TechTalent
         </p>
       </div>
+
+      <GoogleOAuthButton />
+      <AuthDivider />
 
       {message === 'password-updated' && (
         <div

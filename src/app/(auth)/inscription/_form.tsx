@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { signUp, type SignUpState } from './actions'
+import { GoogleOAuthButton } from '@/components/auth/google-oauth-button'
+import { AuthDivider } from '@/components/auth/auth-divider'
 
 type Role = 'talent' | 'entreprise'
 
@@ -94,7 +96,12 @@ export function InscriptionForm() {
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="mb-4">
+            <GoogleOAuthButton label="S'inscrire avec Google" />
+          </div>
+          <AuthDivider />
+
+          <div className="mt-4 space-y-3">
             {ROLES.map(({ value, icon: Icon, title, description }) => (
               <button
                 key={value}
