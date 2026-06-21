@@ -6,7 +6,65 @@ const PROTECTED_TALENT_ROUTES = ['/talent/']
 const PROTECTED_RECRUITER_ROUTES = ['/entreprise/']
 const PROTECTED_ADMIN_ROUTES = ['/admin', '/admin/']
 
+// ── Rate limiter — sliding window in-memory ──────────────────────────────────
+// Per Edge instance (stateless). Sufficient for MVP traffic.
+// Upgrade to Upstash Redis for multi-region enforcement if needed.
+
+type WindowEntry = { count: number; resetAt: number }
+const _rateWindows = new Map<string, WindowEntry>()
+
+const RATE_RULES: { pattern: RegExp; limit: number; windowMs: number }[] = [
+  { pattern: /^\/api\/matching\//, limit: 10, windowMs: 60_000 },
+  { pattern: /^\/api\/upload(\/|$)/, limit: 5,  windowMs: 60_000 },
+  { pattern: /^\/api\/linkedin\//, limit: 10, windowMs: 60_000 },
+]
+
+function checkRateLimit(ip: string, pathname: string): { limited: boolean; retryAfter: number } {
+  const rule = RATE_RULES.find((r) => r.pattern.test(pathname))
+  if (!rule) return { limited: false, retryAfter: 0 }
+
+  // Bucket key = ip + route prefix (first 3 path segments)
+  const bucket = pathname.split('/').slice(0, 3).join('/')
+  const key = `${ip}:${bucket}`
+  const now = Date.now()
+  const entry = _rateWindows.get(key)
+
+  if (!entry || now >= entry.resetAt) {
+    _rateWindows.set(key, { count: 1, resetAt: now + rule.windowMs })
+    return { limited: false, retryAfter: 0 }
+  }
+
+  entry.count += 1
+  if (entry.count > rule.limit) {
+    return { limited: true, retryAfter: Math.ceil((entry.resetAt - now) / 1000) }
+  }
+
+  return { limited: false, retryAfter: 0 }
+}
+
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // ── Rate limiting (before auth — short-circuits expensive routes) ──────────
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    request.headers.get('x-real-ip') ??
+    '127.0.0.1'
+
+  const { limited, retryAfter } = checkRateLimit(ip, pathname)
+  if (limited) {
+    return new NextResponse(
+      JSON.stringify({ error: 'Trop de requêtes. Réessayez dans quelques instants.' }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': String(retryAfter),
+        },
+      },
+    )
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -30,7 +88,6 @@ export async function proxy(request: NextRequest) {
 
   // getUser() refreshes the token if needed and persists updated cookies
   const { data: { user } } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
 
   // ── Route protection ───────────────────────────────────────
   const isProtected =

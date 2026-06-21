@@ -21,16 +21,29 @@ interface NotificationBellProps {
   initialNotifications: Notification[]
 }
 
+const POLL_INTERVAL_MS = 30_000
+
 export function NotificationBell({ userId, initialNotifications }: NotificationBellProps) {
   const [notifs, setNotifs] = useState<Notification[]>(initialNotifications)
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const panelRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
+  const realtimeOk = useRef(false)
+
+  async function fetchNotifs() {
+    const { data } = await supabase
+      .from('notifications')
+      .select('id, type, title, body, link, is_read, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(30)
+    if (data) setNotifs(data as Notification[])
+  }
 
   const unreadCount = notifs.filter((n) => !n.is_read).length
 
-  // ── Supabase Realtime subscription ──────────────────────────
+  // ── Supabase Realtime + fallback polling ─────────────────────
   useEffect(() => {
     const channel = supabase
       .channel(`notifications:${userId}`)
@@ -60,10 +73,22 @@ export function NotificationBell({ userId, initialNotifications }: NotificationB
           )
         },
       )
-      .subscribe()
+      .subscribe((status) => {
+        realtimeOk.current = status === 'SUBSCRIBED'
+      })
 
-    return () => { supabase.removeChannel(channel) }
-  }, [userId, supabase])
+    // Fallback polling — active only when Realtime is not SUBSCRIBED.
+    // Covers: free tier saturation (>80 connections), network drops, cold start.
+    const poll = setInterval(() => {
+      if (!realtimeOk.current) fetchNotifs()
+    }, POLL_INTERVAL_MS)
+
+    return () => {
+      clearInterval(poll)
+      supabase.removeChannel(channel)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
 
   // Close panel on outside click
   useEffect(() => {
