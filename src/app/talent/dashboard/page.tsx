@@ -181,6 +181,28 @@ export default async function TalentDashboardPage() {
         </div>
       </div>
 
+      {/* ── Completeness CTA banner (pending + score < 70) ── */}
+      {talent.validation_status === 'pending' && score < 70 && (
+        <div
+          className="mb-6 flex items-center justify-between gap-3 rounded-xl p-4"
+          style={{ background: '#EFF6FF', border: '1px solid #BFDBFE' }}
+        >
+          <div className="flex items-center gap-3">
+            <TrendingUp className="size-4 shrink-0 text-blue-600" aria-hidden />
+            <p className="text-[13px] text-blue-800">
+              Améliorez votre score de complétude pour augmenter vos chances d'être contacté.
+            </p>
+          </div>
+          <Link
+            href="/talent/profil/modifier"
+            className="shrink-0 rounded-lg px-3 py-1.5 font-heading text-[12px] font-semibold text-white transition-colors hover:opacity-90"
+            style={{ background: '#2563EB' }}
+          >
+            Compléter mon profil →
+          </Link>
+        </div>
+      )}
+
       {/* ── KPI cards ── */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Completeness */}

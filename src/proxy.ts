@@ -28,10 +28,11 @@ export async function proxy(request: NextRequest) {
     }
   )
 
+  // getUser() refreshes the token if needed and persists updated cookies
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
-  // Redirect to login if accessing protected routes without auth
+  // ── Route protection ───────────────────────────────────────
   const isProtected =
     PROTECTED_TALENT_ROUTES.some(r => pathname.startsWith(r)) ||
     PROTECTED_RECRUITER_ROUTES.some(r => pathname.startsWith(r)) ||
@@ -44,12 +45,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Redirect away from auth pages if already logged in
+  // ── Auth page guard ────────────────────────────────────────
   if (user && (pathname === '/connexion' || pathname === '/inscription')) {
+    const role = user.user_metadata?.role as string | undefined
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = role === 'entreprise' ? '/entreprise/dashboard' : '/talent/dashboard'
     return NextResponse.redirect(url)
   }
+
+  // Set x-pathname header so server layouts can read the current path
+  supabaseResponse.headers.set('x-pathname', pathname)
 
   return supabaseResponse
 }
