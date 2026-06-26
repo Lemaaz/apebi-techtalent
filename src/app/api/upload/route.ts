@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 // Allowlist explicite — empêche l'écriture dans des buckets arbitraires
-const ALLOWED_BUCKETS = ['avatars', 'logos', 'resumes'] as const
+const ALLOWED_BUCKETS = ['avatars', 'logos', 'banners', 'resumes'] as const
 type AllowedBucket = (typeof ALLOWED_BUCKETS)[number]
 
 const BUCKET_CONFIG: Record<AllowedBucket, { types: string[]; maxBytes: number }> = {
   avatars: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 2 * 1024 * 1024 },
   logos:   { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 2 * 1024 * 1024 },
+  banners: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 3 * 1024 * 1024 },
   resumes: { types: ['application/pdf'],                        maxBytes: 5 * 1024 * 1024 },
 }
 

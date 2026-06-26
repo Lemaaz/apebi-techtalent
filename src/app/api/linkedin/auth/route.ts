@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 const LINKEDIN_AUTH_URL = 'https://www.linkedin.com/oauth/v2/authorization'
-const SCOPES = 'r_liteprofile r_emailaddress'
+// OIDC scopes via "Sign In with LinkedIn using OpenID Connect" (Standard Tier)
+const SCOPES = 'openid profile email'
 
 export async function GET(req: NextRequest) {
   const supabase = await createClient()

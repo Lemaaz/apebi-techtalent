@@ -45,7 +45,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`${poppins.variable} ${hind.variable} font-sans antialiased`}>
+      <body className={`${poppins.variable} ${hind.variable} font-sans antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
           <Toaster position="bottom-right" richColors />

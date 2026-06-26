@@ -2,44 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 const TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
-const PROFILE_URL = 'https://api.linkedin.com/v2/me?projection=(id,localizedFirstName,localizedLastName,localizedHeadline,profilePicture(displayImage~:playableStreams))'
-const EMAIL_URL = 'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))'
+// OIDC userinfo endpoint — works with openid+profile+email scopes (Standard Tier)
+const USERINFO_URL = 'https://api.linkedin.com/v2/userInfo'
 
 type LinkedInTokenResponse = {
   access_token: string
   expires_in: number
 }
 
-type LinkedInProfile = {
-  id: string
-  localizedFirstName: string
-  localizedLastName: string
-  localizedHeadline?: string
-  profilePicture?: {
-    'displayImage~'?: {
-      elements?: Array<{
-        authorizationMethod: string
-        identifiers?: Array<{ identifier: string; identifierType: string }>
-      }>
-    }
-  }
-}
-
-type LinkedInEmailResponse = {
-  elements?: Array<{
-    'handle~'?: { emailAddress?: string }
-  }>
-}
-
-function extractProfilePhoto(profile: LinkedInProfile): string | null {
-  const elements = profile.profilePicture?.['displayImage~']?.elements
-  if (!elements || elements.length === 0) return null
-  // Get the largest image (last element)
-  const largest = elements[elements.length - 1]
-  const identifier = largest?.identifiers?.find(
-    (id) => id.identifierType === 'EXTERNAL_URL',
-  )
-  return identifier?.identifier ?? null
+type LinkedInUserInfo = {
+  sub: string
+  name: string
+  given_name: string
+  family_name: string
+  picture?: string
+  email?: string
+  email_verified?: boolean
 }
 
 export async function GET(req: NextRequest) {
@@ -114,28 +92,23 @@ export async function GET(req: NextRequest) {
 
   const { access_token }: LinkedInTokenResponse = await tokenRes.json()
 
-  // ── Fetch profile + email in parallel ───────────────────
-  const [profileRes, emailRes] = await Promise.all([
-    fetch(PROFILE_URL, { headers: { Authorization: `Bearer ${access_token}` } }),
-    fetch(EMAIL_URL, { headers: { Authorization: `Bearer ${access_token}` } }),
-  ])
+  // ── Fetch OIDC userinfo (openid + profile + email) ─────────
+  const userInfoRes = await fetch(USERINFO_URL, {
+    headers: { Authorization: `Bearer ${access_token}` },
+  })
 
-  if (!profileRes.ok) {
-    console.error('[linkedin] Profile fetch failed:', profileRes.status)
+  if (!userInfoRes.ok) {
+    console.error('[linkedin] UserInfo fetch failed:', userInfoRes.status)
     return NextResponse.redirect(`${profileEditUrl}?linkedin_error=profile_fetch_failed`)
   }
 
-  const profile: LinkedInProfile = await profileRes.json()
-  const emailData: LinkedInEmailResponse = emailRes.ok ? await emailRes.json() : {}
+  const userInfo: LinkedInUserInfo = await userInfoRes.json()
 
-  const linkedinEmail = emailData.elements?.[0]?.['handle~']?.emailAddress ?? null
-  const photoUrl = extractProfilePhoto(profile)
-
-  // ── Upsert talent profile with LinkedIn data ─────────────
+  // ── Download + upload profile picture ───────────────────
   let avatarUrl: string | undefined
-  if (photoUrl) {
+  if (userInfo.picture) {
     try {
-      const photoRes = await fetch(photoUrl)
+      const photoRes = await fetch(userInfo.picture)
       if (photoRes.ok) {
         const photoBuffer = await photoRes.arrayBuffer()
         const path = `${user.id}/${Date.now()}.jpg`
@@ -155,9 +128,8 @@ export async function GET(req: NextRequest) {
   const { error: upsertError } = await supabase
     .from('talent_profiles')
     .update({
-      first_name: profile.localizedFirstName,
-      last_name: profile.localizedLastName,
-      ...(profile.localizedHeadline ? { title: profile.localizedHeadline } : {}),
+      first_name: userInfo.given_name,
+      last_name: userInfo.family_name,
       ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
     })
     .eq('user_id', user.id)
