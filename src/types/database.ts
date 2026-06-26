@@ -1107,6 +1107,7 @@ export type Database = {
         }
         Returns: Json
       }
+      increment_matching_quota: { Args: { p_user_id: string }; Returns: number }
       is_admin: { Args: never; Returns: boolean }
       is_company_member: { Args: { company_uuid: string }; Returns: boolean }
       refresh_observatoire: { Args: never; Returns: undefined }
