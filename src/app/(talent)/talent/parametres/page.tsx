@@ -12,7 +12,7 @@ export default async function ParametresPage() {
 
   const { data: talent } = await supabase
     .from('talent_profiles')
-    .select('visibility')
+    .select('visibility, receive_alerts')
     .eq('user_id', user.id)
     .maybeSingle()
 
@@ -34,6 +34,7 @@ export default async function ParametresPage() {
           <ParametresClient
             email={user.email ?? ''}
             visibility={talent.visibility ?? false}
+            receiveAlerts={talent.receive_alerts ?? true}
           />
         </div>
       </div>

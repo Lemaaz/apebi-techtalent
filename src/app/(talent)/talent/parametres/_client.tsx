@@ -2,8 +2,8 @@
 
 import { useActionState, useTransition, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { Eye, EyeOff, Lock, Trash2, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react'
-import { changePassword, toggleVisibilityFromParams, deleteAccount, type PwdState, type DeleteState } from './actions'
+import { Bell, BellOff, Eye, EyeOff, Lock, Trash2, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { changePassword, toggleVisibilityFromParams, toggleAlertsFromParams, deleteAccount, type PwdState, type DeleteState } from './actions'
 
 // ── Submit helpers ────────────────────────────────────────────
 
@@ -50,9 +50,11 @@ const LABEL_CLS = 'mb-1 block font-heading text-[12px] font-medium text-muted-fo
 export function ParametresClient({
   email,
   visibility,
+  receiveAlerts,
 }: {
   email: string
   visibility: boolean
+  receiveAlerts: boolean
 }) {
   const initPwd: PwdState = { error: null, success: false }
   const initDel: DeleteState = { error: null }
@@ -63,12 +65,22 @@ export function ParametresClient({
   const [visibilityState, setVisibilityState] = useState(visibility)
   const [visTransition, startVisTransition] = useTransition()
 
+  const [alertsState, setAlertsState] = useState(receiveAlerts)
+  const [alertsTransition, startAlertsTransition] = useTransition()
+
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   function handleToggleVisibility() {
     startVisTransition(async () => {
       await toggleVisibilityFromParams(visibilityState)
       setVisibilityState(!visibilityState)
+    })
+  }
+
+  function handleToggleAlerts() {
+    startAlertsTransition(async () => {
+      await toggleAlertsFromParams(alertsState)
+      setAlertsState(!alertsState)
     })
   }
 
@@ -152,6 +164,41 @@ export function ParametresClient({
               className={[
                 'pointer-events-none inline-block size-5 rounded-full bg-white shadow-lg transition-transform duration-200',
                 visibilityState ? 'translate-x-5' : 'translate-x-0',
+              ].join(' ')}
+            />
+          </button>
+        </div>
+      </SectionCard>
+
+      {/* Alertes email */}
+      <SectionCard title="Alertes offres par email" icon={alertsState ? Bell : BellOff}>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="font-heading text-[13px] font-medium text-foreground">
+              {alertsState ? 'Alertes activées' : 'Alertes désactivées'}
+            </p>
+            <p className="mt-0.5 font-sans text-[12px] text-muted-foreground">
+              {alertsState
+                ? 'Vous êtes notifié par email quand des offres correspondent à vos compétences.'
+                : 'Vous ne recevez plus d\'alertes email pour les nouvelles offres.'}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleToggleAlerts}
+            disabled={alertsTransition}
+            aria-label={alertsState ? 'Désactiver les alertes email' : 'Activer les alertes email'}
+            className={[
+              'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--apebi-cyan)] focus-visible:ring-offset-2 disabled:opacity-50',
+              alertsState ? 'bg-[var(--apebi-cyan)]' : 'bg-muted',
+            ].join(' ')}
+            role="switch"
+            aria-checked={alertsState}
+          >
+            <span
+              className={[
+                'pointer-events-none inline-block size-5 rounded-full bg-white shadow-lg transition-transform duration-200',
+                alertsState ? 'translate-x-5' : 'translate-x-0',
               ].join(' ')}
             />
           </button>

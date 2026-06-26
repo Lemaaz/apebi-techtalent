@@ -53,6 +53,21 @@ export async function toggleVisibilityFromParams(current: boolean): Promise<void
   revalidatePath('/talent/profil')
 }
 
+// ── Basculer les alertes email ────────────────────────────────
+
+export async function toggleAlertsFromParams(current: boolean): Promise<void> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/connexion')
+
+  await supabase
+    .from('talent_profiles')
+    .update({ receive_alerts: !current })
+    .eq('user_id', user.id)
+
+  revalidatePath('/talent/parametres')
+}
+
 // ── Supprimer le compte ───────────────────────────────────────
 
 const deleteSchema = z.object({

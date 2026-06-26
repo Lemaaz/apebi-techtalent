@@ -759,11 +759,13 @@ export type Database = {
           job_type: string[] | null
           label_qr_token: string | null
           label_valid_until: string | null
+          last_alerted_at: string | null
           last_name: string
           linkedin_imported_at: string | null
           linkedin_url: string | null
           mission_duration_weeks: number | null
           portfolio_url: string | null
+          receive_alerts: boolean
           remote_preference: string | null
           seniority_level: string | null
           title: string | null
@@ -793,11 +795,13 @@ export type Database = {
           job_type?: string[] | null
           label_qr_token?: string | null
           label_valid_until?: string | null
+          last_alerted_at?: string | null
           last_name: string
           linkedin_imported_at?: string | null
           linkedin_url?: string | null
           mission_duration_weeks?: number | null
           portfolio_url?: string | null
+          receive_alerts?: boolean
           remote_preference?: string | null
           seniority_level?: string | null
           title?: string | null
@@ -827,11 +831,13 @@ export type Database = {
           job_type?: string[] | null
           label_qr_token?: string | null
           label_valid_until?: string | null
+          last_alerted_at?: string | null
           last_name?: string
           linkedin_imported_at?: string | null
           linkedin_url?: string | null
           mission_duration_weeks?: number | null
           portfolio_url?: string | null
+          receive_alerts?: boolean
           remote_preference?: string | null
           seniority_level?: string | null
           title?: string | null
