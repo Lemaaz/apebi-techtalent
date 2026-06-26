@@ -3,11 +3,13 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Globe, Code2, ExternalLink, GraduationCap,
-  Briefcase, ArrowLeft, Mail,
+  Briefcase, ArrowLeft,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
+import { InviteToApplyModal } from '@/components/company/invite-to-apply-modal'
+import { getCompanyActiveJobs } from './actions'
 
 type TalentRow = {
   id: string
@@ -167,18 +169,8 @@ export default async function TalentDetailRecruteurPage({
     (a, b) => (b.end_year ?? 9999) - (a.end_year ?? 9999),
   )
 
-  // Get company email to prefill mailto
-  const { data: companyMember } = await supabase
-    .from('company_members')
-    .select('company_profiles ( name )')
-    .eq('user_id', user.id)
-    .maybeSingle<{ company_profiles: { name: string } | null }>()
-  const companyName = companyMember?.company_profiles?.name ?? 'une entreprise APEBI'
-
-  const mailtoSubject = encodeURIComponent(`Opportunité via APEBI TechTalent — ${companyName}`)
-  const mailtoBody = encodeURIComponent(
-    `Bonjour ${talent.first_name},\n\nVotre profil sur APEBI TechTalent a retenu notre attention chez ${companyName}.\n\nNous serions ravis d'échanger avec vous sur une opportunité.\n\nCordialement,\n${companyName}`,
-  )
+  // Fetch active jobs for the invite modal (parallel)
+  const activeJobs = await getCompanyActiveJobs()
 
   return (
     <>
@@ -253,18 +245,14 @@ export default async function TalentDetailRecruteurPage({
                 </div>
               </div>
 
-              {/* Contact CTA */}
-              {talent.linkedin_url && (
-                <a
-                  href={`${talent.linkedin_url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(buttonVariants({ size: 'sm' }), 'shrink-0 gap-1.5 text-xs')}
-                >
-                  <ExternalLink className="size-3.5" aria-hidden />
-                  Contacter sur LinkedIn
-                </a>
-              )}
+              {/* Header CTA */}
+              <div className="shrink-0">
+                <InviteToApplyModal
+                  talentId={talent.id}
+                  talentFirstName={talent.first_name}
+                  jobs={activeJobs}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -382,40 +370,33 @@ export default async function TalentDetailRecruteurPage({
 
           {/* Right sidebar */}
           <aside className="space-y-4">
-            {/* Contact card */}
+            {/* Invite to apply card */}
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-              <p className="mb-2 font-heading text-sm font-semibold text-foreground">
-                Contacter ce talent
+              <p className="mb-1 font-heading text-sm font-semibold text-foreground">
+                Inviter à postuler
               </p>
               <p className="mb-3 text-xs text-muted-foreground">
-                Prenez contact directement via LinkedIn ou email.
+                Envoyez une invitation à {talent.first_name} pour une de vos offres actives.
               </p>
-              <div className="flex flex-col gap-2">
-                {talent.linkedin_url && (
-                  <a
-                    href={talent.linkedin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      buttonVariants({ size: 'sm' }),
-                      'justify-start gap-1.5 text-xs',
-                    )}
-                  >
-                    <ExternalLink className="size-3.5" aria-hidden />
-                    LinkedIn
-                  </a>
-                )}
+              <InviteToApplyModal
+                talentId={talent.id}
+                talentFirstName={talent.first_name}
+                jobs={activeJobs}
+              />
+              {talent.linkedin_url && (
                 <a
-                  href={`mailto:?subject=${mailtoSubject}&body=${mailtoBody}`}
+                  href={talent.linkedin_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'justify-start gap-1.5 text-xs',
+                    'mt-2 w-full justify-start gap-1.5 text-xs',
                   )}
                 >
-                  <Mail className="size-3.5" aria-hidden />
-                  Email (modèle)
+                  <ExternalLink className="size-3.5" aria-hidden />
+                  Voir profil LinkedIn
                 </a>
-              </div>
+              )}
             </div>
 
             {/* Preferences */}
@@ -484,18 +465,15 @@ export default async function TalentDetailRecruteurPage({
               </div>
             )}
 
-            {/* Voir les offres de mon entreprise */}
+            {/* Mes offres */}
             <div className="rounded-xl border border-border bg-card p-4">
-              <p className="mb-2 font-heading text-sm font-semibold text-foreground">Recruter ce talent</p>
-              <p className="mb-3 text-xs text-muted-foreground">
-                Invitez-le à postuler sur l&apos;une de vos offres ouvertes.
-              </p>
+              <p className="mb-2 font-heading text-sm font-semibold text-foreground">Mes offres</p>
               <Link
                 href="/entreprise/offres"
                 className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'w-full justify-start gap-1.5 text-xs')}
               >
                 <Briefcase className="size-3.5" aria-hidden />
-                Mes offres en cours
+                Gérer mes offres
               </Link>
             </div>
           </aside>
