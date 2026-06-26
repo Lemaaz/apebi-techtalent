@@ -21,6 +21,18 @@ export async function GET() {
       return NextResponse.json({ error: 'Profil non encore validé' }, { status: 403 })
     }
 
+    // Quota journalier par user (protège le coût Claude — distribué via DB)
+    const DAILY_LIMIT = 30
+    const { data: quota, error: quotaErr } = await supabase.rpc('increment_matching_quota', {
+      p_user_id: user.id,
+    })
+    if (!quotaErr && (quota as number) > DAILY_LIMIT) {
+      return NextResponse.json(
+        { error: `Limite journalière de ${DAILY_LIMIT} requêtes matching atteinte. Réessayez demain.` },
+        { status: 429 },
+      )
+    }
+
     const results = await matchJobsToTalent(talent.id)
     return NextResponse.json({ results })
   } catch (err) {

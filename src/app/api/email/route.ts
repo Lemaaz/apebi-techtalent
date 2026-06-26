@@ -179,11 +179,14 @@ export async function POST(req: NextRequest) {
         const recruiterIds = (recruiterEmails.data ?? []).map((m: { user_id: string }) => m.user_id)
         if (recruiterIds.length === 0) break
 
-        const { data: authUsers } = await adminClient.auth.admin.listUsers()
-        const emails = authUsers.users
-          .filter((u) => recruiterIds.includes(u.id))
-          .map((u) => u.email)
-          .filter(Boolean) as string[]
+        const emails = (
+          await Promise.all(
+            recruiterIds.map(async (id) => {
+              const { data } = await adminClient.auth.admin.getUserById(id)
+              return data.user?.email ?? null
+            })
+          )
+        ).filter(Boolean) as string[]
 
         const talentName = `${app.talent_profiles.first_name} ${app.talent_profiles.last_name}`
         const html = newApplicationEmail(

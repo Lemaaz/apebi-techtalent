@@ -17,6 +17,10 @@ const RATE_RULES: { pattern: RegExp; limit: number; windowMs: number }[] = [
   { pattern: /^\/api\/matching\//, limit: 10, windowMs: 60_000 },
   { pattern: /^\/api\/upload(\/|$)/, limit: 5,  windowMs: 60_000 },
   { pattern: /^\/api\/linkedin\//, limit: 10, windowMs: 60_000 },
+  // Anti-bot inscription (per-IP, per-instance — good enough for MVP)
+  { pattern: /^\/(inscription|entreprises\/inscription)(\/|$)/, limit: 5, windowMs: 600_000 },
+  // Anti-spam email route (admin-only but still protect against brute force)
+  { pattern: /^\/api\/email(\/|$)/, limit: 20, windowMs: 60_000 },
 ]
 
 function checkRateLimit(ip: string, pathname: string): { limited: boolean; retryAfter: number } {
