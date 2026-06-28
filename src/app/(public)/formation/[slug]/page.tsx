@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     .from('training_programs')
     .select('title, description, training_institutions ( name )')
     .eq('slug', slug)
-    .eq('status', 'published')
+    .eq('status', 'active')
     .maybeSingle<{ title: string; description: string | null; training_institutions: { name: string } | null }>()
 
   if (!data) return { title: 'Formation introuvable' }
@@ -78,7 +78,7 @@ export default async function FormationDetailPage({ params }: { params: Params }
        domains ( name_fr, code, color )`,
     )
     .eq('slug', slug)
-    .eq('status', 'published')
+    .eq('status', 'active')
     .maybeSingle<ProgramDetail>()
 
   if (!program) notFound()
@@ -92,7 +92,7 @@ export default async function FormationDetailPage({ params }: { params: Params }
     .from('training_programs')
     .select('id, slug, title, level, modality, duration_text')
     .eq('institution_id', institution?.id ?? '')
-    .eq('status', 'published')
+    .eq('status', 'active')
     .neq('slug', slug)
     .limit(3)
     .returns<Array<{ id: string; slug: string; title: string; level: string | null; modality: string | null; duration_text: string | null }>>()

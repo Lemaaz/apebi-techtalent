@@ -95,31 +95,21 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
           )}
         </div>
 
-        {/* Footer: price + CTA */}
+        {/* Footer: price + "Voir" indicator (pas d'<a> imbriqué — la card entière est cliquable) */}
         <div className="mt-auto flex items-center justify-between gap-3 pt-2">
           {program.price_range ? (
             <span className="text-[12px] font-medium text-white/60">{program.price_range}</span>
           ) : (
             <span />
           )}
-
-          {program.url_inscription ? (
-            <a
-              href={program.url_inscription}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                'rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors',
-                'bg-[var(--apebi-cyan)] text-[#0F0F0F] hover:opacity-90',
-              )}
-            >
-              S&apos;inscrire
-            </a>
-          ) : (
-            <span className="rounded-lg border border-white/10 px-3 py-1.5 text-[12px] text-white/30">
-              Sur candidature
-            </span>
-          )}
+          <span
+            className={cn(
+              'rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors',
+              'bg-[var(--apebi-cyan)] text-[#0F0F0F] group-hover:opacity-90',
+            )}
+          >
+            Voir →
+          </span>
         </div>
       </div>
     </article>
