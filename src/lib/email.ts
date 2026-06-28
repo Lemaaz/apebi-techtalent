@@ -262,3 +262,42 @@ export async function sendAdminNewProfileEmail(params: {
     html: baseLayout(`${label} à valider`, content),
   })
 }
+
+// ── REC-04 : Invitation à postuler (recruteur → talent) ─────────────────────
+
+export async function sendInvitationEmail(params: {
+  toEmail: string
+  talentFirstName: string
+  companyName: string
+  jobTitle: string
+  jobSlug: string
+  message: string | null
+}) {
+  if (!isResendConfigured()) return
+
+  const jobUrl = `${APP_URL}/offres/${esc(params.jobSlug)}`
+
+  const content = `
+    <h1>Invitation à postuler</h1>
+    <p>Bonjour <strong>${esc(params.talentFirstName)}</strong>,</p>
+    <p>Votre profil sur APEBI TechTalent a retenu l&apos;attention de <strong>${esc(params.companyName)}</strong>.</p>
+    <div style="background:#f0fafd;border:1px solid #00afd230;border-radius:8px;padding:12px 16px;margin:16px 0">
+      <p style="font-size:15px;font-weight:700;color:#00AFD2;margin:0">${esc(params.jobTitle)}</p>
+      <p style="margin:4px 0 0;font-size:12px;color:#797979">Offre publiée sur APEBI TechTalent</p>
+    </div>
+    ${params.message ? `<div style="background:#f9f9f9;border-left:3px solid #00AFD2;padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0;font-style:italic">&ldquo;${esc(params.message)}&rdquo;</div>` : ''}
+    <p>Consultez l&apos;offre et postulez directement depuis la plateforme&nbsp;:</p>
+    <a href="${jobUrl}" class="btn">Voir l&apos;offre et postuler</a>
+    <p style="margin-top:16px;font-size:12px;color:#797979">
+      Vous recevez ce message car votre profil est visible sur la plateforme.
+      Pour le masquer&nbsp;: <a href="${APP_URL}/talent/profil" style="color:#00AFD2">gérer ma visibilité</a>.
+    </p>
+  `
+
+  await resend.emails.send({
+    from: `${FROM_NAME} <${FROM}>`,
+    to: params.toEmail,
+    subject: `${params.companyName} vous invite à postuler — ${params.jobTitle}`,
+    html: baseLayout('Invitation à postuler', content),
+  })
+}

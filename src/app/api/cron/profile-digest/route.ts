@@ -144,47 +144,61 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       if (talent_id) viewCountMap[talent_id] = (viewCountMap[talent_id] ?? 0) + 1
     }
 
-    // Nouvelles offres publiées cette semaine
-    const { count: newOffersCount } = await supabase
+    // Skills actifs sur les nouvelles offres de la semaine — 1 requête GROUP au lieu de N
+    // Récupère les skill_ids présents dans les offres actives publiées cette semaine
+    const { data: newJobSkillRows } = await supabase
       .from('job_postings')
-      .select('*', { count: 'exact', head: true })
+      .select('job_skills ( skill_id )')
       .eq('status', 'active')
       .gte('published_at', since7d)
+      .limit(50)
+    const newJobSkillSet = new Set<string>(
+      (newJobSkillRows ?? []).flatMap((j: { job_skills: Array<{ skill_id: string }> }) =>
+        j.job_skills.map(s => s.skill_id)
+      )
+    )
+
+    // Tous les skills des talents éligibles — 1 requête au lieu de N
+    const { data: allTalentSkillRows } = await supabase
+      .from('talent_skills')
+      .select('talent_id, skill_id')
+      .in('talent_id', talentIds)
+    const talentSkillsMap = new Map<string, string[]>()
+    for (const { talent_id, skill_id } of allTalentSkillRows ?? []) {
+      const arr = talentSkillsMap.get(talent_id) ?? []
+      arr.push(skill_id)
+      talentSkillsMap.set(talent_id, arr)
+    }
+
+    // Batch-fetch emails — 1 listUsers() au lieu de N getUserById()
+    const { data: usersPage } = await supabase.auth.admin.listUsers({ perPage: 1000, page: 1 })
+    const emailMap = new Map<string, string>()
+    for (const u of usersPage?.users ?? []) {
+      if (u.email) emailMap.set(u.id, u.email)
+    }
 
     const resendEnabled = !!process.env.RESEND_API_KEY
 
     let digestsSent = 0
 
     for (const talent of talents) {
-      const views     = viewCountMap[talent.id] ?? 0
-      const score     = talent.completeness_score ?? 0
+      const views = viewCountMap[talent.id] ?? 0
+      const score = talent.completeness_score ?? 0
 
-      // Comptage offres matchant les skills de ce talent (rapide — juste le total)
-      const { data: talentSkills } = await supabase
-        .from('talent_skills')
-        .select('skill_id')
-        .eq('talent_id', talent.id)
-
-      const skillIds = (talentSkills ?? []).map(s => s.skill_id)
-      let matchingNew = 0
-      if (skillIds.length > 0 && (newOffersCount ?? 0) > 0) {
-        const { count } = await supabase
-          .from('job_skills')
-          .select('*', { count: 'exact', head: true })
-          .in('skill_id', skillIds)
-        matchingNew = count ?? 0
-      }
+      // Matching en mémoire — 0 appel réseau supplémentaire
+      const skillIds = talentSkillsMap.get(talent.id) ?? []
+      const matchingNew = skillIds.filter(sid => newJobSkillSet.has(sid)).length
 
       // Ne pas envoyer si aucune info utile + profil complet
       if (views === 0 && matchingNew === 0 && score >= 70) continue
 
-      const { data: authUser } = await supabase.auth.admin.getUserById(talent.user_id)
-      if (!authUser.user?.email) continue
+      const email = emailMap.get(talent.user_id)
+      if (!email) continue
 
       if (resendEnabled) {
         await resend.emails.send({
           from: `${FROM_NAME} <${FROM}>`,
-          to: authUser.user.email,
+          to: email,
           subject: views > 0
             ? `Votre profil a été consulté ${views} fois cette semaine`
             : `Résumé de la semaine — APEBI TechTalent`,

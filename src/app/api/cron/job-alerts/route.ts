@@ -139,6 +139,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ ok: true, jobs: newJobs.length, emails: 0, reason: 'no eligible talents' })
     }
 
+    // Batch-fetch des emails — 1 listUsers() au lieu de N getUserById()
+    // (talents limités à 100, 1 page de 1000 couvre largement)
+    const { data: usersPage } = await supabase.auth.admin.listUsers({ perPage: 1000, page: 1 })
+    const emailMap = new Map<string, string>()
+    for (const u of usersPage?.users ?? []) {
+      if (u.email) emailMap.set(u.id, u.email)
+    }
+
     // Pour chaque talent, trouver les offres matchantes
     const resendEnabled = !!process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_[')
     let emailsSent = 0
@@ -156,9 +164,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
       if (matchingJobs.length === 0) continue
 
-      // Récupérer l'email du talent
-      const { data: authUser } = await supabase.auth.admin.getUserById(talent.user_id)
-      if (!authUser.user?.email) continue
+      // Email depuis la map pré-chargée — 0 appel réseau supplémentaire
+      const email = emailMap.get(talent.user_id)
+      if (!email) continue
 
       const jobAlerts: JobAlert[] = matchingJobs.slice(0, 5).map((j) => ({
         title: j.title,
@@ -171,7 +179,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       if (resendEnabled) {
         await resend.emails.send({
           from: `${FROM_NAME} <${FROM}>`,
-          to: authUser.user.email,
+          to: email,
           subject: `${jobAlerts.length} nouvelle${jobAlerts.length > 1 ? 's' : ''} offre${jobAlerts.length > 1 ? 's' : ''} pour vous sur APEBI TechTalent`,
           html: alertEmail(talent.first_name, jobAlerts, talent.id),
         })

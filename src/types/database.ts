@@ -1143,6 +1143,10 @@ export type Database = {
         }
         Returns: Json
       }
+      funnel_event_counts: {
+        Args: Record<string, never>
+        Returns: Array<{ event_type: string; cnt: number }>
+      }
       increment_matching_quota: { Args: { p_user_id: string }; Returns: number }
       is_admin: { Args: never; Returns: boolean }
       is_company_member: { Args: { company_uuid: string }; Returns: boolean }

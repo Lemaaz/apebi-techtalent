@@ -44,25 +44,13 @@ export default async function AdminDashboardPage() {
 
   const adminClient = createAdminClient()
 
-  // Funnel events — service_role uniquement (RLS révoquée pour anon/authenticated)
-  const FUNNEL_STEPS = [
-    'inscription',
-    'candidature_envoyee',
-    'candidature_vue',
-    'invitation_envoyee',
-    'mise_en_relation',
-  ] as const
-
-  const funnelCounts = await Promise.all(
-    FUNNEL_STEPS.map((step) =>
-      adminClient
-        .from('funnel_events')
-        .select('*', { count: 'exact', head: true })
-        .eq('event_type', step)
-        .then(({ count }) => ({ step, count: count ?? 0 }))
-    )
+  // Funnel events — 1 GROUP BY via RPC au lieu de 5 COUNT() séparés (T5 eng review)
+  const { data: funnelRows } = await adminClient
+    .rpc('funnel_event_counts')
+    .returns<Array<{ event_type: string; cnt: number }>>()
+  const funnel: Record<string, number> = Object.fromEntries(
+    (funnelRows ?? []).map(({ event_type, cnt }) => [event_type, cnt])
   )
-  const funnel = Object.fromEntries(funnelCounts.map(({ step, count }) => [step, count]))
 
   const [
     { count: talentsPending },
