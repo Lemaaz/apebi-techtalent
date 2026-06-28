@@ -43,6 +43,23 @@ export async function validateCompany(companyId: string, action: 'approved' | 'r
   }
 }
 
+// ADM-09 — Toggle mise en avant (is_featured) sur la landing
+export async function toggleFeatured(companyId: string, current: boolean): Promise<void> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+  const { data: isAdmin } = await supabase.rpc('is_admin')
+  if (!isAdmin) return
+
+  await supabase
+    .from('company_profiles')
+    .update({ is_featured: !current })
+    .eq('id', companyId)
+
+  revalidatePath('/admin/entreprises')
+  revalidatePath('/')
+}
+
 export async function deactivateCompany(companyId: string): Promise<{ error?: string }> {
   // Verify caller is admin
   const anonClient = await createClient()

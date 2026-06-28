@@ -74,7 +74,10 @@ export function NotificationBell({ userId, initialNotifications }: NotificationB
         },
       )
       .subscribe((status) => {
+        const wasOk = realtimeOk.current
         realtimeOk.current = status === 'SUBSCRIBED'
+        // Fetch immédiat si on vient de perdre Realtime (évite 30s d'attente)
+        if (wasOk && !realtimeOk.current) fetchNotifs()
       })
 
     // Fallback polling — active only when Realtime is not SUBSCRIBED.

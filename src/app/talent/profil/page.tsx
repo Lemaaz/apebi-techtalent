@@ -44,6 +44,7 @@ type TalentRow = {
   visibility: boolean
   completeness_score: number
   validation_status: string
+  has_techtalent_label: boolean | null
   talent_skills: Array<{
     level: string | null
     skills: {
@@ -166,7 +167,7 @@ export default async function TalentProfilPage() {
        city, country, linkedin_url, github_url, portfolio_url,
        years_experience, seniority_level, availability, job_type,
        remote_preference, expected_salary_range, visibility,
-       cv_url, completeness_score, validation_status,
+       cv_url, completeness_score, validation_status, has_techtalent_label,
        talent_skills (
          level,
          skills ( id, name, domains ( name_fr, color ) )
@@ -227,6 +228,12 @@ export default async function TalentProfilPage() {
                 <h1 className="font-heading text-xl font-bold text-foreground">{fullName}</h1>
                 {talent.availability && (
                   <AvailabilityBadge status={talent.availability} />
+                )}
+                {talent.has_techtalent_label && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#00AFD2]/10 px-2.5 py-0.5 font-heading text-[11px] font-semibold text-[#00AFD2]">
+                    <Award className="size-3" aria-hidden />
+                    Label APEBI TechTalent
+                  </span>
                 )}
                 {talent.validation_status !== 'approved' && (
                   <AdminStatusBadge status={talent.validation_status} />

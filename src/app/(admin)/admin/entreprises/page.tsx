@@ -7,7 +7,7 @@ import { AdminTable, AdminTableAction, type AdminTableColumn } from '@/component
 import { AdminStatusBadge } from '@/components/admin/admin-status-badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Building2 } from 'lucide-react'
-import { validateCompany, deactivateCompany } from './actions'
+import { validateCompany, deactivateCompany, toggleFeatured } from './actions'
 
 export const metadata: Metadata = { title: 'Entreprises — Admin' }
 
@@ -230,14 +230,27 @@ export default async function AdminEntreprisesPage({ searchParams }: { searchPar
               </form>
             )}
             {row.validation_status === 'approved' && (
-              <form
-                action={async () => {
-                  'use server'
-                  await deactivateCompany(row.id)
-                }}
-              >
-                <AdminTableAction label="Désactiver" variant="reject" />
-              </form>
+              <>
+                <form
+                  action={async () => {
+                    'use server'
+                    await toggleFeatured(row.id, row.is_featured)
+                  }}
+                >
+                  <AdminTableAction
+                    label={row.is_featured ? '★ Vedette' : '☆ Mettre en vedette'}
+                    variant={row.is_featured ? 'approve' : 'reset'}
+                  />
+                </form>
+                <form
+                  action={async () => {
+                    'use server'
+                    await deactivateCompany(row.id)
+                  }}
+                >
+                  <AdminTableAction label="Désactiver" variant="reject" />
+                </form>
+              </>
             )}
           </>
         )}

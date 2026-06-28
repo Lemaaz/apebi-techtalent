@@ -4,7 +4,7 @@
  */
 import { test, expect } from '@playwright/test'
 
-test.describe('Unsubscribe alertes email', () => {
+test.describe('Unsubscribe alertes email @smoke', () => {
 
   test('Accès direct sans token affiche la page par défaut', async ({ page }) => {
     await page.goto('/unsubscribe')
