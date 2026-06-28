@@ -26,8 +26,10 @@ const MODALITY_ICON = {
 export function ProgramCard({ program }: { program: ProgramCardData }) {
   const ModalityIcon = MODALITY_ICON[program.modality as keyof typeof MODALITY_ICON] ?? GraduationCap
   const domainColor = program.domain?.color ?? '#00AFD2'
+  const detailHref = `/formation/${program.slug}`
 
   return (
+    <Link href={detailHref} className="block">
     <article className="group flex flex-col rounded-2xl border border-white/8 bg-[#1A1A1A] transition-all hover:border-white/16 hover:bg-[#1E1E1E]">
       {/* Domain stripe */}
       <div
@@ -121,5 +123,6 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
         </div>
       </div>
     </article>
+    </Link>
   )
 }

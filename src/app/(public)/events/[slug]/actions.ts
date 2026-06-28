@@ -1,7 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { sendEventConfirmationEmail } from '@/lib/email'
 
 // ── Inscription à un événement ──
 // Vérifie auth + capacité (places_disponibles) + déduplique via
@@ -17,7 +18,7 @@ export async function registerForEvent(eventId: string, slug: string): Promise<R
 
   const { data: event } = await supabase
     .from('events')
-    .select('id, places_disponibles, status, date_debut')
+    .select('id, title, places_disponibles, status, date_debut, lieu, url_inscription_externe')
     .eq('id', eventId)
     .maybeSingle<{ id: string; places_disponibles: number | null; status: string; date_debut: string }>()
 
@@ -44,6 +45,30 @@ export async function registerForEvent(eventId: string, slug: string): Promise<R
   if (error) {
     if (error.code === '23505') return { ok: false, error: 'Vous êtes déjà inscrit à cet événement.' }
     return { ok: false, error: error.message }
+  }
+
+  // NOT-EVT — email de confirmation (non-bloquant)
+  try {
+    const admin = createAdminClient()
+    const { data: authUser } = await admin.auth.admin.getUserById(user.id)
+    if (authUser.user?.email && event) {
+      const { data: profile } = await supabase
+        .from('talent_profiles')
+        .select('first_name')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      const ev = event as { title?: string; lieu?: string | null; url_inscription_externe?: string | null; date_debut: string }
+      await sendEventConfirmationEmail({
+        toEmail: authUser.user.email,
+        firstName: profile?.first_name ?? 'Membre APEBI',
+        eventTitle: ev.title ?? 'Événement APEBI',
+        dateDebut: ev.date_debut,
+        lieu: ev.lieu ?? null,
+        urlExterne: ev.url_inscription_externe ?? null,
+      })
+    }
+  } catch (emailErr) {
+    console.error('[registerForEvent] email error (non-blocking):', emailErr)
   }
 
   revalidatePath(`/events/${slug}`)

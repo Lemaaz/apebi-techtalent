@@ -11,7 +11,7 @@ const NAV = [
   { href: '/entreprise/candidatures',      label: 'Candidatures',        icon: Users },
   { href: '/entreprise/recherche-talents', label: 'Recherche Talents',   icon: Search },
   { href: '/entreprise/favoris',           label: 'Favoris',             icon: Heart },
-  { href: '/entreprise/profil/modifier',   label: 'Mon Entreprise',      icon: Building2 },
+  { href: '/entreprise/profil',            label: 'Mon Entreprise',      icon: Building2 },
   { href: '/entreprise/label',             label: 'Label APEBI',         icon: Award },
   { href: '/entreprise/parametres',        label: 'Paramètres',          icon: Settings },
 ]

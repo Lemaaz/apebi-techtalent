@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import {
   Briefcase, Bookmark, Eye, EyeOff, CheckCircle, Clock,
-  ArrowRight, Plus, AlertTriangle, UserCircle, TrendingUp, Sparkles, MapPin,
+  ArrowRight, Plus, AlertTriangle, UserCircle, TrendingUp, Sparkles, MapPin, Calendar,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { buttonVariants } from '@/components/ui/button'
@@ -25,6 +25,17 @@ type TalentRow = {
   validation_status: string
   visibility: boolean
   availability: string | null
+}
+
+type UpcomingEvent = {
+  event_id: string
+  events: {
+    id: string
+    title: string
+    slug: string
+    date_debut: string
+    lieu: string | null
+  } | null
 }
 
 type SuggestedJob = {
@@ -148,6 +159,17 @@ export default async function TalentDashboardPage() {
       }
     }
   }
+
+  // Événements inscrits à venir (T4)
+  const { data: upcomingEvents } = await supabase
+    .from('event_registrations')
+    .select('event_id, events ( id, title, slug, date_debut, lieu )')
+    .eq('user_id', user.id)
+    .eq('status', 'registered')
+    .gte('events.date_debut', new Date().toISOString())
+    .order('events(date_debut)', { ascending: true })
+    .limit(3)
+    .returns<UpcomingEvent[]>()
 
   const [
     { data: rawApplications },
@@ -481,6 +503,68 @@ export default async function TalentDashboardPage() {
           </ul>
         )}
       </section>
+
+      {/* ── Mes événements inscrits (T4) ── */}
+      {upcomingEvents && upcomingEvents.filter(e => e.events).length > 0 && (
+        <section aria-labelledby="events-heading" className="mt-10">
+          <div className="mb-4 flex items-center justify-between">
+            <h2
+              id="events-heading"
+              className="font-heading text-[15px] font-semibold text-foreground"
+            >
+              Mes prochains événements
+            </h2>
+            <Link
+              href="/events"
+              className="font-heading text-[12px] font-medium hover:underline"
+              style={{ color: 'var(--apebi-cyan)' }}
+            >
+              Voir tous →
+            </Link>
+          </div>
+          <ul className="space-y-2" role="list">
+            {upcomingEvents.filter(e => e.events).map((reg) => {
+              const ev = reg.events!
+              const dateFormatted = new Date(ev.date_debut).toLocaleDateString('fr-FR', {
+                weekday: 'short', day: 'numeric', month: 'short',
+              })
+              return (
+                <li key={reg.event_id}>
+                  <Link
+                    href={`/events/${ev.slug}`}
+                    className="flex items-center gap-3 rounded-xl border px-4 py-3 transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
+                    style={{ borderColor: 'var(--apebi-border)', background: 'white' }}
+                  >
+                    <div
+                      className="flex size-9 shrink-0 items-center justify-center rounded-lg"
+                      style={{ background: 'var(--apebi-cyan-muted)' }}
+                      aria-hidden
+                    >
+                      <Calendar className="size-4" style={{ color: 'var(--apebi-cyan)' }} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-heading text-[13px] font-semibold text-foreground">
+                        {ev.title}
+                      </p>
+                      <p className="text-[12px] text-muted-foreground">
+                        {dateFormatted}
+                        {ev.lieu ? ` · ${ev.lieu}` : ''}
+                      </p>
+                    </div>
+                    <span
+                      className="shrink-0 rounded-full px-2 py-0.5 font-heading text-[11px] font-semibold"
+                      style={{ background: 'var(--apebi-cyan-muted)', color: 'var(--apebi-cyan)' }}
+                    >
+                      Inscrit
+                    </span>
+                    <ArrowRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* ── Offres recommandées (REC-08 — skill-based, 0 LLM) ── */}
       {suggestedJobs.length > 0 && (

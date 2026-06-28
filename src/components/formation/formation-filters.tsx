@@ -46,7 +46,7 @@ export function FormationFilters({
   }
 
   function selectCls() {
-    return 'rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/70 focus:outline-none focus:ring-1 focus:ring-[var(--apebi-cyan)] focus:border-[var(--apebi-cyan)] transition-colors'
+    return 'rounded-lg border border-white/10 bg-[#1a2035] px-3 py-2 text-sm text-white/70 focus:outline-none focus:ring-1 focus:ring-[var(--apebi-cyan)] focus:border-[var(--apebi-cyan)] transition-colors [&>option]:bg-[#1a2035] [&>option]:text-white'
   }
 
   return (
@@ -71,9 +71,9 @@ export function FormationFilters({
           onChange={(e) => update('modality', e.target.value)}
           className={selectCls()}
         >
-          <option value="">Toutes modalités</option>
+          <option value="" style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>Toutes modalités</option>
           {MODALITIES.map((m) => (
-            <option key={m} value={m}>{m}</option>
+            <option key={m} value={m} style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>{m}</option>
           ))}
         </select>
 
@@ -83,9 +83,9 @@ export function FormationFilters({
           onChange={(e) => update('level', e.target.value)}
           className={selectCls()}
         >
-          <option value="">Tous niveaux</option>
+          <option value="" style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>Tous niveaux</option>
           {LEVELS.map((l) => (
-            <option key={l} value={l}>{l}</option>
+            <option key={l} value={l} style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>{l}</option>
           ))}
         </select>
 

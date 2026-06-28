@@ -301,3 +301,42 @@ export async function sendInvitationEmail(params: {
     html: baseLayout('Invitation à postuler', content),
   })
 }
+
+// ── NOT-EVT : Confirmation inscription événement ─────────────────────────────
+
+export async function sendEventConfirmationEmail(params: {
+  toEmail: string
+  firstName: string
+  eventTitle: string
+  dateDebut: string
+  lieu: string | null
+  urlExterne: string | null
+}) {
+  if (!isResendConfigured()) return
+
+  const dateFormatted = new Date(params.dateDebut).toLocaleDateString('fr-FR', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  })
+
+  const content = `
+    <h1>Inscription confirmée !</h1>
+    <p>Bonjour <strong>${esc(params.firstName)}</strong>,</p>
+    <p>Votre inscription à l&apos;événement suivant est confirmée :</p>
+    <div style="background:#f0fafd;border:1px solid #00afd230;border-radius:8px;padding:16px;margin:16px 0">
+      <p style="font-size:16px;font-weight:700;color:#00AFD2;margin:0">${esc(params.eventTitle)}</p>
+      <p style="margin:8px 0 0;font-size:13px;color:#545454">
+        📅 ${esc(dateFormatted)}<br>
+        ${params.lieu ? `📍 ${esc(params.lieu)}` : ''}
+      </p>
+    </div>
+    ${params.urlExterne ? `<a href="${esc(params.urlExterne)}" class="btn" style="margin-top:4px">Voir les détails de l&apos;événement</a>` : ''}
+    <p style="margin-top:16px">Retrouvez vos événements inscrits depuis votre <a href="${APP_URL}/talent/dashboard" style="color:#00AFD2">tableau de bord talent</a>.</p>
+  `
+
+  await resend.emails.send({
+    from: `${FROM_NAME} <${FROM}>`,
+    to: params.toEmail,
+    subject: `Inscription confirmée — ${params.eventTitle}`,
+    html: baseLayout('Inscription confirmée', content),
+  })
+}
