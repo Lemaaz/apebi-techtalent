@@ -4,6 +4,7 @@ export type FunnelEventType =
   | 'inscription'
   | 'candidature_envoyee'
   | 'candidature_vue'
+  | 'profil_vu'
   | 'invitation_envoyee'
   | 'mise_en_relation'
 

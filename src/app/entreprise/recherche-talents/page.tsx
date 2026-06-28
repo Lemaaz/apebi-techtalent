@@ -74,7 +74,23 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
     .eq('visibility', true)
     .order('created_at', { ascending: false })
 
-  if (q)            query = query.ilike('title', `%${q}%`)
+  // Recherche élargie : titre + bio + compétences
+  if (q) {
+    // 1. Talents dont un skill correspond au query
+    const { data: skillMatches } = await supabase
+      .from('talent_skills')
+      .select('talent_id, skills!inner(name)')
+      .ilike('skills.name', `%${q}%`)
+      .limit(200)
+    const skillTalentIds = [...new Set((skillMatches ?? []).map((s: { talent_id: string }) => s.talent_id))]
+
+    // 2. OR(title, bio, skill-ids) — un seul filtre Supabase
+    const orParts = [`title.ilike.%${q}%`, `bio.ilike.%${q}%`]
+    if (skillTalentIds.length > 0) {
+      orParts.push(`id.in.(${skillTalentIds.join(',')})`)
+    }
+    query = query.or(orParts.join(','))
+  }
   if (seniority)    query = query.eq('seniority_level', seniority)
   if (availability) query = query.eq('availability', availability)
   if (remote)       query = query.eq('remote_preference', remote)

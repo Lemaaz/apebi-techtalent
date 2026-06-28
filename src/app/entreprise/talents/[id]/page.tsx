@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { InviteToApplyModal } from '@/components/company/invite-to-apply-modal'
 import { getCompanyActiveJobs } from './actions'
+import { logFunnel } from '@/lib/funnel'
 
 type TalentRow = {
   id: string
@@ -171,6 +172,9 @@ export default async function TalentDetailRecruteurPage({
 
   // Fetch active jobs for the invite modal (parallel)
   const activeJobs = await getCompanyActiveJobs()
+
+  // FUNNEL — profil vu par un recruteur (fire-and-forget)
+  logFunnel('profil_vu', { talentId: talent.id, companyId: member.company_id })
 
   return (
     <>
