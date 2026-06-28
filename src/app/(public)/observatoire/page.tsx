@@ -23,6 +23,11 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Observatoire des Compétences Tech',
+  openGraph: {
+    title: 'Observatoire des Compétences Tech — APEBI TechTalent',
+    description: "Données en temps réel du marché tech marocain : compétences demandées, vivier de talents, tensions par domaine. Par la Commission C5 de l'APEBI.",
+    url: 'https://techtalent-apebi.vercel.app/observatoire',
+  },
   description:
     "Données du marché des compétences tech marocaines : compétences demandées, vivier de talents, répartition par domaine et géographie. Par la Commission Formation & Talent Tech de l'APEBI.",
 }

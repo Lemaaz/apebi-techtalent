@@ -19,19 +19,33 @@ const hind = Hind({
   display: 'swap',
 })
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
+
 export const metadata: Metadata = {
   title: {
     default: 'APEBI TechTalent — Talents tech & entreprises numériques au Maroc',
     template: '%s | APEBI TechTalent',
   },
   description:
-    "La plateforme officielle de l'APEBI pour connecter les talents tech marocains aux entreprises membres de la fédération.",
-  keywords: ['talents tech', 'recrutement Maroc', 'APEBI', 'numérique', 'emploi tech', 'TechTalent'],
+    "La plateforme officielle de l'APEBI pour connecter les talents tech marocains aux entreprises membres de la fédération. Offres d'emploi tech, vivier de talents certifiés, Observatoire des compétences.",
+  keywords: ['talents tech', 'recrutement Maroc', 'APEBI', 'numérique', 'emploi tech', 'TechTalent', 'informatique Maroc', 'développeur Maroc', 'data science Maroc'],
+  metadataBase: new URL(APP_URL),
   openGraph: {
     type: 'website',
     locale: 'fr_MA',
     alternateLocale: 'en_US',
     siteName: 'APEBI TechTalent',
+    url: APP_URL,
+    description: "La plateforme officielle de l'APEBI pour connecter les talents tech marocains aux entreprises membres.",
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@APEBI_Maroc',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 }
 

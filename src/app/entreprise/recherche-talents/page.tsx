@@ -20,8 +20,11 @@ type TalentRow = {
   seniority_level: string | null
   availability: string | null
   avatar_url: string | null
+  completeness_score: number | null
   talent_skills: Array<{ skills: { name: string } | null }>
 }
+
+type SortOption = 'recent' | 'completeness' | 'available'
 
 type SearchParams = Promise<{
   q?: string
@@ -29,6 +32,7 @@ type SearchParams = Promise<{
   availability?: string
   remote?: string
   domain?: string
+  sort?: SortOption
 }>
 
 const SENIORITY_OPTIONS = ['Junior', 'Mid', 'Senior', 'Lead', 'Expert']
@@ -55,7 +59,7 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
 
   if (!member) redirect('/entreprise/dashboard')
 
-  const { q, seniority, availability, remote, domain } = await searchParams
+  const { q, seniority, availability, remote, domain, sort = 'recent' } = await searchParams
 
   const { data: allDomains = [] } = await supabase
     .from('domains')
@@ -63,16 +67,24 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
     .order('name_fr')
 
   // ── Build talent query ───────────────────────────────────
+  // REC-05 — tri configurable
+  const SORT_CONFIG: Record<string, { column: string; ascending: boolean }> = {
+    recent:       { column: 'created_at',         ascending: false },
+    completeness: { column: 'completeness_score',  ascending: false },
+    available:    { column: 'availability',         ascending: true  }, // "Immédiate" < "1 mois" alphabétiquement
+  }
+  const sortCfg = SORT_CONFIG[sort] ?? SORT_CONFIG.recent
+
   let query = supabase
     .from('talent_profiles')
     .select(
       `id, first_name, last_name, title, city, seniority_level,
-       availability, avatar_url,
+       availability, avatar_url, completeness_score,
        talent_skills ( skills ( name ) )`,
     )
     .eq('validation_status', 'approved')
     .eq('visibility', true)
-    .order('created_at', { ascending: false })
+    .order(sortCfg.column, { ascending: sortCfg.ascending })
 
   // Recherche élargie : titre + bio + compétences
   if (q) {
@@ -148,7 +160,7 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
     seniority_level: t.seniority_level,
   }))
 
-  const hasFilters = !!(q || seniority || availability || remote || domain)
+  const hasFilters = !!(q || seniority || availability || remote || domain || (sort && sort !== 'recent'))
   const resultCount = talents.length
 
   return (
@@ -247,6 +259,19 @@ export default async function RechercheTalentsPage({ searchParams }: { searchPar
                   {REMOTE_OPTIONS.map((r) => (
                     <option key={r} value={r}>{r}</option>
                   ))}
+                </select>
+
+                {/* Tri */}
+                <select
+                  name="sort"
+                  defaultValue={sort ?? 'recent'}
+                  className={SELECT_CLS}
+                  style={{ borderColor: sort && sort !== 'recent' ? 'var(--apebi-cyan)' : 'var(--apebi-border)' }}
+                  aria-label="Trier par"
+                >
+                  <option value="recent">Plus récents</option>
+                  <option value="completeness">Profil le plus complet</option>
+                  <option value="available">Disponibilité immédiate</option>
                 </select>
 
                 <button

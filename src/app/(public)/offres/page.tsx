@@ -11,6 +11,11 @@ import { EmptyState } from '@/components/ui/empty-state'
 export const metadata: Metadata = {
   title: "Offres d'emploi",
   description: "Toutes les offres d'emploi tech des entreprises membres APEBI au Maroc.",
+  openGraph: {
+    title: "Offres d'emploi tech — APEBI TechTalent",
+    description: "Trouvez votre prochain poste tech dans l'écosystème APEBI : développeur, data, cybersécurité, cloud, UX au Maroc.",
+    url: 'https://techtalent-apebi.vercel.app/offres',
+  },
 }
 
 type SearchParams = Promise<{

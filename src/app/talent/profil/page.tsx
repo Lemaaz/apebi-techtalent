@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import {
   Globe, Code2, ExternalLink, MapPin, GraduationCap,
-  Briefcase, Eye, EyeOff, UserCircle, Award, Pencil,
+  Briefcase, Eye, EyeOff, UserCircle, Award, Pencil, MonitorSmartphone,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { buttonVariants } from '@/components/ui/button'
@@ -254,14 +254,24 @@ export default async function TalentProfilPage() {
             </div>
           </div>
 
-          {/* Edit CTA */}
-          <Link
-            href="/talent/profil/modifier"
-            className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'shrink-0 gap-1.5 text-xs')}
-          >
-            <Pencil className="size-3.5" aria-hidden />
-            Modifier mon profil
-          </Link>
+          {/* CTAs */}
+          <div className="flex shrink-0 gap-2">
+            <Link
+              href="/talent/profil/apercu"
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-1.5 text-xs')}
+              title="Voir votre profil tel qu'un recruteur le voit"
+            >
+              <MonitorSmartphone className="size-3.5" aria-hidden />
+              Vue recruteur
+            </Link>
+            <Link
+              href="/talent/profil/modifier"
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-1.5 text-xs')}
+            >
+              <Pencil className="size-3.5" aria-hidden />
+              Modifier
+            </Link>
+          </div>
         </div>
 
         {/* Completeness bar */}

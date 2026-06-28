@@ -12,6 +12,11 @@ import { EmptyState } from '@/components/ui/empty-state'
 
 export const metadata: Metadata = {
   title: 'Entreprises membres APEBI',
+  openGraph: {
+    title: 'Entreprises membres APEBI — TechTalent',
+    description: "Découvrez les 260+ entreprises membres de l'APEBI qui recrutent des talents tech au Maroc.",
+    url: 'https://techtalent-apebi.vercel.app/entreprises',
+  },
   description:
     "Découvrez les entreprises membres de l'APEBI qui recrutent des talents tech au Maroc.",
 }
