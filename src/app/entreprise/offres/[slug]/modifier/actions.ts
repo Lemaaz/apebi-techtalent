@@ -161,3 +161,73 @@ export async function deleteJobPosting(formData: FormData) {
 
   redirect('/entreprise/offres')
 }
+
+// ── OFF-11 — Duplication d'offre ──────────────────────────────────────────
+
+export async function duplicateOffer(jobId: string): Promise<void> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) { console.error('[duplicateOffer] non authentifié'); return }
+
+  const { data: member } = await supabase
+    .from('company_members')
+    .select('company_id')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (!member) { console.error('[duplicateOffer] accès refusé'); return }
+
+  // Lire l'offre source (doit appartenir à l'entreprise)
+  const { data: source } = await supabase
+    .from('job_postings')
+    .select('title, description, contract_type, seniority_level, city, remote_policy, salary_range, closes_at, domain_id, mission_duration')
+    .eq('id', jobId)
+    .eq('company_id', member.company_id)
+    .maybeSingle()
+
+  if (!source) { console.error('[duplicateOffer] offre introuvable'); return }
+
+  // Slug unique : base du titre + timestamp en base36
+  const baseSlug = source.title
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 40)
+  const newSlug = `${baseSlug}-${Date.now().toString(36)}`
+
+  const { data: newJob, error: insertErr } = await supabase
+    .from('job_postings')
+    .insert({
+      ...source,
+      title: `${source.title} (copie)`,
+      slug: newSlug,
+      status: 'draft',
+      company_id: member.company_id,
+      created_by: user.id,
+      published_at: null,
+      applications_count: 0,
+      views_count: 0,
+    })
+    .select('id, slug')
+    .single()
+
+  if (insertErr || !newJob) {
+    console.error('[duplicateOffer]', insertErr?.message)
+    return
+  }
+
+  // Copier les skills de l'offre source
+  const { data: skills } = await supabase
+    .from('job_skills')
+    .select('skill_id, is_required')
+    .eq('job_id', jobId)
+
+  if (skills && skills.length > 0) {
+    await supabase.from('job_skills').insert(
+      skills.map((s) => ({ job_id: newJob.id, skill_id: s.skill_id, is_required: s.is_required }))
+    )
+  }
+
+  revalidatePath('/entreprise/offres')
+  redirect(`/entreprise/offres/${newJob.slug}/modifier`)
+}

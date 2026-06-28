@@ -50,6 +50,9 @@ type RawCompany = {
     remote_policy: string | null
     salary_range: string | null
     created_at: string
+    views_count: number | null
+    applications_count: number | null
+    status: string
     job_skills: Array<{
       skills: { name: string } | null
     }>
@@ -71,6 +74,7 @@ async function fetchCompany(slug: string): Promise<RawCompany | null> {
        job_postings (
          id, title, slug, contract_type, seniority_level,
          city, remote_policy, salary_range, created_at,
+         views_count, applications_count, status,
          job_skills (
            skills ( name )
          )
@@ -163,7 +167,13 @@ export default async function EntreprisePage({ params }: { params: Params }) {
 
   if (!company) notFound()
 
-  const jobs: JobListItemData[] = (company.job_postings ?? []).map((j) => ({
+  // ENT-11 — Stats vitrine : agrégats sur les offres de l'entreprise
+  const allJobPostings = company.job_postings ?? []
+  const activeJobsCount = allJobPostings.filter((j) => j.status === 'active').length
+  const totalViews = allJobPostings.reduce((sum, j) => sum + (j.views_count ?? 0), 0)
+  const totalApplications = allJobPostings.reduce((sum, j) => sum + (j.applications_count ?? 0), 0)
+
+  const jobs: JobListItemData[] = allJobPostings.map((j) => ({
     id: j.id,
     title: j.title,
     slug: j.slug,
@@ -359,6 +369,26 @@ export default async function EntreprisePage({ params }: { params: Params }) {
 
             {/* Score APEBI Employeur */}
             <ApebiScoreBadge score={apebiScore} variant="full" />
+
+            {/* ENT-11 — Stats vitrine */}
+            {(totalViews > 0 || totalApplications > 0 || activeJobsCount > 0) && (
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: 'Offres actives', value: activeJobsCount, icon: Briefcase },
+                  { label: 'Vues totales', value: totalViews, icon: Users },
+                  { label: 'Candidatures', value: totalApplications, icon: Check },
+                ].map(({ label, value, icon: Icon }) => (
+                  <div
+                    key={label}
+                    className="flex flex-col items-center rounded-xl border border-white/8 bg-[#141414] p-3 text-center"
+                  >
+                    <Icon className="mb-1.5 size-4 text-[#00AFD2]/70" aria-hidden />
+                    <p className="font-heading text-xl font-bold text-white">{value}</p>
+                    <p className="mt-0.5 text-[10px] text-white/40">{label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div>
             <h2

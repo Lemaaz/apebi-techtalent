@@ -17,6 +17,9 @@ import { buttonVariants } from '@/components/ui/button'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { ApplyForm } from './_apply-form'
+import { ShareOfferButton } from '@/components/jobs/share-offer-button'
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
 
 type Params = Promise<{ slug: string }>
 
@@ -109,6 +112,21 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
   }
 
   const company = job.company_profiles
+
+  // OFF-08 — Offres similaires (même contract_type, exclut l'offre courante, limite 3)
+  const { data: similarJobs } = await supabase
+    .from('job_postings')
+    .select('id, title, slug, contract_type, city, company_profiles ( name, slug )')
+    .eq('status', 'active')
+    .eq('contract_type', job.contract_type)
+    .neq('id', job.id)
+    .order('published_at', { ascending: false })
+    .limit(3)
+    .returns<Array<{
+      id: string; title: string; slug: string; contract_type: string; city: string | null
+      company_profiles: { name: string; slug: string } | null
+    }>>()
+
   const requiredSkills = (job.job_skills ?? [])
     .filter((js) => js.is_required && js.skills)
     .map((js) => js.skills!.name)
@@ -214,6 +232,15 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                     </span>
                   )}
                 </div>
+              </div>
+
+              {/* OFF-07 — Partager l'offre */}
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-[12px] text-white/35">Partager :</span>
+                <ShareOfferButton
+                  offerUrl={`${APP_URL}/offres/${job.slug}`}
+                  title={job.title}
+                />
               </div>
 
               {/* Description */}
@@ -347,6 +374,36 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
             </aside>
           </div>
         </div>
+
+        {/* OFF-08 — Offres similaires */}
+        {similarJobs && similarJobs.length > 0 && (
+          <section aria-labelledby="similar-heading" className="mt-12 border-t border-white/8 pt-8">
+            <h2 id="similar-heading" className="mb-4 font-heading text-base font-semibold text-white">
+              Offres similaires
+            </h2>
+            <ul className="grid gap-3 sm:grid-cols-3" role="list">
+              {similarJobs.map((similar) => (
+                <li key={similar.id}>
+                  <Link
+                    href={`/offres/${similar.slug}`}
+                    className="block rounded-xl border border-white/8 bg-[#141414] p-4 transition-all hover:border-[#00AFD2]/40 hover:bg-[#181818]"
+                  >
+                    <p className="truncate font-heading text-[13px] font-semibold text-white">
+                      {similar.title}
+                    </p>
+                    <p className="mt-1 text-[11px] text-white/45">
+                      {similar.company_profiles?.name ?? '—'}
+                      {similar.city ? ` · ${similar.city}` : ''}
+                    </p>
+                    <span className="mt-2 inline-block rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-[10px] font-medium text-[#00AFD2]">
+                      {similar.contract_type}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </main>
 
       <Footer />

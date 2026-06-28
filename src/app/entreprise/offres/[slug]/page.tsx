@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Pencil, MapPin, Briefcase, Clock, Users, Sparkles } from 'lucide-react'
+import { ArrowLeft, Pencil, Copy, MapPin, Briefcase, Clock, Users, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { JobMatchingPanel } from '@/components/matching/matching-panel'
+import { duplicateOffer } from './modifier/actions'
 
 type Params = Promise<{ slug: string }>
 
@@ -125,6 +126,16 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                       <Pencil className="size-3.5" aria-hidden />
                       Modifier
                     </Link>
+                    <form action={duplicateOffer.bind(null, job.id)}>
+                      <button
+                        type="submit"
+                        className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-1.5')}
+                        title="Dupliquer cette offre en brouillon"
+                      >
+                        <Copy className="size-3.5" aria-hidden />
+                        Dupliquer
+                      </button>
+                    </form>
                   </div>
                 </div>
 
