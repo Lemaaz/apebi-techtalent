@@ -187,6 +187,36 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_events: {
+        Row: {
+          id: string
+          event_type: string
+          talent_id: string | null
+          user_id: string | null
+          job_id: string | null
+          company_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_type: string
+          talent_id?: string | null
+          user_id?: string | null
+          job_id?: string | null
+          company_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          event_type?: string
+          talent_id?: string | null
+          user_id?: string | null
+          job_id?: string | null
+          company_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       domains: {
         Row: {
           code: string

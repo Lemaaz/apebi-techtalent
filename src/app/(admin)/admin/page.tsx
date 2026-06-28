@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Users, Building2, Briefcase, Clock, TrendingUp, CheckCircle, Download } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { Users, Building2, Briefcase, Clock, TrendingUp, CheckCircle, Download, ArrowRight } from 'lucide-react'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 
 export const metadata: Metadata = { title: 'Dashboard — Admin' }
@@ -41,6 +41,28 @@ export default async function AdminDashboardPage() {
   const supabase = await createClient()
 
   const since30d = new Date(Date.now() - 30 * 86_400_000).toISOString()
+
+  const adminClient = createAdminClient()
+
+  // Funnel events — service_role uniquement (RLS révoquée pour anon/authenticated)
+  const FUNNEL_STEPS = [
+    'inscription',
+    'candidature_envoyee',
+    'candidature_vue',
+    'invitation_envoyee',
+    'mise_en_relation',
+  ] as const
+
+  const funnelCounts = await Promise.all(
+    FUNNEL_STEPS.map((step) =>
+      adminClient
+        .from('funnel_events')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_type', step)
+        .then(({ count }) => ({ step, count: count ?? 0 }))
+    )
+  )
+  const funnel = Object.fromEntries(funnelCounts.map(({ step, count }) => [step, count]))
 
   const [
     { count: talentsPending },
@@ -293,6 +315,80 @@ export default async function AdminDashboardPage() {
               {weeklyBuckets.reduce((s, b) => s + b.count, 0)} candidatures
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ── Funnel KPI nord — mise en relation ── */}
+      <section aria-labelledby="funnel-heading" className="mt-10">
+        <h2 id="funnel-heading" className="mb-3 text-overline">
+          Funnel — KPI nord «&nbsp;Mise en relation&nbsp;»
+        </h2>
+        <div
+          className="rounded-xl border p-6"
+          style={{ background: 'white', border: '1px solid var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
+        >
+          {/* Étapes du funnel */}
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { key: 'inscription',         label: 'Inscriptions',       color: '#94a3b8' },
+              { key: 'candidature_envoyee', label: 'Candidatures',       color: '#00AFD2' },
+              { key: 'candidature_vue',     label: 'Vues recruteur',     color: '#3b82f6' },
+              { key: 'invitation_envoyee',  label: 'Invitations',        color: '#8b5cf6' },
+              { key: 'mise_en_relation',    label: 'Mises en relation',  color: '#10b981' },
+            ].map(({ key, label, color }, i, arr) => {
+              const count = funnel[key] ?? 0
+              const prev  = i > 0 ? (funnel[arr[i - 1].key] ?? 0) : null
+              const rate  = prev && prev > 0 ? Math.round((count / prev) * 100) : null
+              return (
+                <div key={key} className="flex items-center gap-2">
+                  <div
+                    className="flex min-w-[100px] flex-col items-center justify-center gap-1 rounded-xl border p-4 text-center"
+                    style={{ borderColor: color + '40', background: color + '08' }}
+                  >
+                    <span className="font-heading text-2xl font-bold tabular-nums" style={{ color }}>
+                      {count}
+                    </span>
+                    <span className="font-heading text-[11px] font-medium text-muted-foreground leading-tight">
+                      {label}
+                    </span>
+                    {rate !== null && (
+                      <span className="mt-0.5 rounded-full px-1.5 py-0.5 font-heading text-[10px] font-semibold" style={{ background: color + '15', color }}>
+                        {rate}% conv.
+                      </span>
+                    )}
+                  </div>
+                  {i < arr.length - 1 && (
+                    <ArrowRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* KPI nord */}
+          <div
+            className="mt-5 flex items-center justify-between rounded-lg border-t pt-4"
+            style={{ borderColor: 'var(--apebi-border)' }}
+          >
+            <div>
+              <p className="font-sans text-[12px] text-muted-foreground">KPI nord — objectif 2 ans</p>
+              <p className="mt-0.5 font-heading text-[13px] font-semibold text-foreground">
+                Mises en relation tracées
+              </p>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-heading text-2xl font-bold text-emerald-600 tabular-nums">
+                {funnel['mise_en_relation'] ?? 0}
+              </span>
+              <span className="font-heading text-[13px] text-muted-foreground">/ 500</span>
+            </div>
+          </div>
+
+          {funnel['mise_en_relation'] === 0 && (
+            <p className="mt-3 text-center text-[12px] text-muted-foreground">
+              Les événements seront enregistrés dès les premières actions sur la plateforme.
+            </p>
+          )}
         </div>
       </section>
 

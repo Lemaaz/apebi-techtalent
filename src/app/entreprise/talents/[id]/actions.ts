@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { logFunnel } from '@/lib/funnel'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = process.env.EMAIL_FROM ?? 'noreply@techtalent-apebi.vercel.app'
@@ -137,6 +138,14 @@ export async function inviterAPostuler(
       title: `${companyName} vous invite à postuler`,
       body: `Pour le poste : ${job.title}`,
       link: `/offres/${job.slug}`,
+    })
+
+    // FUNNEL — invitation envoyée
+    logFunnel('invitation_envoyee', {
+      talentId: talent.id,
+      userId:   user.id,
+      jobId:    job.id,
+      companyId: member.company_id,
     })
 
     revalidatePath(`/entreprise/talents/${talentId}`)

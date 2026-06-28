@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendNewApplicationEmail } from '@/lib/email'
+import { logFunnel } from '@/lib/funnel'
 
 const schema = z.object({
   job_id: z.string().uuid('Offre invalide'),
@@ -75,6 +76,9 @@ export async function applyToJob(
     }
     return { error: 'Erreur lors de la candidature. Réessayez.', success: false }
   }
+
+  // FUNNEL — candidature envoyée
+  logFunnel('candidature_envoyee', { talentId: talent.id, userId: user.id, jobId: parsed.data.job_id })
 
   // Increment applications_count
   await supabase

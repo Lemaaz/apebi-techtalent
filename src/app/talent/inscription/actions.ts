@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { sendProfileSubmittedEmail, sendAdminNewProfileEmail } from '@/lib/email'
+import { logFunnel } from '@/lib/funnel'
 
 const schema = z.object({
   first_name: z.string().min(1, 'Prénom requis').max(50),
@@ -101,6 +102,9 @@ export async function createTalentProfile(
       }
     }
   }
+
+  // FUNNEL — inscription
+  logFunnel('inscription', { talentId: profile.id, userId: user.id })
 
   // NOT-00 — confirmation au talent + alerte admin (non-bloquant)
   try {

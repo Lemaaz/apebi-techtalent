@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { sendApplicationStatusEmail } from '@/lib/email'
+import { logFunnel } from '@/lib/funnel'
 
 const ALLOWED_STATUSES = ['viewed', 'shortlisted', 'rejected', 'accepted'] as const
 type AppStatus = (typeof ALLOWED_STATUSES)[number]
@@ -33,6 +34,29 @@ export async function updateApplicationStatus(formData: FormData) {
 
   revalidatePath('/entreprise/dashboard')
   revalidatePath('/entreprise/candidatures')
+
+  // FUNNEL — candidature vue / mise en relation
+  if (status === 'viewed' || status === 'accepted') {
+    try {
+      type AppIds = { talent_id: string; job_id: string; company_id: string }
+      const supabaseFunnel = await createClient()
+      const { data: appIds } = await supabaseFunnel
+        .from('applications')
+        .select('talent_id, job_id, job_postings(company_id)')
+        .eq('id', applicationId)
+        .maybeSingle<AppIds & { job_postings: { company_id: string } | null }>()
+      if (appIds) {
+        logFunnel(
+          status === 'accepted' ? 'mise_en_relation' : 'candidature_vue',
+          {
+            talentId: appIds.talent_id,
+            jobId:    appIds.job_id,
+            companyId: (appIds as any).job_postings?.company_id ?? null,
+          },
+        )
+      }
+    } catch { /* non-bloquant */ }
+  }
 
   // NOT-03 — notify talent of status change (non-blocking)
   try {
