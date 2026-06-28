@@ -9,7 +9,7 @@ import { ProgramCard, type ProgramCardData } from '@/components/formation/progra
 import { EmptyState } from '@/components/ui/empty-state'
 
 export const metadata: Metadata = {
-  title: 'Formation Hub — APEBI TechTalent',
+  title: 'Formation Hub',
   description:
     'Découvrez les formations tech de l\'écosystème APEBI : écoles, bootcamps, certifications. Parcours par domaine C5.',
 }

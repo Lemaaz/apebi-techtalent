@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
 export const metadata: Metadata = {
-  title: 'À propos | APEBI TechTalent',
+  title: 'À propos',
   description:
     'APEBI TechTalent est la plateforme officielle de la Fédération APEBI pour connecter les talents tech marocains aux entreprises membres du secteur numérique.',
 }

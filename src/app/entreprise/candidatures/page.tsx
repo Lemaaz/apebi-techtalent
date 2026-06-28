@@ -9,7 +9,7 @@ import { ApplicationStatusBadge, ApplicationStatusActions } from '@/components/s
 import { updateApplicationStatus } from '@/app/entreprise/dashboard/actions'
 import { RecruiterNoteForm } from '@/components/company/recruiter-note-form'
 
-export const metadata: Metadata = { title: 'Candidatures | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Candidatures' }
 
 // ── Types ────────────────────────────────────────────────────
 

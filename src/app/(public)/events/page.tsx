@@ -9,7 +9,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Événements | APEBI TechTalent',
+  title: 'Événements',
   description:
     "Conférences, workshops, job fairs et rencontres de l'écosystème tech APEBI au Maroc.",
 }

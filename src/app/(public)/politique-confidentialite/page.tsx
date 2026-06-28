@@ -4,7 +4,7 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
-  title: 'Politique de confidentialité | APEBI TechTalent',
+  title: 'Politique de confidentialité',
   description: 'Comment APEBI TechTalent collecte, utilise et protège vos données personnelles.',
 }
 

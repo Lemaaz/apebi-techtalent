@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { CheckCircle, XCircle, Bell, BellOff } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Désabonnement alertes | APEBI TechTalent',
+  title: 'Désabonnement alertes',
 }
 
 type SearchParams = Promise<{ success?: string; error?: string }>

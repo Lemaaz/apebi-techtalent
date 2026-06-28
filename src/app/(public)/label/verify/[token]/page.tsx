@@ -14,9 +14,9 @@ type Params = Promise<{ token: string }>
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { token } = await params
   const result = await verifyLabelToken(token)
-  if (!result) return { title: 'Label introuvable | APEBI TechTalent' }
+  if (!result) return { title: 'Label introuvable' }
   return {
-    title: `Label APEBI TechTalent — ${result.name}`,
+    title: { absolute: `Label APEBI TechTalent — ${result.name}` },
     description: `Vérification du Label APEBI TechTalent de ${result.name}.`,
   }
 }

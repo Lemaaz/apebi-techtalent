@@ -8,7 +8,7 @@ import { HowItWorksTabs } from '@/components/landing/how-it-works-tabs'
 import { NetworkGraph } from '@/components/landing/network-graph'
 
 export const metadata: Metadata = {
-  title: 'APEBI TechTalent — Talents tech & entreprises numériques au Maroc',
+  title: { absolute: 'APEBI TechTalent — Talents tech & entreprises numériques au Maroc' },
   description:
     "La plateforme officielle de l'APEBI pour connecter les entreprises membres aux talents tech marocains qualifiés.",
 }

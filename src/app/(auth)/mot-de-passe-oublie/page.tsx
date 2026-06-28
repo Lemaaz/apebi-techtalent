@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { ResetPasswordForm } from './_form'
 
 export const metadata: Metadata = {
-  title: 'Mot de passe oublié | APEBI TechTalent',
+  title: 'Mot de passe oublié',
 }
 
 export default function MotDePasseOubliePage() {

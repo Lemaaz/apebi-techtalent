@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { UpdatePasswordForm } from './_form'
 
 export const metadata: Metadata = {
-  title: 'Nouveau mot de passe | APEBI TechTalent',
+  title: 'Nouveau mot de passe',
 }
 
 export default function UpdatePasswordPage() {

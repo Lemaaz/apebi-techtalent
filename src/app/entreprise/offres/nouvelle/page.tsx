@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { JobPostingForm, type SkillGroup } from './_form'
 
 export const metadata: Metadata = {
-  title: 'Nouvelle offre | APEBI TechTalent',
+  title: 'Nouvelle offre',
 }
 
 type SkillRow = {

@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/server'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-export const metadata: Metadata = { title: 'Dashboard | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Dashboard' }
 
 // ── Types ────────────────────────────────────────────────────
 

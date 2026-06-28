@@ -101,7 +101,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       company.description ??
       `Découvrez ${company.name}, entreprise membre APEBI spécialisée en ${company.sector}.`,
     openGraph: {
-      title: `${company.name} | APEBI TechTalent`,
+      title: `${company.name} `,
       description: company.description ?? undefined,
       images: company.banner_url ? [{ url: company.banner_url }] : [],
     },

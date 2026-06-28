@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { EntrepriseParametresClient } from './_client'
 
-export const metadata: Metadata = { title: 'Paramètres | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Paramètres' }
 
 export default async function EntrepriseParametresPage() {
   const supabase = await createClient()

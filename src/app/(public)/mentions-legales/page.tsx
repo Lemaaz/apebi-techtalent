@@ -4,7 +4,7 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
-  title: 'Mentions légales | APEBI TechTalent',
+  title: 'Mentions légales',
   description: 'Informations légales sur la plateforme APEBI TechTalent.',
 }
 

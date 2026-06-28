@@ -32,7 +32,7 @@ type JobDetail = {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params
-  return { title: `Offre ${slug} | APEBI TechTalent` }
+  return { title: `Offre ${slug} ` }
 }
 
 const STATUS_LABELS: Record<string, string> = {

@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { JobCard, type JobCardData } from '@/components/jobs/job-card'
 import { SaveJobButton } from '@/components/jobs/save-job-button'
 
-export const metadata: Metadata = { title: 'Offres sauvegardées | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Offres sauvegardées' }
 
 type SavedJobRow = {
   job_id: string

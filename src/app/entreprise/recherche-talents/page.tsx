@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { TalentCard, type TalentCardData } from '@/components/talent/talent-card'
 import { BookmarkTalentButton } from '@/components/company/bookmark-talent-button'
 
-export const metadata: Metadata = { title: 'Recherche de talents | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Recherche de talents' }
 
 type DomainRow = { id: string; code: string; name_fr: string }
 

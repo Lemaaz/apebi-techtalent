@@ -97,9 +97,9 @@ export async function generateMetadata({
     .eq('id', id)
     .maybeSingle()
 
-  if (!data) return { title: 'Talent | APEBI TechTalent' }
+  if (!data) return { title: 'Talent' }
   return {
-    title: `${data.first_name} ${data.last_name}${data.title ? ` · ${data.title}` : ''} | APEBI TechTalent`,
+    title: `${data.first_name} ${data.last_name}${data.title ? ` · ${data.title}` : ''}`,
   }
 }
 

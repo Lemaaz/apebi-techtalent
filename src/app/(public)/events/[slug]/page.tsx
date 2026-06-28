@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const event = await fetchEvent(slug)
   if (!event) return { title: 'Événement non trouvé' }
   return {
-    title: `${event.title} | APEBI TechTalent`,
+    title: `${event.title} `,
     description: event.description?.slice(0, 160) ?? undefined,
   }
 }

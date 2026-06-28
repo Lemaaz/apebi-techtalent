@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { ApplicationStatusBadge } from '@/components/shared/application-status-badge'
 
 export const metadata: Metadata = {
-  title: 'Mes candidatures | APEBI TechTalent',
+  title: 'Mes candidatures',
 }
 
 type ApplicationRow = {

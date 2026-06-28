@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { CompanyProfileForm } from './_form'
 
 export const metadata: Metadata = {
-  title: 'Éditer ma vitrine | APEBI TechTalent',
+  title: 'Éditer ma vitrine',
 }
 
 type CompanyRow = {

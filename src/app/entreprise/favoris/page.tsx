@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { TalentCard, type TalentCardData } from '@/components/talent/talent-card'
 import { BookmarkTalentButton } from '@/components/company/bookmark-talent-button'
 
-export const metadata: Metadata = { title: 'Talents favoris | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Talents favoris' }
 
 export default async function FavorisTalentsPage() {
   const supabase = await createClient()

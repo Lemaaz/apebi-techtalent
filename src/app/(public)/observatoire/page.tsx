@@ -22,7 +22,7 @@ const THRESHOLD_JOBS = 100
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Observatoire des Compétences Tech | APEBI TechTalent',
+  title: 'Observatoire des Compétences Tech',
   description:
     "Données du marché des compétences tech marocaines : compétences demandées, vivier de talents, répartition par domaine et géographie. Par la Commission Formation & Talent Tech de l'APEBI.",
 }

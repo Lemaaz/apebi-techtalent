@@ -8,7 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { changeJobStatus, deleteJobPosting } from './[slug]/modifier/actions'
 
 export const metadata: Metadata = {
-  title: 'Mes offres | APEBI TechTalent',
+  title: 'Mes offres',
 }
 
 type JobRow = {

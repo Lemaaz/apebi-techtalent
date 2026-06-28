@@ -6,7 +6,7 @@ import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 import { PromoteAdminForm } from './_form'
 import { CreateCompanyForm } from './_create-company-form'
 
-export const metadata: Metadata = { title: 'Super Admin | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Super Admin' }
 
 export default async function SuperAdminPage() {
   const supabase = await createClient()

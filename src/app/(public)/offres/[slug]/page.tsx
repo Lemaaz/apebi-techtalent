@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const job = await fetchJob(slug)
   if (!job) return { title: 'Offre non trouvée' }
   return {
-    title: `${job.title} — ${job.company_profiles?.name ?? ''} | APEBI TechTalent`,
+    title: `${job.title} — ${job.company_profiles?.name ?? ''} `,
     description: job.description.slice(0, 160),
   }
 }

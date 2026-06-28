@@ -10,7 +10,7 @@ import { ApplicationStatusBadge, ApplicationStatusActions, JobStatusBadge } from
 import { updateApplicationStatus } from './actions'
 import { cn } from '@/lib/utils'
 
-export const metadata: Metadata = { title: 'Dashboard Recruteur | APEBI TechTalent' }
+export const metadata: Metadata = { title: 'Dashboard Recruteur' }
 
 // ── Types ────────────────────────────────────────────────────
 

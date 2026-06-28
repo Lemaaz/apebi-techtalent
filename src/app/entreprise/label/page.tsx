@@ -5,7 +5,7 @@ import { Award, ShieldCheck, Clock, XCircle, ExternalLink, ArrowLeft } from 'luc
 import { createClient } from '@/lib/supabase/server'
 import { applyForCompanyLabel } from './actions'
 
-export const metadata: Metadata = { title: 'Label APEBI TechTalent | Mon entreprise' }
+export const metadata: Metadata = { title: 'Label APEBI | Mon entreprise' }
 
 type CompanyLabel = {
   id: string

@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/footer'
 import { CompanyRegistrationForm } from './_form'
 
 export const metadata: Metadata = {
-  title: 'Inscrire mon entreprise | APEBI TechTalent',
+  title: 'Inscrire mon entreprise',
   description:
     'Inscrivez votre entreprise membre APEBI sur TechTalent pour accéder aux profils talents et publier vos offres.',
 }

@@ -17,7 +17,7 @@ import { AvatarUploader } from '@/components/talent/avatar-uploader'
 import { CvUploader } from '@/components/talent/cv-uploader'
 
 export const metadata: Metadata = {
-  title: 'Mon Profil | APEBI TechTalent',
+  title: 'Mon Profil',
 }
 
 // ── Types ────────────────────────────────────────────────────

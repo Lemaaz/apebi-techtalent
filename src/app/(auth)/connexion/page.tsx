@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ConnexionForm } from './_form'
 
 export const metadata: Metadata = {
-  title: 'Connexion | APEBI TechTalent',
+  title: 'Connexion',
 }
 
 export default async function ConnexionPage({
