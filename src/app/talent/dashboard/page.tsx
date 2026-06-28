@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import {
   Briefcase, Bookmark, Eye, EyeOff, CheckCircle, Clock,
-  ArrowRight, Plus, AlertTriangle, UserCircle, TrendingUp,
+  ArrowRight, Plus, AlertTriangle, UserCircle, TrendingUp, Sparkles, MapPin,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { buttonVariants } from '@/components/ui/button'
@@ -25,6 +25,16 @@ type TalentRow = {
   validation_status: string
   visibility: boolean
   availability: string | null
+}
+
+type SuggestedJob = {
+  id: string
+  title: string
+  slug: string
+  city: string | null
+  contract_type: string
+  matchCount: number
+  company: { name: string; slug: string; logo_url: string | null } | null
 }
 
 type ApplicationRow = {
@@ -82,6 +92,63 @@ export default async function TalentDashboardPage() {
   if (!talent) redirect('/talent/inscription')
 
   // Parallel data fetches
+  // ── REC-08 : offres suggérées par skills (0 coût LLM) ───────
+  let suggestedJobs: SuggestedJob[] = []
+  if (talent.validation_status === 'approved') {
+    const { data: talentSkills } = await supabase
+      .from('talent_skills')
+      .select('skill_id')
+      .eq('talent_id', talent.id)
+
+    const skillIds = (talentSkills ?? []).map((s) => s.skill_id)
+
+    if (skillIds.length > 0) {
+      // Offres actives avec skills matchants
+      const { data: jobSkillMatches } = await supabase
+        .from('job_skills')
+        .select('job_id')
+        .in('skill_id', skillIds)
+        .limit(300)
+
+      // Compter les matches par offre
+      const matchCountMap: Record<string, number> = {}
+      for (const { job_id } of jobSkillMatches ?? []) {
+        matchCountMap[job_id] = (matchCountMap[job_id] ?? 0) + 1
+      }
+
+      const topJobIds = Object.entries(matchCountMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([id]) => id)
+
+      if (topJobIds.length > 0) {
+        // Offres déjà postulées (à exclure)
+        const { data: alreadyApplied } = await supabase
+          .from('applications')
+          .select('job_id')
+          .eq('talent_id', talent.id)
+        const appliedIds = new Set((alreadyApplied ?? []).map((a) => a.job_id))
+
+        const { data: jobDetails } = await supabase
+          .from('job_postings')
+          .select('id, title, slug, city, contract_type, company_profiles ( name, slug, logo_url )')
+          .in('id', topJobIds)
+          .eq('status', 'active')
+          .limit(10)
+          .returns<Array<{
+            id: string; title: string; slug: string; city: string | null; contract_type: string
+            company_profiles: { name: string; slug: string; logo_url: string | null } | null
+          }>>()
+
+        suggestedJobs = (jobDetails ?? [])
+          .filter((j) => !appliedIds.has(j.id))
+          .map((j) => ({ ...j, company: j.company_profiles, matchCount: matchCountMap[j.id] ?? 0 }))
+          .sort((a, b) => b.matchCount - a.matchCount)
+          .slice(0, 5)
+      }
+    }
+  }
+
   const [
     { data: rawApplications },
     { count: savedCount },
@@ -414,6 +481,78 @@ export default async function TalentDashboardPage() {
           </ul>
         )}
       </section>
+
+      {/* ── Offres recommandées (REC-08 — skill-based, 0 LLM) ── */}
+      {suggestedJobs.length > 0 && (
+        <section aria-labelledby="rec-heading" className="mt-10">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <h2
+                id="rec-heading"
+                className="font-heading text-[15px] font-semibold text-foreground"
+              >
+                Offres suggérées pour vous
+              </h2>
+              <span className="rounded-full bg-[var(--apebi-cyan-muted)] px-2 py-0.5 font-heading text-[10px] font-semibold text-[var(--apebi-cyan)]">
+                Basées sur vos compétences
+              </span>
+            </div>
+            <Link
+              href="/offres"
+              className="font-heading text-[12px] font-medium hover:underline"
+              style={{ color: 'var(--apebi-cyan)' }}
+            >
+              Voir toutes →
+            </Link>
+          </div>
+
+          <ul className="space-y-2" role="list">
+            {suggestedJobs.map((job) => (
+              <li key={job.id}>
+                <Link
+                  href={`/offres/${job.slug}`}
+                  className="flex items-center gap-3 rounded-xl border px-4 py-3 transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
+                  style={{ borderColor: 'var(--apebi-border)', background: 'white' }}
+                >
+                  {/* Logo ou initiale */}
+                  <div
+                    className="flex size-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
+                    style={{ background: 'var(--apebi-navy)' }}
+                    aria-hidden
+                  >
+                    {job.company?.name?.[0]?.toUpperCase() ?? '?'}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-heading text-[13px] font-semibold text-foreground">
+                      {job.title}
+                    </p>
+                    <p className="text-[12px] text-muted-foreground">
+                      {job.company?.name ?? '—'}
+                      {job.city ? (
+                        <> · <MapPin className="inline size-2.5" aria-hidden /> {job.city}</>
+                      ) : null}
+                      {' · '}{job.contract_type}
+                    </p>
+                  </div>
+
+                  {/* Match badge */}
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span
+                      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-heading text-[11px] font-semibold"
+                      style={{ background: 'var(--apebi-cyan-muted)', color: 'var(--apebi-cyan)' }}
+                    >
+                      <Sparkles className="size-2.5" aria-hidden />
+                      {job.matchCount} skill{job.matchCount > 1 ? 's' : ''}
+                    </span>
+                    <ArrowRight className="size-4 text-muted-foreground" aria-hidden />
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* ── Quick actions ── */}
       <section aria-labelledby="quick-actions-heading" className="mt-10">
