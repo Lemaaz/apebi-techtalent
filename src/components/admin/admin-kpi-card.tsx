@@ -27,7 +27,7 @@ export function AdminKpiCard({
     <div
       className={cn(
         'group rounded-xl border bg-card p-5 transition-all duration-200',
-        href && 'cursor-pointer hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]',
+        href && 'card-lift cursor-pointer hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]',
         urgent
           ? 'border-[var(--color-warning)]'
           : 'border-[var(--apebi-border)] shadow-[var(--shadow-card)]',

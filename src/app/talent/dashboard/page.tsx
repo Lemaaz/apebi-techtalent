@@ -443,7 +443,7 @@ export default async function TalentDashboardPage() {
         {/* Total applications */}
         <Link
           href="/talent/candidatures"
-          className="group rounded-xl border p-5 transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
+          className="group card-lift rounded-xl border p-5 hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
           style={{ borderColor: 'var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
         >
           <div className="mb-3 flex items-center gap-2">
@@ -466,7 +466,7 @@ export default async function TalentDashboardPage() {
         {/* Saved jobs */}
         <Link
           href="/talent/offres-sauvegardees"
-          className="group rounded-xl border p-5 transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
+          className="group card-lift rounded-xl border p-5 hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
           style={{ borderColor: 'var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
         >
           <div className="mb-3 flex items-center gap-2">
@@ -486,7 +486,7 @@ export default async function TalentDashboardPage() {
         {/* Profile completeness action */}
         <Link
           href="/talent/profil"
-          className="group rounded-xl border p-5 transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
+          className="group card-lift rounded-xl border p-5 hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
           style={{ borderColor: 'var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
         >
           <div className="mb-3 flex items-center gap-2">
@@ -742,7 +742,7 @@ export default async function TalentDashboardPage() {
             <Link
               key={href}
               href={href}
-              className="group rounded-xl border p-4 transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
+              className="group card-lift rounded-xl border p-4 hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
               style={{ background: 'white', border: '1px solid var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
             >
               <p className="font-heading text-[13px] font-semibold text-foreground transition-colors group-hover:text-[var(--apebi-cyan)]">
