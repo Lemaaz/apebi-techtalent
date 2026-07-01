@@ -232,7 +232,7 @@ export default async function LandingPage() {
             </div>
             <h2
               id="how-heading"
-              className="mb-3 text-center font-heading text-3xl font-bold text-white"
+              className="mb-3 text-center font-heading text-3xl font-bold text-white sm:text-4xl"
             >
               Comment ça marche
             </h2>
@@ -252,7 +252,7 @@ export default async function LandingPage() {
             <div className="mb-8 flex items-center justify-between">
               <h2
                 id="companies-heading"
-                className="font-heading text-2xl font-bold text-white"
+                className="font-heading text-3xl font-bold text-white sm:text-4xl"
               >
                 Entreprises membres en vedette
               </h2>
