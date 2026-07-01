@@ -61,7 +61,7 @@ type TalentRow = {
 
 const AVATAR_PALETTES = [
   'bg-primary/10 text-primary',
-  'bg-[#3A4652]/10 text-[#3A4652]',
+  'bg-[var(--apebi-navy)]/10 text-[var(--apebi-navy)]',
   'bg-emerald-500/10 text-emerald-600',
   'bg-violet-500/10 text-violet-600',
   'bg-amber-500/10 text-amber-600',
@@ -224,7 +224,7 @@ export default async function AperçuRecruteurPage() {
 
             {/* Actions visibles côté recruteur — désactivées en mode aperçu */}
             <div className="shrink-0 opacity-40 pointer-events-none" title="Boutons visibles par les recruteurs (désactivés en mode aperçu)">
-              <div className="inline-flex items-center gap-1.5 rounded-lg bg-[#00AFD2] px-4 py-2.5 font-heading text-[13px] font-semibold text-white">
+              <div className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--apebi-cyan)] px-4 py-2.5 font-heading text-[13px] font-semibold text-white">
                 Inviter à postuler
               </div>
             </div>

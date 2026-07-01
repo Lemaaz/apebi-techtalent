@@ -39,8 +39,8 @@ const LEVELS: Record<ApebiScoreLevel, Omit<ApebiScore, 'level'>> = {
   1: {
     label: 'Membre APEBI',
     description: 'Entreprise validée par la Commission C5.',
-    color: 'text-[#00AFD2]',
-    bgColor: 'bg-[#00AFD2]/10',
+    color: 'text-[var(--apebi-cyan)]',
+    bgColor: 'bg-[var(--apebi-cyan)]/10',
   },
   2: {
     label: 'Actif',

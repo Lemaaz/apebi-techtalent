@@ -38,12 +38,12 @@ function CompanyAvatar({ name, logoUrl }: { name: string; logoUrl: string | null
     .join('')
 
   return (
-    <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#00AFD2]/10">
+    <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[var(--apebi-cyan)]/10">
       {logoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={logoUrl} alt="" className="size-full object-contain" />
       ) : (
-        <span className="font-heading text-xs font-semibold text-[#00AFD2]">{initials}</span>
+        <span className="font-heading text-xs font-semibold text-[var(--apebi-cyan)]">{initials}</span>
       )}
     </div>
   )
@@ -64,7 +64,7 @@ export function JobCard({ job }: { job: JobCardData }) {
 
   return (
     <Link href={`/offres/${job.slug}`} className="group block h-full">
-      <article className="flex h-full flex-col rounded-xl border border-white/8 bg-[#141414] p-5 transition-all hover:border-[#00AFD2]/40 hover:bg-[#161616]">
+      <article className="flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)]">
         {/* Company row */}
         <div className="mb-3 flex items-center gap-2.5">
           <CompanyAvatar name={job.company.name} logoUrl={job.company.logo_url} />
@@ -77,7 +77,7 @@ export function JobCard({ job }: { job: JobCardData }) {
         </div>
 
         {/* Title */}
-        <p className="font-heading text-sm font-semibold leading-snug text-white line-clamp-2 group-hover:text-[#00AFD2] transition-colors">
+        <p className="font-heading text-sm font-semibold leading-snug text-white line-clamp-2 group-hover:text-[var(--apebi-cyan)] transition-colors">
           {job.title}
         </p>
 
@@ -111,7 +111,7 @@ export function JobCard({ job }: { job: JobCardData }) {
             {job.skills.slice(0, 4).map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center rounded-full border border-[#00AFD2]/20 bg-[#00AFD2]/8 px-2 py-0.5 text-[10px] font-medium text-[#00AFD2]"
+                className="inline-flex items-center rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2 py-0.5 text-[10px] font-medium text-[var(--apebi-cyan)]"
               >
                 {skill}
               </span>

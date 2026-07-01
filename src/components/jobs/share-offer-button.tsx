@@ -35,7 +35,7 @@ export function ShareOfferButton({ offerUrl, title }: ShareOfferButtonProps) {
           'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-heading text-[12px] font-semibold transition-all',
           copied
             ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-            : 'border-white/15 bg-white/5 text-white/55 hover:border-[#00AFD2]/40 hover:text-[#00AFD2]',
+            : 'border-white/15 bg-white/5 text-white/55 hover:border-[var(--apebi-cyan)]/40 hover:text-[var(--apebi-cyan)]',
         )}
         aria-label={copied ? 'Lien copié !' : 'Copier le lien'}
       >

@@ -57,7 +57,7 @@ type TalentRow = {
 
 const AVATAR_PALETTES = [
   'bg-primary/10 text-primary',
-  'bg-[#3A4652]/10 text-[#3A4652]',
+  'bg-[var(--apebi-navy)]/10 text-[var(--apebi-navy)]',
   'bg-emerald-500/10 text-emerald-600',
   'bg-violet-500/10 text-violet-600',
   'bg-amber-500/10 text-amber-600',

@@ -65,7 +65,7 @@ function useFilters() {
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-sm text-white appearance-none focus:border-[#00AFD2]/50 focus:outline-none focus:ring-2 focus:ring-[#00AFD2]/30'
+  'h-8 rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-sm text-white appearance-none focus:border-[var(--apebi-cyan)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/30'
 
 export function CompanyFilters({ total }: { total: number }) {
   const { current, push, reset, hasFilters, isPending } = useFilters()
@@ -100,7 +100,7 @@ export function CompanyFilters({ total }: { total: number }) {
               const val = e.target.value.trim()
               if (val !== current.q) push({ q: val })
             }}
-            className="h-8 w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/35 focus:border-[#00AFD2]/50 focus:outline-none focus:ring-2 focus:ring-[#00AFD2]/30"
+            className="h-8 w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/35 focus:border-[var(--apebi-cyan)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/30"
           />
         </label>
 

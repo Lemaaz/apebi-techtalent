@@ -99,7 +99,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
             {/* ── Left: job details ─────────────────────────── */}
             <div className="space-y-5">
               {/* Header */}
-              <div className="rounded-2xl border border-white/8 bg-[#1A1A1A] p-6">
+              <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] p-6">
                 <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h1 className="font-heading text-xl font-bold text-white">{job.title}</h1>
@@ -163,7 +163,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
 
               {/* Skills */}
               {(requiredSkills.length > 0 || optionalSkills.length > 0) && (
-                <div className="rounded-2xl border border-white/8 bg-[#1A1A1A] p-5">
+                <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] p-5">
                   <h2 className="mb-3 font-heading text-sm font-semibold text-white">Compétences</h2>
                   {requiredSkills.length > 0 && (
                     <div className="mb-3">
@@ -193,7 +193,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
               )}
 
               {/* Conditions */}
-              <div className="rounded-2xl border border-white/8 bg-[#1A1A1A] p-5">
+              <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] p-5">
                 <h2 className="mb-3 font-heading text-sm font-semibold text-white">Conditions</h2>
                 <dl className="grid gap-2 text-[13px] sm:grid-cols-2">
                   {[
@@ -213,7 +213,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
               </div>
 
               {/* Description */}
-              <div className="rounded-2xl border border-white/8 bg-[#1A1A1A] p-5">
+              <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] p-5">
                 <h2 className="mb-3 font-heading text-sm font-semibold text-white">Description</h2>
                 <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-white/55">
                   {job.description}
@@ -226,7 +226,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
               <JobMatchingPanel jobId={job.id} />
 
               {/* Quick links */}
-              <div className="rounded-xl border border-white/8 bg-[#1A1A1A] p-4">
+              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] p-4">
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/30">
                   Actions
                 </p>

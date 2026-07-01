@@ -102,7 +102,7 @@ export default async function EntrepriseProfilPage() {
               className="size-16 shrink-0 rounded-xl object-contain bg-white/10"
             />
           ) : (
-            <div className="flex size-16 shrink-0 items-center justify-center rounded-xl bg-[#3A4652] font-heading text-lg font-bold text-white">
+            <div className="flex size-16 shrink-0 items-center justify-center rounded-xl bg-[var(--apebi-navy)] font-heading text-lg font-bold text-white">
               {company.name.slice(0, 2).toUpperCase()}
             </div>
           )}
@@ -114,7 +114,7 @@ export default async function EntrepriseProfilPage() {
                 <span className="text-[12px] text-muted-foreground">· {company.company_size}</span>
               )}
               {company.has_techtalent_label && (
-                <span className="rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-[11px] font-semibold text-[#00AFD2]">
+                <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--apebi-cyan)]">
                   Label APEBI TechTalent
                 </span>
               )}

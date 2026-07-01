@@ -236,7 +236,7 @@ export default async function TalentProfilPage() {
                   <AvailabilityBadge status={talent.availability} />
                 )}
                 {talent.has_techtalent_label && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#00AFD2]/10 px-2.5 py-0.5 font-heading text-[11px] font-semibold text-[#00AFD2]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan)]/10 px-2.5 py-0.5 font-heading text-[11px] font-semibold text-[var(--apebi-cyan)]">
                     <Award className="size-3" aria-hidden />
                     Label APEBI TechTalent
                   </span>

@@ -85,7 +85,7 @@ export function InviteToApplyModal({ talentId, talentFirstName, jobs }: InviteTo
           hasJobs
             ? sent
               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-default'
-              : 'bg-[#00AFD2] text-white hover:bg-[#0096B5]'
+              : 'bg-[var(--apebi-cyan)] text-white hover:bg-[var(--apebi-cyan-dark)]'
             : 'cursor-not-allowed bg-gray-100 text-gray-400',
         )}
         title={!hasJobs ? 'Publiez une offre active pour inviter ce talent' : undefined}
@@ -114,8 +114,8 @@ export function InviteToApplyModal({ talentId, talentFirstName, jobs }: InviteTo
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
             <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-[#00AFD2]/10">
-                <Send className="size-4 text-[#00AFD2]" aria-hidden />
+              <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--apebi-cyan)]/10">
+                <Send className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
               </div>
               <h2 id="invite-dialog-title" className="font-heading text-[15px] font-semibold text-gray-900">
                 Inviter {talentFirstName} à postuler
@@ -136,14 +136,14 @@ export function InviteToApplyModal({ talentId, talentFirstName, jobs }: InviteTo
             {/* Job selection */}
             <div>
               <label htmlFor="job-select" className="mb-1.5 block font-heading text-[13px] font-semibold text-gray-700">
-                Offre d'emploi <span className="text-[#00AFD2]">*</span>
+                Offre d'emploi <span className="text-[var(--apebi-cyan)]">*</span>
               </label>
               <select
                 id="job-select"
                 required
                 value={selectedJobId}
                 onChange={(e) => setSelectedJobId(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 font-sans text-[13px] text-gray-900 transition-colors focus:border-[#00AFD2] focus:outline-none focus:ring-2 focus:ring-[#00AFD2]/20"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 font-sans text-[13px] text-gray-900 transition-colors focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/20"
               >
                 <option value="">Sélectionner une offre active…</option>
                 {jobs.map((job) => (
@@ -166,14 +166,14 @@ export function InviteToApplyModal({ talentId, talentFirstName, jobs }: InviteTo
                 onChange={(e) => setMessage(e.target.value)}
                 maxLength={500}
                 placeholder={`Bonjour ${talentFirstName}, votre profil a retenu notre attention…`}
-                className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2.5 font-sans text-[13px] text-gray-900 placeholder:text-gray-400 transition-colors focus:border-[#00AFD2] focus:outline-none focus:ring-2 focus:ring-[#00AFD2]/20"
+                className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2.5 font-sans text-[13px] text-gray-900 placeholder:text-gray-400 transition-colors focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/20"
               />
               <p className="mt-1 text-right text-[11px] text-gray-400">{message.length}/500</p>
             </div>
 
             {/* Info box */}
             <div className="flex gap-2.5 rounded-lg bg-[#f0fafd] px-3 py-2.5">
-              <Briefcase className="mt-0.5 size-3.5 shrink-0 text-[#00AFD2]" aria-hidden />
+              <Briefcase className="mt-0.5 size-3.5 shrink-0 text-[var(--apebi-cyan)]" aria-hidden />
               <p className="text-[12px] leading-relaxed text-[#005a75]">
                 {talentFirstName} recevra un email d'invitation et une notification sur la plateforme avec un lien direct vers votre offre.
               </p>
@@ -201,7 +201,7 @@ export function InviteToApplyModal({ talentId, talentFirstName, jobs }: InviteTo
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg px-5 py-2 font-heading text-[13px] font-semibold text-white transition-all',
                 selectedJobId && !isPending
-                  ? 'bg-[#00AFD2] hover:bg-[#0096B5]'
+                  ? 'bg-[var(--apebi-cyan)] hover:bg-[var(--apebi-cyan-dark)]'
                   : 'cursor-not-allowed bg-gray-300',
               )}
             >

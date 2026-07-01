@@ -34,14 +34,14 @@ export function JobMatchingPanel({ jobId }: { jobId: string }) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#1A1A1A] p-5">
+    <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] p-5">
       {/* Header */}
       <div className="mb-4 flex items-center gap-2.5">
         <div
           className="flex size-8 items-center justify-center rounded-lg"
           style={{ background: 'rgba(0,175,210,0.12)' }}
         >
-          <Sparkles className="size-4" style={{ color: '#00AFD2' }} aria-hidden />
+          <Sparkles className="size-4" style={{ color: 'var(--apebi-cyan)' }} aria-hidden />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ function TalentMatchItem({ result }: { result: TalentMatchResult }) {
             <div className="min-w-0">
               <Link
                 href={`/entreprise/talents/${talent.id}`}
-                className="font-heading text-[13px] font-semibold text-white hover:text-[#00AFD2] transition-colors"
+                className="font-heading text-[13px] font-semibold text-white hover:text-[var(--apebi-cyan)] transition-colors"
               >
                 {talent.first_name} {talent.last_name}
               </Link>
@@ -206,7 +206,7 @@ function TalentMatchItem({ result }: { result: TalentMatchResult }) {
           <div className="mt-3 flex items-center justify-between">
             <Link
               href={`/entreprise/talents/${talent.id}`}
-              className="inline-flex items-center gap-1 text-[11px] text-[#00AFD2] hover:opacity-80"
+              className="inline-flex items-center gap-1 text-[11px] text-[var(--apebi-cyan)] hover:opacity-80"
             >
               Voir le profil complet <ExternalLink className="size-3" aria-hidden />
             </Link>

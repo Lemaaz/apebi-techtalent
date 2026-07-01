@@ -121,7 +121,7 @@ export default async function AdminInstitutionsPage() {
                         className={cn(
                           'flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors',
                           inst.is_apebi_partner
-                            ? 'bg-[rgba(0,175,210,0.15)] text-[#00AFD2] hover:bg-[rgba(0,175,210,0.1)]'
+                            ? 'bg-[rgba(0,175,210,0.15)] text-[var(--apebi-cyan)] hover:bg-[rgba(0,175,210,0.1)]'
                             : 'bg-muted text-muted-foreground hover:bg-muted/80',
                         )}
                       >

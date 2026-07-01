@@ -59,7 +59,7 @@ export function CreateCompanyForm() {
           type="submit"
           disabled={isPending}
           className="rounded-lg px-4 py-2 text-sm font-medium text-white transition-opacity disabled:opacity-50"
-          style={{ background: '#00AFD2' }}
+          style={{ background: 'var(--apebi-cyan)' }}
         >
           {isPending ? 'Création en cours...' : "Créer l'entreprise"}
         </button>

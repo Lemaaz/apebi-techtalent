@@ -101,7 +101,7 @@ export default async function SuperAdminPage() {
         style={{ background: 'white', border: '1px solid var(--apebi-border)' }}
       >
         <div className="mb-4 flex items-center gap-2">
-          <Building2 className="size-4" style={{ color: '#00AFD2' }} aria-hidden />
+          <Building2 className="size-4" style={{ color: 'var(--apebi-cyan)' }} aria-hidden />
           <h2 className="font-heading text-base font-semibold text-foreground">
             Créer une entreprise APEBI
           </h2>

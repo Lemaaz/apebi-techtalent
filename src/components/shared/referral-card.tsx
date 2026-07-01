@@ -31,7 +31,7 @@ export function ReferralCard({ url, invitedCount, variant = 'light' }: ReferralC
 
   return (
     <div
-      className={cn('rounded-xl border p-5', dark ? 'border-white/10 bg-[#1A1A1A]' : '')}
+      className={cn('rounded-xl border p-5', dark ? 'border-white/10 bg-[var(--apebi-dark-74)]' : '')}
       style={dark ? undefined : { background: 'white', borderColor: 'var(--apebi-border)', boxShadow: 'var(--shadow-card)' }}
     >
       <div className="mb-1 flex items-center gap-2">

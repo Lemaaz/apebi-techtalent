@@ -14,7 +14,7 @@ const REMOTE_OPTIONS = ['Full remote', 'Hybride', 'Présentiel'] as const
 const SENIORITY_LEVELS = ['Junior', 'Mid', 'Senior', 'Lead'] as const
 
 const selectCls =
-  'rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 outline-none focus:border-[#00AFD2]/50 focus:ring-1 focus:ring-[#00AFD2]/30 transition-colors'
+  'rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 outline-none focus:border-[var(--apebi-cyan)]/50 focus:ring-1 focus:ring-[var(--apebi-cyan)]/30 transition-colors'
 
 export function JobFilters({ total }: { total: number }) {
   const router = useRouter()
@@ -47,7 +47,7 @@ export function JobFilters({ total }: { total: number }) {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-white/40" aria-hidden />
         <input
-          className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-[#00AFD2]/50 focus:ring-1 focus:ring-[#00AFD2]/30 transition-colors"
+          className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-[var(--apebi-cyan)]/50 focus:ring-1 focus:ring-[var(--apebi-cyan)]/30 transition-colors"
           placeholder="Rechercher une offre, un titre, une compétence…"
           defaultValue={q}
           onChange={(e) => update('q', e.target.value || null)}

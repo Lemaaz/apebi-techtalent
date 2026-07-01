@@ -16,7 +16,7 @@ export interface JobListItemData {
 }
 
 const CONTRACT_STYLES: Record<string, string> = {
-  CDI: 'bg-[#00AFD2]/10 text-[#00AFD2]',
+  CDI: 'bg-[var(--apebi-cyan)]/10 text-[var(--apebi-cyan)]',
   CDD: 'bg-amber-500/10 text-amber-400',
   Freelance: 'bg-purple-500/10 text-purple-400',
   Stage: 'bg-blue-500/10 text-blue-400',
@@ -46,7 +46,7 @@ export function JobListItem({ job }: { job: JobListItemData }) {
     .join(' · ')
 
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-white/8 bg-[#141414] p-4 transition-all hover:border-[#00AFD2]/40 hover:bg-[#161616]">
+    <article className="flex flex-col gap-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)]">
       {/* Title */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-heading text-sm font-semibold leading-snug text-white">
@@ -89,7 +89,7 @@ export function JobListItem({ job }: { job: JobListItemData }) {
           {job.skills.slice(0, 4).map((s) => (
             <span
               key={s}
-              className="rounded-full border border-[#00AFD2]/20 bg-[#00AFD2]/8 px-2 py-0.5 text-[11px] font-medium text-[#00AFD2]"
+              className="rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]"
             >
               {s}
             </span>
@@ -106,7 +106,7 @@ export function JobListItem({ job }: { job: JobListItemData }) {
       <div className="mt-auto pt-1">
         <Link
           href={`/offres/${job.slug}`}
-          className="flex w-full items-center justify-center rounded-lg bg-[#00AFD2] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#00AFD2]/90"
+          className="flex w-full items-center justify-center rounded-lg bg-[var(--apebi-cyan)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90"
         >
           Postuler
         </Link>

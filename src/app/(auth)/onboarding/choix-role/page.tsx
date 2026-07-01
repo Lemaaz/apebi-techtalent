@@ -60,7 +60,7 @@ export default function ChoixRolePage() {
             className={cn(
               'group relative flex items-start gap-4 rounded-xl border-2 p-5 text-left transition-all',
               selected === role
-                ? 'border-[#00AFD2] bg-[#00AFD2]/5 shadow-sm'
+                ? 'border-[var(--apebi-cyan)] bg-[var(--apebi-cyan)]/5 shadow-sm'
                 : 'border-gray-200 bg-white hover:border-gray-300',
             )}
           >
@@ -69,7 +69,7 @@ export default function ChoixRolePage() {
               className={cn(
                 'mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-all',
                 selected === role
-                  ? 'border-[#00AFD2] bg-[#00AFD2]'
+                  ? 'border-[var(--apebi-cyan)] bg-[var(--apebi-cyan)]'
                   : 'border-gray-300',
               )}
             >
@@ -83,14 +83,14 @@ export default function ChoixRolePage() {
               className={cn(
                 'flex size-10 shrink-0 items-center justify-center rounded-lg transition-all',
                 selected === role
-                  ? 'bg-[#00AFD2]/15'
+                  ? 'bg-[var(--apebi-cyan)]/15'
                   : 'bg-gray-100 group-hover:bg-gray-150',
               )}
             >
               <Icon
                 className={cn(
                   'size-5 transition-colors',
-                  selected === role ? 'text-[#00AFD2]' : 'text-gray-500',
+                  selected === role ? 'text-[var(--apebi-cyan)]' : 'text-gray-500',
                 )}
               />
             </div>
@@ -100,7 +100,7 @@ export default function ChoixRolePage() {
               <p
                 className={cn(
                   'font-heading text-base font-semibold',
-                  selected === role ? 'text-[#00AFD2]' : 'text-gray-900',
+                  selected === role ? 'text-[var(--apebi-cyan)]' : 'text-gray-900',
                 )}
               >
                 {title}
@@ -109,7 +109,7 @@ export default function ChoixRolePage() {
               <p
                 className={cn(
                   'mt-2 text-xs font-medium',
-                  selected === role ? 'text-[#00AFD2]' : 'text-gray-400',
+                  selected === role ? 'text-[var(--apebi-cyan)]' : 'text-gray-400',
                 )}
               >
                 {cta}
@@ -126,7 +126,7 @@ export default function ChoixRolePage() {
         className={cn(
           'mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white transition-all',
           selected && !isPending
-            ? 'bg-[#00AFD2] hover:bg-[#0096B5]'
+            ? 'bg-[var(--apebi-cyan)] hover:bg-[var(--apebi-cyan-dark)]'
             : 'cursor-not-allowed bg-gray-200 text-gray-400',
         )}
       >

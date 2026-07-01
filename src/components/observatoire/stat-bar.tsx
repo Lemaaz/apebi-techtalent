@@ -11,7 +11,7 @@ type StatBarProps = {
   barClass?: string
 }
 
-export function StatBar({ label, value, max, hint, barClass = 'bg-[#00AFD2]' }: StatBarProps) {
+export function StatBar({ label, value, max, hint, barClass = 'bg-[var(--apebi-cyan)]' }: StatBarProps) {
   // Largeur min 2% pour rester visible même à faible valeur
   const pct = max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0
 
@@ -26,7 +26,7 @@ export function StatBar({ label, value, max, hint, barClass = 'bg-[#00AFD2]' }: 
           className={`flex h-full items-center justify-end rounded-md ${barClass} px-2`}
           style={{ width: `${pct}%` }}
         >
-          <span className="text-[11px] font-semibold text-[#0F0F0F]">{value}</span>
+          <span className="text-[11px] font-semibold text-[var(--apebi-dark-90)]">{value}</span>
         </div>
       </div>
     </div>

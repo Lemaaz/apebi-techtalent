@@ -30,7 +30,7 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
 
   return (
     <Link href={detailHref} className="block">
-    <article className="group flex flex-col rounded-2xl border border-white/8 bg-[#1A1A1A] transition-all hover:border-white/16 hover:bg-[#1E1E1E]">
+    <article className="group flex flex-col rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] transition-all hover:border-white/16 hover:bg-[var(--apebi-dark-70)]">
       {/* Domain stripe */}
       <div
         className="h-1 w-full rounded-t-2xl"
@@ -105,7 +105,7 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
           <span
             className={cn(
               'rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors',
-              'bg-[var(--apebi-cyan)] text-[#0F0F0F] group-hover:opacity-90',
+              'bg-[var(--apebi-cyan)] text-[var(--apebi-dark-90)] group-hover:opacity-90',
             )}
           >
             Voir →

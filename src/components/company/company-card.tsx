@@ -5,7 +5,7 @@ import { computeApebiScore } from '@/lib/apebi-score'
 import { ApebiScoreBadge } from './apebi-score-badge'
 
 const AVATAR_PALETTES = [
-  'bg-[#00AFD2]/10 text-[#00AFD2]',
+  'bg-[var(--apebi-cyan)]/10 text-[var(--apebi-cyan)]',
   'bg-white/8 text-white/60',
   'bg-emerald-500/10 text-emerald-400',
   'bg-violet-500/10 text-violet-400',
@@ -53,7 +53,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
       aria-label={`Voir la vitrine de ${name}`}
       className="group block"
     >
-      <div className="flex h-full flex-col rounded-xl border border-white/8 bg-[#141414] p-5 transition-all hover:border-[#00AFD2]/40 hover:bg-[#161616]">
+      <div className="flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)]">
 
         {/* Header — avatar + nom */}
         <div className="mb-3 flex items-center gap-3">
@@ -77,7 +77,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
             </div>
           )}
           <div className="min-w-0">
-            <p className="truncate font-heading text-sm font-semibold text-white group-hover:text-[#00AFD2] transition-colors">
+            <p className="truncate font-heading text-sm font-semibold text-white group-hover:text-[var(--apebi-cyan)] transition-colors">
               {name}
             </p>
             <p className="truncate text-xs text-white/50">{sector}</p>
@@ -87,7 +87,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
         {/* Badges */}
         <div className="mb-3 flex flex-wrap gap-1.5">
           {apebi_member_since && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-[11px] font-medium text-[#00AFD2]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]">
               <Check className="size-2.5" aria-hidden />
               Membre APEBI
             </span>
@@ -120,7 +120,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
           <span
             className={cn(
               'text-xs font-medium',
-              jobCount > 0 ? 'text-[#00AFD2]' : 'text-white/35',
+              jobCount > 0 ? 'text-[var(--apebi-cyan)]' : 'text-white/35',
             )}
           >
             {jobCount > 0 ? `${jobCount} offre${jobCount > 1 ? 's' : ''}` : 'Aucune offre'}

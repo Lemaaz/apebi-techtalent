@@ -23,7 +23,7 @@ const ACCOUNT_LINKS = [
 // Footer TOUJOURS dark (#212121) + logo light — règle design system §1 & §7.7
 export function Footer() {
   return (
-    <footer style={{ background: '#212121', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+    <footer style={{ background: 'var(--apebi-dark)', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
 
         {/* Main columns */}

@@ -21,7 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* ── Top bar ── */}
       <header
         className="sticky top-0 z-50 border-b"
-        style={{ background: '#212121', borderColor: 'rgba(255,255,255,0.08)' }}
+        style={{ background: 'var(--apebi-dark)', borderColor: 'rgba(255,255,255,0.08)' }}
       >
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-3 sm:px-6">
 
