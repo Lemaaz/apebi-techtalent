@@ -128,21 +128,21 @@ export default async function LandingPage() {
   const avatarInitials = featuredCompanies.slice(0, 4).map((c) => companyInitials(c.name))
 
   return (
-    <div className="dark flex min-h-dvh flex-col bg-[#0F0F0F]">
+    <div className="dark flex min-h-dvh flex-col bg-[var(--apebi-dark-90)]">
       <Navbar />
 
       <main className="flex-1">
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section
           aria-labelledby="hero-heading"
-          className="relative overflow-hidden bg-[#0F0F0F]"
+          className="relative overflow-hidden bg-[var(--apebi-dark-90)]"
         >
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
 
             {/* Left — text + CTAs */}
             <div className="flex flex-col justify-center">
-              <span className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[#00AFD2]/30 bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
-                <span className="size-1.5 rounded-full bg-[#00AFD2]" aria-hidden />
+              <span className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
+                <span className="size-1.5 rounded-full bg-[var(--apebi-cyan)]" aria-hidden />
                 Plateforme officielle APEBI
               </span>
 
@@ -151,7 +151,7 @@ export default async function LandingPage() {
                 className="font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
               >
                 Connectez les talents tech aux entreprises qui construisent le{' '}
-                <span className="text-[#00AFD2]">Maroc numérique</span>
+                <span className="text-[var(--apebi-cyan)]">Maroc numérique</span>
               </h1>
 
               <p className="mt-5 max-w-lg text-base leading-relaxed text-white/60 sm:text-lg">
@@ -162,14 +162,14 @@ export default async function LandingPage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/entreprises/inscription"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#00AFD2] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0096B5]"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan-dark)]"
                 >
                   <Briefcase className="size-4" aria-hidden />
                   Je cherche un talent
                 </Link>
                 <Link
                   href="/offres"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#00AFD2]/50 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-[#00AFD2] hover:bg-[#00AFD2]/10"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--apebi-cyan)]/50 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-[var(--apebi-cyan)] hover:bg-[var(--apebi-cyan)]/10"
                 >
                   <Users className="size-4" aria-hidden />
                   Je cherche une opportunité
@@ -182,7 +182,7 @@ export default async function LandingPage() {
                   {(avatarInitials.length > 0 ? avatarInitials : ['CI', 'DX', 'TS', 'AI']).map((init) => (
                     <div
                       key={init}
-                      className="flex size-7 items-center justify-center rounded-full border-2 border-[#0F0F0F] bg-[#3A4652] text-[9px] font-bold text-white"
+                      className="flex size-7 items-center justify-center rounded-full border-2 border-[var(--apebi-dark-90)] bg-[var(--apebi-navy)] text-[9px] font-bold text-white"
                     >
                       {init}
                     </div>
@@ -205,14 +205,14 @@ export default async function LandingPage() {
         </section>
 
         {/* ── Stats bar ─────────────────────────────────────────── */}
-        <section aria-label="Chiffres clés" className="bg-[#161616]">
+        <section aria-label="Chiffres clés" className="bg-[var(--apebi-dark-80)]">
           <dl className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-white/10 sm:grid-cols-4">
             {liveStats.map(({ value, label }) => (
               <div
                 key={label}
                 className="flex flex-col items-center justify-center px-6 py-8 text-center"
               >
-                <dt className="font-heading text-3xl font-bold text-[#00AFD2]">{value}</dt>
+                <dt className="font-heading text-3xl font-bold text-[var(--apebi-cyan)]">{value}</dt>
                 <dd className="mt-1 text-xs text-white/50">{label}</dd>
               </div>
             ))}
@@ -222,11 +222,11 @@ export default async function LandingPage() {
         {/* ── Comment ça marche ─────────────────────────────────── */}
         <section
           aria-labelledby="how-heading"
-          className="bg-[#0F0F0F] px-4 py-20 sm:px-6"
+          className="bg-[var(--apebi-dark-90)] px-4 py-20 sm:px-6"
         >
           <div className="mx-auto max-w-7xl">
             <div className="mb-3 flex justify-center">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#00AFD2]">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--apebi-cyan)]">
                 Simple &amp; efficace
               </span>
             </div>
@@ -246,7 +246,7 @@ export default async function LandingPage() {
         {/* ── Entreprises en vedette ────────────────────────────── */}
         <section
           aria-labelledby="companies-heading"
-          className="bg-[#0D0D0D] px-4 py-20 sm:px-6"
+          className="bg-[var(--apebi-dark-92)] px-4 py-20 sm:px-6"
         >
           <div className="mx-auto max-w-7xl">
             <div className="mb-8 flex items-center justify-between">
@@ -258,7 +258,7 @@ export default async function LandingPage() {
               </h2>
               <Link
                 href="/entreprises"
-                className="flex items-center gap-1 text-xs font-medium text-[#00AFD2] hover:underline"
+                className="flex items-center gap-1 text-xs font-medium text-[var(--apebi-cyan)] hover:underline"
               >
                 Voir toutes
                 <ArrowRight className="size-3" aria-hidden />
@@ -274,7 +274,7 @@ export default async function LandingPage() {
                 {featuredCompanies.map((company) => (
                   <li key={company.id}>
                     <Link href={`/entreprises/${company.slug}`} className="block">
-                      <div className="group rounded-xl border border-white/8 bg-[#141414] p-5 transition-all hover:border-[#00AFD2]/40 hover:bg-[#181818]">
+                      <div className="group rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-78)]">
                         <div className="mb-4 flex items-center gap-3">
                           {company.logo_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -284,7 +284,7 @@ export default async function LandingPage() {
                               className="size-10 shrink-0 rounded-lg object-contain bg-white/5"
                             />
                           ) : (
-                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#3A4652] font-heading text-sm font-semibold text-white">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--apebi-navy)] font-heading text-sm font-semibold text-white">
                               {companyInitials(company.name)}
                             </div>
                           )}
@@ -301,13 +301,13 @@ export default async function LandingPage() {
                             <MapPin className="size-3" aria-hidden />
                             {company.city ?? 'Maroc'}
                           </span>
-                          <span className="text-xs font-medium text-[#00AFD2]">
+                          <span className="text-xs font-medium text-[var(--apebi-cyan)]">
                             {company.activeJobs} offre{company.activeJobs !== 1 ? 's' : ''}
                           </span>
                         </div>
 
                         <div className="mt-3 flex items-center gap-1.5">
-                          <CheckCircle className="size-3 text-[#00AFD2]" aria-hidden />
+                          <CheckCircle className="size-3 text-[var(--apebi-cyan)]" aria-hidden />
                           <span className="text-xs text-white/40">Membre APEBI validé</span>
                         </div>
                       </div>
@@ -348,7 +348,7 @@ export default async function LandingPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 href="/entreprises/inscription"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#00AFD2] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0096B5]"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan-dark)]"
               >
                 <Briefcase className="size-4" aria-hidden />
                 Inscrire mon entreprise
