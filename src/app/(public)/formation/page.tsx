@@ -171,8 +171,8 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
           <div className="relative mx-auto max-w-3xl text-center">
             <div
-              className="rise-in mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider shadow-glow-soft"
-              style={{ borderColor: 'rgba(0,175,210,0.3)', color: 'var(--apebi-cyan)', background: 'rgba(0,175,210,0.08)' }}
+              className="rise-in mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider"
+              style={{ borderColor: 'rgba(244,120,91,0.3)', color: 'var(--apebi-coral)', background: 'rgba(244,120,91,0.08)' }}
             >
               <GraduationCap className="size-3.5" aria-hidden />
               Formation Hub — Axe F · C5

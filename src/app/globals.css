@@ -54,6 +54,10 @@
   --apebi-cyan-dark:   #0096B5;
   --apebi-cyan-light:  #E6F7FB;
   --apebi-cyan-muted:  rgba(0, 175, 210, 0.12);
+  /* Accent secondaire chaud — contrepoint du cyan, usage parcimonieux
+     (eyebrows de section, chaleur ambiante). Distinct des couleurs de statut. */
+  --apebi-coral:       #F4785B;
+  --apebi-coral-muted: rgba(244, 120, 91, 0.12);
   --apebi-dark:        #212121;
   --apebi-dark-92:     #0D0D0D;
   --apebi-dark-90:     #0F0F0F;

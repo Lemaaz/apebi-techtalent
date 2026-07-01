@@ -146,7 +146,7 @@ export default async function LandingPage() {
             />
             <div
               className="aurora aurora-slow absolute -right-32 top-16 size-[500px] rounded-full blur-[120px]"
-              style={{ background: 'radial-gradient(circle, rgba(58,70,82,0.55), transparent 70%)' }}
+              style={{ background: 'radial-gradient(circle, rgba(244,120,91,0.20), transparent 70%)' }}
             />
             <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[var(--apebi-dark-90)]" />
           </div>
@@ -248,7 +248,7 @@ export default async function LandingPage() {
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-dot-cyan mask-radial opacity-60" />
           <div className="relative mx-auto max-w-7xl">
             <div className="mb-3 flex justify-center">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--apebi-cyan)]">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--apebi-coral)]">
                 Simple &amp; efficace
               </span>
             </div>

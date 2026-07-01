@@ -133,7 +133,7 @@ export default async function ObservatoirePage() {
             />
           </div>
           <div className="relative mx-auto max-w-5xl">
-            <p className="rise-in inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)] shadow-glow-soft">
+            <p className="rise-in inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-coral)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-coral)]">
               <BarChart3 className="size-3.5" aria-hidden />
               Observatoire des Talents · Commission Formation & Tech Talents
             </p>
