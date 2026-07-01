@@ -64,7 +64,7 @@ export function JobCard({ job }: { job: JobCardData }) {
 
   return (
     <Link href={`/offres/${job.slug}`} className="group block h-full">
-      <article className="flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)]">
+      <article className="card-lift flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)] hover:shadow-glow-soft">
         {/* Company row */}
         <div className="mb-3 flex items-center gap-2.5">
           <CompanyAvatar name={job.company.name} logoUrl={job.company.logo_url} />

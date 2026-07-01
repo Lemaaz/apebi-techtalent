@@ -161,39 +161,40 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
         {/* ── Hero ──────────────────────────────────────────── */}
         <section className="relative overflow-hidden border-b border-white/8 px-4 py-16 sm:px-6">
-          {/* Background glow */}
+          {/* Texture réseau + lueur */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
           <div
-            className="pointer-events-none absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full opacity-20 blur-3xl"
+            className="aurora pointer-events-none absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full opacity-25 blur-3xl"
             style={{ background: 'radial-gradient(circle, var(--apebi-cyan), transparent 70%)' }}
             aria-hidden
           />
 
           <div className="relative mx-auto max-w-3xl text-center">
             <div
-              className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider"
+              className="rise-in mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider shadow-glow-soft"
               style={{ borderColor: 'rgba(0,175,210,0.3)', color: 'var(--apebi-cyan)', background: 'rgba(0,175,210,0.08)' }}
             >
               <GraduationCap className="size-3.5" aria-hidden />
               Formation Hub — Axe F · C5
             </div>
 
-            <h1 className="mb-4 font-heading text-3xl font-bold text-white sm:text-4xl">
+            <h1 className="rise-in mb-4 font-heading text-3xl font-bold text-white sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Développez vos compétences{' '}
-              <span style={{ color: 'var(--apebi-cyan)' }}>tech</span>
+              <span className="text-gradient-cyan">tech</span>
             </h1>
 
-            <p className="mx-auto max-w-xl text-base leading-relaxed text-white/50">
+            <p className="rise-in mx-auto max-w-xl text-base leading-relaxed text-white/50" style={{ animationDelay: '160ms' }}>
               Le catalogue officiel C5 des formations et certifications tech de l&apos;écosystème
               APEBI — écoles, bootcamps, parcours par domaine.
             </p>
           </div>
 
           {/* Stats */}
-          <div className="mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-4">
+          <div className="rise-in mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-4" style={{ animationDelay: '240ms' }}>
             {stats.map(({ label, value, icon: Icon }) => (
               <div
                 key={label}
-                className="flex flex-col items-center gap-1.5 rounded-2xl border border-white/8 bg-white/3 p-4 text-center"
+                className="card-lift flex flex-col items-center gap-1.5 rounded-2xl border border-white/8 bg-white/3 p-4 text-center hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft"
               >
                 <Icon className="size-5 text-white/30" aria-hidden />
                 <span className="font-heading text-2xl font-bold text-white">{value}</span>

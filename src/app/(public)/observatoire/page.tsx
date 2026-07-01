@@ -124,16 +124,23 @@ export default async function ObservatoirePage() {
 
       <main className="flex-1">
         {/* ── Hero institutionnel ───────────────────── */}
-        <section className="border-b border-white/8 px-4 py-12 sm:px-6">
-          <div className="mx-auto max-w-5xl">
-            <p className="inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
+        <section className="relative overflow-hidden border-b border-white/8 px-4 py-14 sm:px-6">
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
+            <div
+              className="aurora absolute -right-24 -top-20 size-[380px] rounded-full blur-[100px]"
+              style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.18), transparent 70%)' }}
+            />
+          </div>
+          <div className="relative mx-auto max-w-5xl">
+            <p className="rise-in inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)] shadow-glow-soft">
               <BarChart3 className="size-3.5" aria-hidden />
               Observatoire des Talents · Commission Formation & Tech Talents
             </p>
-            <h1 className="mt-4 font-heading text-3xl font-bold text-white sm:text-4xl">
+            <h1 className="rise-in mt-4 font-heading text-3xl font-bold text-white sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Observatoire des Compétences Tech
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
+            <p className="rise-in mt-3 max-w-2xl text-sm leading-relaxed text-white/55" style={{ animationDelay: '160ms' }}>
               Une lecture en temps réel du marché des compétences numériques marocaines,
               alimentée par l&apos;écosystème APEBI : ce que les entreprises recherchent, le
               vivier de talents disponible, et les déséquilibres par domaine. Un outil au
@@ -141,16 +148,16 @@ export default async function ObservatoirePage() {
             </p>
 
             {/* KPIs */}
-            <div className="mt-6 flex flex-wrap gap-3">
-              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3">
+            <div className="rise-in mt-6 flex flex-wrap gap-3" style={{ animationDelay: '240ms' }}>
+              <div className="card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3 hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft">
                 <p className="font-heading text-2xl font-bold text-white">{totalActiveJobs}</p>
                 <p className="text-xs text-white/45">Offres actives</p>
               </div>
-              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3">
+              <div className="card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3 hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft">
                 <p className="font-heading text-2xl font-bold text-white">{totalTalents}</p>
                 <p className="text-xs text-white/45">Talents référencés</p>
               </div>
-              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3">
+              <div className="card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3 hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft">
                 <p className="font-heading text-2xl font-bold text-white">{domains.length}</p>
                 <p className="text-xs text-white/45">Domaines tech</p>
               </div>

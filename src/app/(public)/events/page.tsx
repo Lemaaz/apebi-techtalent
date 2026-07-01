@@ -77,10 +77,11 @@ export default async function EventsPage() {
       <Navbar />
 
       <main className="flex-1">
-        <div className="border-b border-white/8 px-4 py-8 sm:px-6">
-          <div className="mx-auto max-w-5xl">
-            <h1 className="font-heading text-2xl font-bold text-white">Événements</h1>
-            <p className="mt-2 max-w-xl text-sm text-white/55">
+        <div className="relative overflow-hidden border-b border-white/8 px-4 py-10 sm:px-6">
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
+          <div className="relative mx-auto max-w-5xl">
+            <h1 className="rise-in font-heading text-2xl font-bold text-white sm:text-3xl">Événements</h1>
+            <p className="rise-in mt-2 max-w-xl text-sm text-white/55" style={{ animationDelay: '80ms' }}>
               Conférences, workshops et rencontres de l&apos;écosystème tech APEBI.
             </p>
           </div>

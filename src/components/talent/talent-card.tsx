@@ -111,7 +111,7 @@ export function TalentCard({
   return (
     <article
       className={cn(
-        'group relative flex flex-col rounded-xl border bg-card p-5 transition-all duration-200 hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]',
+        'card-lift group relative flex flex-col rounded-xl border bg-card p-5 hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]',
         'border-[var(--apebi-border)] shadow-[var(--shadow-card)]',
         className,
       )}

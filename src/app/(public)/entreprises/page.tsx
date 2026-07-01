@@ -111,9 +111,10 @@ export default async function EntreprisesPage({
 
       <main className="flex-1">
         {/* ── Header + filters ───────────────────── */}
-        <div className="border-b border-white/8 bg-[var(--apebi-dark-90)] px-4 py-6 sm:px-6">
-          <div className="mx-auto max-w-7xl">
-            <h1 className="font-heading text-xl font-semibold text-white">
+        <div className="relative overflow-hidden border-b border-white/8 bg-[var(--apebi-dark-90)] px-4 py-8 sm:px-6">
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
+          <div className="relative mx-auto max-w-7xl">
+            <h1 className="rise-in font-heading text-2xl font-bold text-white sm:text-3xl">
               Entreprises membres APEBI
             </h1>
 

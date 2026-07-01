@@ -53,7 +53,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
       aria-label={`Voir la vitrine de ${name}`}
       className="group block"
     >
-      <div className="flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)]">
+      <div className="card-lift flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)] hover:shadow-glow-soft">
 
         {/* Header — avatar + nom */}
         <div className="mb-3 flex items-center gap-3">
