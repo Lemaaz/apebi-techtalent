@@ -5,7 +5,7 @@ import {
   Briefcase, Bookmark, Eye, EyeOff, CheckCircle, Clock,
   ArrowRight, Plus, AlertTriangle, UserCircle, TrendingUp, Sparkles, MapPin, Calendar,
 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -101,6 +101,43 @@ export default async function TalentDashboardPage() {
   if (role === 'SUPER_ADMIN' || role === 'ADMIN') redirect('/admin')
   if (role === 'entreprise') redirect('/entreprise/dashboard')
   if (!talent) redirect('/talent/inscription')
+
+  // ── Growth A : Qui a vu mon profil (funnel_events profil_vu) ──
+  let profileViewsCount = 0
+  let viewingCompanies: Array<{ id: string; name: string; slug: string; logo_url: string | null; sector: string; when: string }> = []
+  if (talent.validation_status === 'approved') {
+    const admin = createAdminClient()
+    const since7d = new Date(Date.now() - 7 * 86_400_000).toISOString()
+    const { data: viewEvents } = await admin
+      .from('funnel_events')
+      .select('company_id, created_at')
+      .eq('event_type', 'profil_vu')
+      .eq('talent_id', talent.id)
+      .gte('created_at', since7d)
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    profileViewsCount = viewEvents?.length ?? 0
+
+    // Entreprises distinctes, plus récentes d'abord
+    const whenById: Record<string, string> = {}
+    const orderedIds: string[] = []
+    for (const ev of viewEvents ?? []) {
+      if (ev.company_id && !(ev.company_id in whenById)) {
+        whenById[ev.company_id] = ev.created_at
+        orderedIds.push(ev.company_id)
+      }
+    }
+    if (orderedIds.length > 0) {
+      const { data: comps } = await admin
+        .from('company_profiles')
+        .select('id, name, slug, logo_url, sector')
+        .in('id', orderedIds.slice(0, 5))
+      viewingCompanies = (comps ?? [])
+        .map((c) => ({ ...c, when: whenById[c.id] }))
+        .sort((a, b) => (b.when > a.when ? 1 : -1))
+    }
+  }
 
   // Parallel data fetches
   // ── REC-08 : offres suggérées par skills (0 coût LLM) ───────
@@ -293,6 +330,54 @@ export default async function TalentDashboardPage() {
           >
             Compléter mon profil →
           </Link>
+        </div>
+      )}
+
+      {/* ── Growth A : Qui a vu mon profil ── */}
+      {profileViewsCount > 0 && (
+        <div
+          className="mb-6 rounded-xl border p-5"
+          style={{ borderColor: 'var(--apebi-cyan)', background: 'var(--apebi-cyan-muted)' }}
+        >
+          <div className="flex items-center gap-2">
+            <Eye className="size-4 shrink-0" style={{ color: 'var(--apebi-cyan)' }} aria-hidden />
+            <p className="font-heading text-[14px] font-semibold text-foreground">
+              {viewingCompanies.length > 0 ? viewingCompanies.length : profileViewsCount}
+              {' '}entreprise{(viewingCompanies.length || profileViewsCount) > 1 ? 's ont' : ' a'} consulté votre profil cette semaine
+            </p>
+          </div>
+
+          {viewingCompanies.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2" role="list">
+              {viewingCompanies.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    href={`/entreprises/${c.slug}`}
+                    className="flex items-center gap-2 rounded-lg border bg-white px-2.5 py-1.5 transition-colors hover:border-[var(--apebi-cyan)]"
+                    style={{ borderColor: 'var(--apebi-border)' }}
+                  >
+                    {c.logo_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={c.logo_url} alt="" className="size-5 rounded object-contain" />
+                    ) : (
+                      <span className="flex size-5 items-center justify-center rounded bg-[var(--apebi-navy)] text-[9px] font-bold text-white">
+                        {c.name.slice(0, 2).toUpperCase()}
+                      </span>
+                    )}
+                    <span className="font-heading text-[12px] font-medium text-foreground">{c.name}</span>
+                    <span className="text-[11px] text-muted-foreground">· {c.sector}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <p className="mt-3 text-[12px] text-muted-foreground">
+            Un profil complet attire plus de recruteurs.{' '}
+            <Link href="/talent/profil/modifier" className="font-medium hover:underline" style={{ color: 'var(--apebi-cyan)' }}>
+              Complétez le vôtre →
+            </Link>
+          </p>
         </div>
       )}
 

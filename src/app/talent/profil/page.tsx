@@ -15,6 +15,9 @@ import { toggleVisibility } from './actions'
 import { cn } from '@/lib/utils'
 import { AvatarUploader } from '@/components/talent/avatar-uploader'
 import { CvUploader } from '@/components/talent/cv-uploader'
+import { PublicProfileCard } from '@/components/talent/public-profile-card'
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://apebi-techtalent.vercel.app'
 
 export const metadata: Metadata = {
   title: 'Mon Profil',
@@ -45,6 +48,8 @@ type TalentRow = {
   completeness_score: number
   validation_status: string
   has_techtalent_label: boolean | null
+  public_enabled: boolean
+  public_token: string | null
   talent_skills: Array<{
     level: string | null
     skills: {
@@ -168,6 +173,7 @@ export default async function TalentProfilPage() {
        years_experience, seniority_level, availability, job_type,
        remote_preference, expected_salary_range, visibility,
        cv_url, completeness_score, validation_status, has_techtalent_label,
+       public_enabled, public_token,
        talent_skills (
          level,
          skills ( id, name, domains ( name_fr, color ) )
@@ -514,6 +520,13 @@ export default async function TalentProfilPage() {
             <SideCard title="Mon CV">
               <CvUploader currentUrl={talent.cv_url} />
             </SideCard>
+
+            {/* Profil public partageable (Growth B) */}
+            <PublicProfileCard
+              enabled={talent.public_enabled}
+              token={talent.public_token}
+              appUrl={APP_URL}
+            />
 
             {/* Quick nav */}
             <SideCard title="Mon espace">

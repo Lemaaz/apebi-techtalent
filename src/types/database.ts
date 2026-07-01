@@ -796,6 +796,8 @@ export type Database = {
           mission_duration_weeks: number | null
           portfolio_url: string | null
           receive_alerts: boolean
+          public_enabled: boolean
+          public_token: string | null
           remote_preference: string | null
           seniority_level: string | null
           title: string | null
@@ -832,6 +834,8 @@ export type Database = {
           mission_duration_weeks?: number | null
           portfolio_url?: string | null
           receive_alerts?: boolean
+          public_enabled?: boolean
+          public_token?: string | null
           remote_preference?: string | null
           seniority_level?: string | null
           title?: string | null
@@ -868,6 +872,8 @@ export type Database = {
           mission_duration_weeks?: number | null
           portfolio_url?: string | null
           receive_alerts?: boolean
+          public_enabled?: boolean
+          public_token?: string | null
           remote_preference?: string | null
           seniority_level?: string | null
           title?: string | null
