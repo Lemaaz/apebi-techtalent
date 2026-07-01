@@ -64,7 +64,7 @@ export function Footer() {
 
           {/* Plateforme */}
           <div>
-            <h3 className="mb-4 font-heading text-[11px] font-semibold uppercase tracking-widest text-white/40">
+            <h3 className="mb-4 font-heading text-[12px] font-semibold uppercase tracking-widest text-white/45">
               Plateforme
             </h3>
             <ul className="space-y-3">
@@ -84,7 +84,7 @@ export function Footer() {
 
           {/* Mon espace */}
           <div>
-            <h3 className="mb-4 font-heading text-[11px] font-semibold uppercase tracking-widest text-white/40">
+            <h3 className="mb-4 font-heading text-[12px] font-semibold uppercase tracking-widest text-white/45">
               Mon espace
             </h3>
             <ul className="space-y-3">
@@ -104,7 +104,7 @@ export function Footer() {
 
           {/* Légal */}
           <div>
-            <h3 className="mb-4 font-heading text-[11px] font-semibold uppercase tracking-widest text-white/40">
+            <h3 className="mb-4 font-heading text-[12px] font-semibold uppercase tracking-widest text-white/45">
               Légal
             </h3>
             <ul className="space-y-3">
