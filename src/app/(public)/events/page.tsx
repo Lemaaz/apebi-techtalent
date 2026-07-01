@@ -139,11 +139,11 @@ function EventCard({ event, past = false }: { event: EventRow; past?: boolean })
   return (
     <Link
       href={`/events/${event.slug}`}
-      className={`block h-full rounded-xl border border-white/8 bg-[#141414] p-5 transition-colors hover:border-[#00AFD2]/30 ${past ? 'opacity-70' : ''}`}
+      className={`block h-full rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-colors hover:border-[var(--apebi-cyan)]/30 ${past ? 'opacity-70' : ''}`}
     >
       <div className="flex items-center gap-2">
         {event.type_event && (
-          <span className="rounded-full bg-[#00AFD2]/10 px-2.5 py-0.5 text-[11px] font-medium text-[#00AFD2]">
+          <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-2.5 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]">
             {TYPE_LABELS[event.type_event] ?? event.type_event}
           </span>
         )}

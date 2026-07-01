@@ -85,7 +85,7 @@ export default async function FormationDetailPage({ params }: { params: Params }
 
   const institution = program.training_institutions
   const domain = program.domains
-  const domainColor = domain?.color ?? '#00AFD2'
+  const domainColor = domain?.color ?? 'var(--apebi-cyan)'
 
   // Autres formations de la même institution
   const { data: relatedPrograms } = await supabase

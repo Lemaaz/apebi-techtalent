@@ -31,7 +31,7 @@ export function RegisterButton({ eventId, slug, isAuthenticated, isRegistered, i
     return (
       <a
         href="/connexion"
-        className="flex w-full items-center justify-center rounded-lg bg-[#00AFD2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#00AFD2]/90"
+        className="flex w-full items-center justify-center rounded-lg bg-[var(--apebi-cyan)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90"
       >
         Se connecter pour s&apos;inscrire
       </a>
@@ -83,7 +83,7 @@ export function RegisterButton({ eventId, slug, isAuthenticated, isRegistered, i
           }
         })
       }
-      className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00AFD2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#00AFD2]/90 disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90 disabled:opacity-60"
     >
       {pending ? (
         <Loader2 className="size-4 animate-spin" aria-hidden />

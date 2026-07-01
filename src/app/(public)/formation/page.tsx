@@ -154,7 +154,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
   ]
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[#0F0F0F]">
+    <div className="flex min-h-dvh flex-col bg-[var(--apebi-dark-90)]">
       <Navbar />
 
       <main className="flex-1">
@@ -164,14 +164,14 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
           {/* Background glow */}
           <div
             className="pointer-events-none absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full opacity-20 blur-3xl"
-            style={{ background: 'radial-gradient(circle, #00AFD2, transparent 70%)' }}
+            style={{ background: 'radial-gradient(circle, var(--apebi-cyan), transparent 70%)' }}
             aria-hidden
           />
 
           <div className="relative mx-auto max-w-3xl text-center">
             <div
               className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider"
-              style={{ borderColor: 'rgba(0,175,210,0.3)', color: '#00AFD2', background: 'rgba(0,175,210,0.08)' }}
+              style={{ borderColor: 'rgba(0,175,210,0.3)', color: 'var(--apebi-cyan)', background: 'rgba(0,175,210,0.08)' }}
             >
               <GraduationCap className="size-3.5" aria-hidden />
               Formation Hub — Axe F · C5
@@ -179,7 +179,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
             <h1 className="mb-4 font-heading text-3xl font-bold text-white sm:text-4xl">
               Développez vos compétences{' '}
-              <span style={{ color: '#00AFD2' }}>tech</span>
+              <span style={{ color: 'var(--apebi-cyan)' }}>tech</span>
             </h1>
 
             <p className="mx-auto max-w-xl text-base leading-relaxed text-white/50">
@@ -254,12 +254,12 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
               <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list">
                 {domains.map((d) => {
-                  const color = d.color ?? '#00AFD2'
+                  const color = d.color ?? 'var(--apebi-cyan)'
                   return (
                     <li key={d.id}>
                       <a
                         href={`/formation?domain=${d.code}`}
-                        className="group flex items-start gap-3 rounded-xl border border-white/8 bg-[#1A1A1A] p-4 transition-all hover:border-white/16 hover:bg-[#1E1E1E]"
+                        className="group flex items-start gap-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] p-4 transition-all hover:border-white/16 hover:bg-[var(--apebi-dark-70)]"
                       >
                         <div
                           className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg text-sm"
@@ -308,7 +308,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
                       href={inst.website_url ?? '#'}
                       target={inst.website_url ? '_blank' : undefined}
                       rel="noopener noreferrer"
-                      className="group flex flex-col gap-3 rounded-xl border border-white/8 bg-[#1A1A1A] p-4 transition-all hover:border-white/16 hover:bg-[#1E1E1E]"
+                      className="group flex flex-col gap-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] p-4 transition-all hover:border-white/16 hover:bg-[var(--apebi-dark-70)]"
                     >
                       {/* Logo placeholder */}
                       <div className="flex size-10 items-center justify-center rounded-lg bg-white/8 text-lg font-bold text-white/50">
@@ -332,7 +332,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
                           {inst.is_apebi_partner && (
                             <span
                               className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
-                              style={{ background: 'rgba(0,175,210,0.15)', color: '#00AFD2' }}
+                              style={{ background: 'rgba(0,175,210,0.15)', color: 'var(--apebi-cyan)' }}
                             >
                               Partenaire
                             </span>

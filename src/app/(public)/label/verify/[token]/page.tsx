@@ -60,7 +60,7 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
         <div className="mx-auto max-w-md">
           {!result ? (
             // ── Token introuvable / invalide ──
-            <div className="rounded-2xl border border-white/8 bg-[#141414] p-8 text-center">
+            <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-85)] p-8 text-center">
               <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
                 <ShieldX className="size-7 text-white/40" aria-hidden />
               </div>
@@ -86,7 +86,7 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
               const TypeIcon = result.type === 'enterprise' ? Building2 : User
               return (
                 <div
-                  className={`rounded-2xl border border-white/8 bg-[#141414] p-8 text-center ring-1 ${ui.ring}`}
+                  className={`rounded-2xl border border-white/8 bg-[var(--apebi-dark-85)] p-8 text-center ring-1 ${ui.ring}`}
                 >
                   <div
                     className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-full ${ui.bg}`}
@@ -128,7 +128,7 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
                   </div>
 
                   <p className="mt-6 text-xs text-white/35">
-                    Vérifié par <span className="text-[#00AFD2]">APEBI TechTalent</span> ·
+                    Vérifié par <span className="text-[var(--apebi-cyan)]">APEBI TechTalent</span> ·
                     Commission Formation &amp; Talent Tech
                   </p>
                 </div>

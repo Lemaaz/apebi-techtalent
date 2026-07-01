@@ -126,7 +126,7 @@ export default async function ObservatoirePage() {
         {/* ── Hero institutionnel ───────────────────── */}
         <section className="border-b border-white/8 px-4 py-12 sm:px-6">
           <div className="mx-auto max-w-5xl">
-            <p className="inline-flex items-center gap-1.5 rounded-full bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
               <BarChart3 className="size-3.5" aria-hidden />
               Observatoire des Talents · Commission Formation & Tech Talents
             </p>
@@ -142,15 +142,15 @@ export default async function ObservatoirePage() {
 
             {/* KPIs */}
             <div className="mt-6 flex flex-wrap gap-3">
-              <div className="rounded-xl border border-white/8 bg-[#141414] px-4 py-3">
+              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3">
                 <p className="font-heading text-2xl font-bold text-white">{totalActiveJobs}</p>
                 <p className="text-xs text-white/45">Offres actives</p>
               </div>
-              <div className="rounded-xl border border-white/8 bg-[#141414] px-4 py-3">
+              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3">
                 <p className="font-heading text-2xl font-bold text-white">{totalTalents}</p>
                 <p className="text-xs text-white/45">Talents référencés</p>
               </div>
-              <div className="rounded-xl border border-white/8 bg-[#141414] px-4 py-3">
+              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3">
                 <p className="font-heading text-2xl font-bold text-white">{domains.length}</p>
                 <p className="text-xs text-white/45">Domaines tech</p>
               </div>
@@ -160,7 +160,7 @@ export default async function ObservatoirePage() {
 
         {!isAboveThreshold ? (
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <div className="rounded-2xl border border-white/8 bg-[#141414] p-8 text-center">
+            <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-85)] p-8 text-center">
               <Info className="mx-auto mb-4 size-10 text-white/20" aria-hidden />
               <h2 className="font-heading text-lg font-semibold text-white">
                 Données en cours de collecte
@@ -181,7 +181,7 @@ export default async function ObservatoirePage() {
             {/* ── Compétences demandées ──────────────── */}
             <section aria-labelledby="demand-h">
               <h2 id="demand-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
-                <TrendingUp className="size-4 text-[#00AFD2]" aria-hidden />
+                <TrendingUp className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
                 Compétences les plus demandées
               </h2>
               <p className="mb-5 text-xs text-white/45">Par les offres d&apos;emploi actives.</p>
@@ -230,7 +230,7 @@ export default async function ObservatoirePage() {
             {/* ── Activité par domaine (offre vs vivier) ── */}
             <section aria-labelledby="domain-h">
               <h2 id="domain-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
-                <Scale className="size-4 text-[#00AFD2]" aria-hidden />
+                <Scale className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
                 Équilibre offre / vivier par domaine
               </h2>
               <p className="mb-5 text-xs text-white/45">
@@ -242,10 +242,10 @@ export default async function ObservatoirePage() {
                     ? d.active_jobs > 0 ? 'Sous tension' : '—'
                     : `${(d.active_jobs / d.approved_talents).toFixed(1)} offre/talent`
                   return (
-                    <div key={d.code} className="rounded-xl border border-white/8 bg-[#141414] p-4">
+                    <div key={d.code} className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <p className="text-[11px] font-semibold text-[#00AFD2]">{d.code}</p>
+                          <p className="text-[11px] font-semibold text-[var(--apebi-cyan)]">{d.code}</p>
                           <p className="text-sm font-medium text-white">{d.name_fr}</p>
                         </div>
                         <span className="shrink-0 rounded-full bg-white/5 px-2 py-0.5 text-[11px] text-white/55">
@@ -270,7 +270,7 @@ export default async function ObservatoirePage() {
             {geo.length > 0 && (
               <section aria-labelledby="geo-h">
                 <h2 id="geo-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
-                  <MapPin className="size-4 text-[#00AFD2]" aria-hidden />
+                  <MapPin className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
                   Répartition géographique des talents
                 </h2>
                 <p className="mb-5 text-xs text-white/45">Villes les plus représentées dans le vivier.</p>

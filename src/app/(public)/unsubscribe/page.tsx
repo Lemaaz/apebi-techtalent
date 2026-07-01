@@ -26,7 +26,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
         <div className="mt-6 flex flex-col items-center gap-2">
           <Link
             href="/talent/parametres"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#00AFD2] px-5 py-2.5 font-heading text-[13px] font-semibold text-white hover:bg-[#0096B5]"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--apebi-cyan)] px-5 py-2.5 font-heading text-[13px] font-semibold text-white hover:bg-[var(--apebi-cyan-dark)]"
           >
             <Bell className="size-3.5" aria-hidden />
             Gérer mes préférences
@@ -56,7 +56,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
         </p>
         <Link
           href="/connexion"
-          className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-[#00AFD2] px-5 py-2.5 font-heading text-[13px] font-semibold text-white hover:bg-[#0096B5]"
+          className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-[var(--apebi-cyan)] px-5 py-2.5 font-heading text-[13px] font-semibold text-white hover:bg-[var(--apebi-cyan-dark)]"
         >
           Se connecter
         </Link>
@@ -67,8 +67,8 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
   // Default — direct access (no params)
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-      <div className="flex size-14 items-center justify-center rounded-full bg-[#00AFD2]/10">
-        <BellOff className="size-7 text-[#00AFD2]" aria-hidden />
+      <div className="flex size-14 items-center justify-center rounded-full bg-[var(--apebi-cyan)]/10">
+        <BellOff className="size-7 text-[var(--apebi-cyan)]" aria-hidden />
       </div>
       <h1 className="mt-5 font-heading text-xl font-bold text-foreground">
         Alertes offres APEBI TechTalent
@@ -78,7 +78,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
       </p>
       <Link
         href="/talent/parametres"
-        className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-[#00AFD2] px-5 py-2.5 font-heading text-[13px] font-semibold text-white hover:bg-[#0096B5]"
+        className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-[var(--apebi-cyan)] px-5 py-2.5 font-heading text-[13px] font-semibold text-white hover:bg-[var(--apebi-cyan-dark)]"
       >
         Mes paramètres
       </Link>

@@ -127,7 +127,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
 
           <div className="flex flex-wrap items-center gap-2">
             {event.type_event && (
-              <span className="rounded-full bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
+              <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
                 {TYPE_LABELS[event.type_event] ?? event.type_event}
               </span>
             )}
@@ -146,9 +146,9 @@ export default async function EventDetailPage({ params }: { params: Params }) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_280px]">
             {/* Contenu */}
             <div className="space-y-6 min-w-0">
-              <dl className="space-y-3 rounded-xl border border-white/8 bg-[#141414] p-5 text-sm">
+              <dl className="space-y-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 text-sm">
                 <div className="flex items-center gap-2.5 text-white/70">
-                  <Calendar className="size-4 shrink-0 text-[#00AFD2]" aria-hidden />
+                  <Calendar className="size-4 shrink-0 text-[var(--apebi-cyan)]" aria-hidden />
                   {formatDateTime(event.date_debut)}
                 </div>
                 {event.date_fin && (
@@ -159,7 +159,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
                 )}
                 {event.lieu && (
                   <div className="flex items-center gap-2.5 text-white/70">
-                    <MapPin className="size-4 shrink-0 text-[#00AFD2]" aria-hidden />
+                    <MapPin className="size-4 shrink-0 text-[var(--apebi-cyan)]" aria-hidden />
                     {event.lieu}
                   </div>
                 )}
@@ -167,7 +167,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
                   <div className="flex items-center gap-2.5 text-white/70">
                     <Building2 className="size-4 shrink-0 text-white/40" aria-hidden />
                     {event.company_profiles?.slug ? (
-                      <Link href={`/entreprises/${event.company_profiles.slug}`} className="hover:text-[#00AFD2]">
+                      <Link href={`/entreprises/${event.company_profiles.slug}`} className="hover:text-[var(--apebi-cyan)]">
                         {organiser}
                       </Link>
                     ) : (
@@ -189,7 +189,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
 
             {/* Inscription */}
             <aside>
-              <div className="rounded-xl border border-white/8 bg-[#141414] p-5">
+              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5">
                 <p className="mb-3 font-heading text-sm font-semibold text-white">Inscription</p>
 
                 {placesLeft != null && !isPast && (
@@ -204,7 +204,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
                     href={event.url_inscription_externe}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00AFD2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#00AFD2]/90"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90"
                   >
                     <ExternalLink className="size-4" aria-hidden />
                     S&apos;inscrire (lien externe)
