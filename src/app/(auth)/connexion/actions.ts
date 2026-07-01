@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { translateAuthError } from '@/lib/supabase/auth-errors'
+import { logFunnel } from '@/lib/funnel'
 
 export type SignInState = { error: string | null }
 
@@ -19,6 +20,10 @@ export async function signIn(
   if (error) return { error: translateAuthError(error.message) }
 
   const { data: { user } } = await supabase.auth.getUser()
+
+  // Signal de rétention — connexion réussie (avant le redirect qui throw)
+  if (user) logFunnel('connexion', { userId: user.id })
+
   const userMeta = user?.user_metadata?.role as string | undefined
   const appMeta = (user as any)?.app_metadata?.role as string | undefined
   const role = appMeta === 'SUPER_ADMIN' || appMeta === 'ADMIN' ? appMeta : userMeta

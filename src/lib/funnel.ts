@@ -8,6 +8,7 @@ export type FunnelEventType =
   | 'invitation_envoyee'
   | 'mise_en_relation'
   | 'parrainage_converti'
+  | 'connexion'
 
 interface FunnelParams {
   talentId?: string | null
