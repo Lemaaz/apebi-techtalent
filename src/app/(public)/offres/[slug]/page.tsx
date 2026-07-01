@@ -161,7 +161,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                 {company && (
                   <Link
                     href={`/entreprises/${company.slug}`}
-                    className="mb-2 inline-flex items-center gap-2 text-sm text-[#00AFD2] hover:underline"
+                    className="mb-2 inline-flex items-center gap-2 text-sm text-[var(--apebi-cyan)] hover:underline"
                   >
                     {company.logo_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -181,7 +181,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
 
                 {/* Meta chips */}
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
+                  <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
                     {job.contract_type}
                   </span>
                   {job.seniority_level && (
@@ -274,7 +274,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                         {requiredSkills.map((s) => (
                           <span
                             key={s}
-                            className="rounded-full border border-[#00AFD2]/20 bg-[#00AFD2]/8 px-2.5 py-1 text-xs font-medium text-[#00AFD2]"
+                            className="rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2.5 py-1 text-xs font-medium text-[var(--apebi-cyan)]"
                           >
                             {s}
                           </span>
@@ -306,7 +306,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
             {/* ── Right: Sidebar ── */}
             <aside className="space-y-4">
               {/* Apply box */}
-              <div className="rounded-xl border border-white/8 bg-[#141414] p-5">
+              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5">
                 <p className="mb-4 font-heading text-sm font-semibold text-white">
                   Postuler à cette offre
                 </p>
@@ -319,7 +319,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
 
               {/* Company card */}
               {company && (
-                <div className="rounded-xl border border-white/8 bg-[#141414] p-4">
+                <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4">
                   <p className="mb-3 font-heading text-sm font-semibold text-white">
                     L&apos;entreprise
                   </p>
@@ -386,7 +386,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                 <li key={similar.id}>
                   <Link
                     href={`/offres/${similar.slug}`}
-                    className="block rounded-xl border border-white/8 bg-[#141414] p-4 transition-all hover:border-[#00AFD2]/40 hover:bg-[#181818]"
+                    className="block rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-78)]"
                   >
                     <p className="truncate font-heading text-[13px] font-semibold text-white">
                       {similar.title}
@@ -395,7 +395,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                       {similar.company_profiles?.name ?? '—'}
                       {similar.city ? ` · ${similar.city}` : ''}
                     </p>
-                    <span className="mt-2 inline-block rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-[10px] font-medium text-[#00AFD2]">
+                    <span className="mt-2 inline-block rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--apebi-cyan)]">
                       {similar.contract_type}
                     </span>
                   </Link>

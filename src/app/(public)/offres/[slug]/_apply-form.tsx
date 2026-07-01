@@ -12,7 +12,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00AFD2] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#00AFD2]/90 disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90 disabled:opacity-60"
     >
       {pending ? (
         <>
@@ -70,7 +70,7 @@ export function ApplyForm({
         </p>
         <a
           href="/connexion"
-          className="mt-4 flex w-full items-center justify-center rounded-lg bg-[#00AFD2] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#00AFD2]/90"
+          className="mt-4 flex w-full items-center justify-center rounded-lg bg-[var(--apebi-cyan)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90"
         >
           Se connecter
         </a>
@@ -89,7 +89,7 @@ export function ApplyForm({
         </p>
         <a
           href="/talent/inscription"
-          className="mt-4 flex w-full items-center justify-center rounded-lg bg-[#00AFD2] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#00AFD2]/90"
+          className="mt-4 flex w-full items-center justify-center rounded-lg bg-[var(--apebi-cyan)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan)]/90"
         >
           Créer mon profil
         </a>
@@ -111,7 +111,7 @@ export function ApplyForm({
           placeholder="Expliquez brièvement pourquoi vous êtes intéressé·e par ce poste et ce que vous apporteriez à l'équipe…"
           rows={5}
           maxLength={1000}
-          className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[#00AFD2]/50 focus-visible:ring-[#00AFD2]/30"
+          className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[var(--apebi-cyan)]/50 focus-visible:ring-[var(--apebi-cyan)]/30"
         />
       </div>
 

@@ -123,7 +123,7 @@ function CompanyInitials({ name }: { name: string }) {
   return (
     <div
       aria-hidden
-      className="flex size-full items-center justify-center font-heading text-xl font-semibold text-[#00AFD2]"
+      className="flex size-full items-center justify-center font-heading text-xl font-semibold text-[var(--apebi-cyan)]"
     >
       {initials}
     </div>
@@ -212,17 +212,17 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
-              : { background: 'linear-gradient(135deg, #212121 0%, #3A4652 100%)' }
+              : { background: 'linear-gradient(135deg, var(--apebi-dark) 0%, var(--apebi-navy) 100%)' }
           }
           aria-hidden
         />
 
         {/* ── Company header ──────────────────────── */}
-        <div className="border-b border-white/8 bg-[#0F0F0F] px-4 pb-6 sm:px-6">
+        <div className="border-b border-white/8 bg-[var(--apebi-dark-90)] px-4 pb-6 sm:px-6">
           <div className="mx-auto max-w-7xl">
 
             {/* Logo — overlaps banner */}
-            <div className="-mt-7 mb-4 size-14 overflow-hidden rounded-xl border-2 border-[#0F0F0F] bg-[#141414] shadow-sm">
+            <div className="-mt-7 mb-4 size-14 overflow-hidden rounded-xl border-2 border-[var(--apebi-dark-90)] bg-[var(--apebi-dark-85)] shadow-sm">
               {company.logo_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -241,7 +241,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="font-heading text-xl font-bold text-white">{company.name}</h1>
                   {company.is_featured && (
-                    <span className="rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-[11px] font-medium text-[#00AFD2]">
+                    <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]">
                       En vedette
                     </span>
                   )}
@@ -256,7 +256,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 {/* Badges */}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {company.apebi_member_since && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[#00AFD2]/10 px-3 py-1 text-xs font-medium text-[#00AFD2]">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
                       <Check className="size-3" aria-hidden />
                       Membre APEBI{memberYear ? ` depuis ${memberYear}` : ''}
                     </span>
@@ -380,9 +380,9 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 ].map(({ label, value, icon: Icon }) => (
                   <div
                     key={label}
-                    className="flex flex-col items-center rounded-xl border border-white/8 bg-[#141414] p-3 text-center"
+                    className="flex flex-col items-center rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-3 text-center"
                   >
-                    <Icon className="mb-1.5 size-4 text-[#00AFD2]/70" aria-hidden />
+                    <Icon className="mb-1.5 size-4 text-[var(--apebi-cyan)]/70" aria-hidden />
                     <p className="font-heading text-xl font-bold text-white">{value}</p>
                     <p className="mt-0.5 text-[10px] text-white/40">{label}</p>
                   </div>
@@ -397,7 +397,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
             >
               Offres actives
               {jobs.length > 0 && (
-                <span className="ml-2 rounded-full bg-[#00AFD2]/10 px-2 py-0.5 text-xs font-medium text-[#00AFD2]">
+                <span className="ml-2 rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-xs font-medium text-[var(--apebi-cyan)]">
                   {jobs.length}
                 </span>
               )}
