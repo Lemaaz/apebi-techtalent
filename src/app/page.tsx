@@ -137,39 +137,60 @@ export default async function LandingPage() {
           aria-labelledby="hero-heading"
           className="relative overflow-hidden bg-[var(--apebi-dark-90)]"
         >
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
+          {/* Couches de fond — texture réseau + lueurs */}
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-0 bg-grid-cyan mask-radial opacity-80" />
+            <div
+              className="aurora absolute -left-40 -top-32 size-[460px] rounded-full blur-[110px]"
+              style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.30), transparent 70%)' }}
+            />
+            <div
+              className="aurora aurora-slow absolute -right-32 top-16 size-[500px] rounded-full blur-[120px]"
+              style={{ background: 'radial-gradient(circle, rgba(58,70,82,0.55), transparent 70%)' }}
+            />
+            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[var(--apebi-dark-90)]" />
+          </div>
+
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
 
             {/* Left — text + CTAs */}
             <div className="flex flex-col justify-center">
-              <span className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
-                <span className="size-1.5 rounded-full bg-[var(--apebi-cyan)]" aria-hidden />
+              <span
+                className="rise-in mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)] shadow-glow-soft"
+                style={{ animationDelay: '0ms' }}
+              >
+                <span className="node-pulse size-1.5 rounded-full bg-[var(--apebi-cyan)]" aria-hidden />
                 Plateforme officielle APEBI
               </span>
 
               <h1
                 id="hero-heading"
-                className="font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
+                className="rise-in font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
+                style={{ animationDelay: '80ms' }}
               >
                 Connectez les talents tech aux entreprises qui construisent le{' '}
-                <span className="text-[var(--apebi-cyan)]">Maroc numérique</span>
+                <span className="text-gradient-cyan">Maroc numérique</span>
               </h1>
 
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-white/60 sm:text-lg">
+              <p
+                className="rise-in mt-5 max-w-lg text-base leading-relaxed text-white/60 sm:text-lg"
+                style={{ animationDelay: '160ms' }}
+              >
                 La plateforme officielle de l&apos;APEBI pour mettre en relation les entreprises
                 membres et les profils tech marocains qualifiés.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="rise-in mt-8 flex flex-wrap gap-3" style={{ animationDelay: '240ms' }}>
                 <Link
                   href="/entreprises/inscription"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan-dark)]"
+                  className="btn-shine inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--apebi-cyan-dark)] hover:shadow-glow-cyan"
                 >
                   <Briefcase className="size-4" aria-hidden />
                   Je cherche un talent
                 </Link>
                 <Link
                   href="/offres"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--apebi-cyan)]/50 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-[var(--apebi-cyan)] hover:bg-[var(--apebi-cyan)]/10"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--apebi-cyan)]/50 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:border-[var(--apebi-cyan)] hover:bg-[var(--apebi-cyan)]/10"
                 >
                   <Users className="size-4" aria-hidden />
                   Je cherche une opportunité
@@ -177,7 +198,7 @@ export default async function LandingPage() {
               </div>
 
               {/* Social proof */}
-              <div className="mt-8 flex items-center gap-3">
+              <div className="rise-in mt-8 flex items-center gap-3" style={{ animationDelay: '320ms' }}>
                 <div className="flex -space-x-2" aria-hidden>
                   {(avatarInitials.length > 0 ? avatarInitials : ['CI', 'DX', 'TS', 'AI']).map((init) => (
                     <div
@@ -198,21 +219,21 @@ export default async function LandingPage() {
             </div>
 
             {/* Right — network graph */}
-            <div className="hidden items-center justify-center lg:flex">
+            <div className="rise-in hidden items-center justify-center lg:flex" style={{ animationDelay: '200ms' }}>
               <NetworkGraph />
             </div>
           </div>
         </section>
 
         {/* ── Stats bar ─────────────────────────────────────────── */}
-        <section aria-label="Chiffres clés" className="bg-[var(--apebi-dark-80)]">
+        <section aria-label="Chiffres clés" className="hairline-top bg-[var(--apebi-dark-80)]">
           <dl className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-white/10 sm:grid-cols-4">
             {liveStats.map(({ value, label }) => (
               <div
                 key={label}
-                className="flex flex-col items-center justify-center px-6 py-8 text-center"
+                className="group flex flex-col items-center justify-center px-6 py-8 text-center transition-colors hover:bg-white/[0.02]"
               >
-                <dt className="font-heading text-3xl font-bold text-[var(--apebi-cyan)]">{value}</dt>
+                <dt className="font-heading text-3xl font-bold text-[var(--apebi-cyan)] transition-transform duration-300 group-hover:scale-110">{value}</dt>
                 <dd className="mt-1 text-xs text-white/50">{label}</dd>
               </div>
             ))}
@@ -222,9 +243,10 @@ export default async function LandingPage() {
         {/* ── Comment ça marche ─────────────────────────────────── */}
         <section
           aria-labelledby="how-heading"
-          className="bg-[var(--apebi-dark-90)] px-4 py-20 sm:px-6"
+          className="relative overflow-hidden bg-[var(--apebi-dark-90)] px-4 py-20 sm:px-6"
         >
-          <div className="mx-auto max-w-7xl">
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-dot-cyan mask-radial opacity-60" />
+          <div className="relative mx-auto max-w-7xl">
             <div className="mb-3 flex justify-center">
               <span className="text-xs font-semibold uppercase tracking-widest text-[var(--apebi-cyan)]">
                 Simple &amp; efficace
@@ -274,7 +296,7 @@ export default async function LandingPage() {
                 {featuredCompanies.map((company) => (
                   <li key={company.id}>
                     <Link href={`/entreprises/${company.slug}`} className="block">
-                      <div className="group rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-78)]">
+                      <div className="group card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-78)] hover:shadow-glow-soft">
                         <div className="mb-4 flex items-center gap-3">
                           {company.logo_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -325,12 +347,13 @@ export default async function LandingPage() {
           className="relative overflow-hidden px-4 py-20 text-center sm:px-6"
           style={{ background: 'linear-gradient(135deg, #061622 0%, #003d52 50%, #061622 100%)' }}
         >
-          {/* Ambient glow */}
+          {/* Ambient glow + texture réseau */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(0,175,210,0.18) 0%, transparent 65%)' }}
             aria-hidden
           />
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
 
           <div className="relative mx-auto max-w-2xl">
             <h2
@@ -348,7 +371,7 @@ export default async function LandingPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 href="/entreprises/inscription"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan-dark)]"
+                className="btn-shine inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--apebi-cyan-dark)] hover:shadow-glow-cyan"
               >
                 <Briefcase className="size-4" aria-hidden />
                 Inscrire mon entreprise

@@ -47,14 +47,14 @@ export function HowItWorksTabs() {
     <div>
       {/* Tab switcher */}
       <div className="mb-10 flex justify-center">
-        <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1">
+        <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 backdrop-blur-sm">
           <button
             type="button"
             onClick={() => setActive('recruiter')}
             className={cn(
               'rounded-lg px-5 py-2.5 text-sm font-medium transition-all',
               active === 'recruiter'
-                ? 'bg-[var(--apebi-cyan)] text-white shadow-sm'
+                ? 'bg-[var(--apebi-cyan)] text-white shadow-glow-cyan'
                 : 'text-white/50 hover:text-white/80',
             )}
           >
@@ -66,7 +66,7 @@ export function HowItWorksTabs() {
             className={cn(
               'rounded-lg px-5 py-2.5 text-sm font-medium transition-all',
               active === 'talent'
-                ? 'bg-[var(--apebi-cyan)] text-white shadow-sm'
+                ? 'bg-[var(--apebi-cyan)] text-white shadow-glow-cyan'
                 : 'text-white/50 hover:text-white/80',
             )}
           >
@@ -87,8 +87,8 @@ export function HowItWorksTabs() {
               />
             )}
 
-            <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-6 text-center transition-colors hover:border-[var(--apebi-cyan)]/30">
-              <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan)]/10">
+            <div className="card-lift group rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-6 text-center hover:border-[var(--apebi-cyan)]/30 hover:shadow-glow-soft">
+              <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan)]/10 shadow-glow-soft transition-transform duration-300 group-hover:scale-105">
                 <span className="font-heading text-lg font-bold text-[var(--apebi-cyan)]">{step}</span>
               </div>
               <h3 className="font-heading text-base font-semibold text-white">{title}</h3>

@@ -1,6 +1,6 @@
 export function NetworkGraph() {
   return (
-    <div className="relative h-[420px] w-[460px]" aria-hidden>
+    <div className="float-slow relative h-[420px] w-[460px]" aria-hidden>
       <svg viewBox="0 0 460 420" xmlns="http://www.w3.org/2000/svg" className="h-full w-full text-[var(--apebi-cyan)]">
         {/* Connection lines */}
         <g stroke="currentColor" strokeWidth="1">
@@ -22,23 +22,23 @@ export function NetworkGraph() {
         {/* Peripheral nodes — small dots */}
         <circle cx="55" cy="220" r="20" fill="currentColor" opacity="0.07" />
         <circle cx="55" cy="220" r="13" fill="currentColor" opacity="0.25" />
-        <circle cx="55" cy="220" r="7" fill="currentColor" opacity="0.75" />
+        <circle cx="55" cy="220" r="7" fill="currentColor" opacity="0.75" className="node-pulse" style={{ animationDelay: '0ms' }} />
 
         <circle cx="230" cy="58" r="24" fill="currentColor" opacity="0.07" />
         <circle cx="230" cy="58" r="15" fill="currentColor" opacity="0.22" />
-        <circle cx="230" cy="58" r="8" fill="currentColor" opacity="0.70" />
+        <circle cx="230" cy="58" r="8" fill="currentColor" opacity="0.70" className="node-pulse" style={{ animationDelay: '600ms' }} />
 
         <circle cx="420" cy="205" r="18" fill="currentColor" opacity="0.08" />
         <circle cx="420" cy="205" r="11" fill="currentColor" opacity="0.28" />
-        <circle cx="420" cy="205" r="6" fill="currentColor" opacity="0.72" />
+        <circle cx="420" cy="205" r="6" fill="currentColor" opacity="0.72" className="node-pulse" style={{ animationDelay: '1200ms' }} />
 
         <circle cx="305" cy="368" r="20" fill="currentColor" opacity="0.07" />
         <circle cx="305" cy="368" r="12" fill="currentColor" opacity="0.24" />
-        <circle cx="305" cy="368" r="7" fill="currentColor" opacity="0.68" />
+        <circle cx="305" cy="368" r="7" fill="currentColor" opacity="0.68" className="node-pulse" style={{ animationDelay: '1800ms' }} />
 
         <circle cx="55" cy="368" r="16" fill="currentColor" opacity="0.06" />
         <circle cx="55" cy="368" r="10" fill="currentColor" opacity="0.22" />
-        <circle cx="55" cy="368" r="6" fill="currentColor" opacity="0.65" />
+        <circle cx="55" cy="368" r="6" fill="currentColor" opacity="0.65" className="node-pulse" style={{ animationDelay: '2400ms' }} />
 
         {/* Mid-tier domain nodes */}
         <circle cx="100" cy="120" r="32" fill="#0a1a26" opacity="0.95" />
