@@ -30,7 +30,7 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
 
   return (
     <Link href={detailHref} className="block">
-    <article className="card-lift group flex flex-col rounded-2xl border border-white/8 bg-[var(--apebi-dark-74)] hover:border-white/16 hover:bg-[var(--apebi-dark-70)] hover:shadow-glow-soft">
+    <article className="card-lift group flex flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] hover:border-white/16 hover:bg-[var(--apebi-dark-70)] hover:shadow-glow-soft">
       {/* Domain stripe */}
       <div
         className="h-1 w-full rounded-t-2xl"

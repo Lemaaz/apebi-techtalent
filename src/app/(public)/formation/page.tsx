@@ -160,7 +160,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
       <main className="flex-1">
 
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section className="relative overflow-hidden border-b border-white/8 px-4 py-16 sm:px-6">
+        <section className="relative overflow-hidden border-b border-white/8 px-4 py-14 sm:px-6">
           {/* Texture réseau + lueur */}
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
           <div
@@ -194,7 +194,7 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
             {stats.map(({ label, value, icon: Icon }) => (
               <div
                 key={label}
-                className="card-lift flex flex-col items-center gap-1.5 rounded-2xl border border-white/8 bg-white/3 p-4 text-center hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft"
+                className="card-lift flex flex-col items-center gap-1.5 rounded-xl border border-white/8 bg-white/3 p-4 text-center hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft"
               >
                 <Icon className="size-5 text-white/30" aria-hidden />
                 <span className="font-heading text-2xl font-bold text-white">{value}</span>
