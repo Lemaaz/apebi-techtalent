@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { slugify } from '@/lib/utils'
 import { sendProfileSubmittedEmail, sendAdminNewProfileEmail } from '@/lib/email'
+import { recordReferralConversion } from '@/lib/referral'
 
 const schema = z.object({
   name: z.string().min(2, 'Nom requis (2 caractères min)').max(100),
@@ -106,6 +107,9 @@ export async function createCompanyProfile(
     }
     return { error: "Erreur lors de la création de l'entreprise. Réessayez." }
   }
+
+  // Growth C — attribution parrainage (non-bloquant)
+  await recordReferralConversion(user.id, 'entreprise')
 
   // NOT-00 — confirmation à l'entreprise + alerte admin (non-bloquant)
   try {

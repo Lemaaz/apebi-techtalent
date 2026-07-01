@@ -8,6 +8,8 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { AdminKpiCard } from '@/components/admin/admin-kpi-card'
 import { ApplicationStatusBadge, ApplicationStatusActions, JobStatusBadge } from '@/components/shared/application-status-badge'
 import { updateApplicationStatus } from './actions'
+import { ReferralCard } from '@/components/shared/referral-card'
+import { getReferralStats } from '@/lib/referral'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = { title: 'Dashboard Recruteur' }
@@ -112,6 +114,9 @@ export default async function DashboardRecruteurPage() {
   const totalApplications = jobs.reduce((sum, j) => sum + (j.applications_count ?? 0), 0)
   const totalViews = jobs.reduce((sum, j) => sum + (j.views_count ?? 0), 0)
   const pendingApps = applications.filter((a) => a.status === 'sent').length
+
+  // Growth C — parrainage (code + compteur)
+  const referral = await getReferralStats()
 
   return (
     <>
@@ -326,6 +331,13 @@ export default async function DashboardRecruteurPage() {
                   )
                 })}
               </ul>
+            </section>
+          )}
+
+          {/* ── Parrainage (Growth C) ── */}
+          {referral && (
+            <section className="max-w-md">
+              <ReferralCard url={referral.url} invitedCount={referral.invitedCount} />
             </section>
           )}
         </div>

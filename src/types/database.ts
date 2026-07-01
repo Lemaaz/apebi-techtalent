@@ -217,6 +217,48 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_codes: {
+        Row: {
+          user_id: string
+          code: string
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          code: string
+          created_at?: string
+        }
+        Update: {
+          user_id?: string
+          code?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          id: string
+          referrer_user_id: string | null
+          referred_user_id: string
+          referred_role: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          referrer_user_id?: string | null
+          referred_user_id: string
+          referred_role?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          referrer_user_id?: string | null
+          referred_user_id?: string
+          referred_role?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       domains: {
         Row: {
           code: string

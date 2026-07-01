@@ -7,6 +7,8 @@ import {
 } from 'lucide-react'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { buttonVariants } from '@/components/ui/button'
+import { ReferralCard } from '@/components/shared/referral-card'
+import { getReferralStats } from '@/lib/referral'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = { title: 'Dashboard' }
@@ -241,6 +243,9 @@ export default async function TalentDashboardPage() {
   const score = talent.completeness_score ?? 0
   const validationCfg = VALIDATION_CONFIG[talent.validation_status] ?? VALIDATION_CONFIG.pending
   const ValidationIcon = validationCfg.icon
+
+  // Growth C — parrainage (code + compteur)
+  const referral = await getReferralStats()
 
   // Completeness hints: show which fields are still missing
   const FIELD_HINTS: { key: keyof TalentRow; label: string }[] = [
@@ -748,6 +753,13 @@ export default async function TalentDashboardPage() {
           ))}
         </div>
       </section>
+
+      {/* ── Parrainage (Growth C) ── */}
+      {referral && (
+        <section className="mt-10 max-w-md">
+          <ReferralCard url={referral.url} invitedCount={referral.invitedCount} />
+        </section>
+      )}
     </>
   )
 }

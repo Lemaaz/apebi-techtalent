@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { sendProfileSubmittedEmail, sendAdminNewProfileEmail } from '@/lib/email'
 import { logFunnel } from '@/lib/funnel'
+import { recordReferralConversion } from '@/lib/referral'
 
 const schema = z.object({
   first_name: z.string().min(1, 'Prénom requis').max(50),
@@ -105,6 +106,9 @@ export async function createTalentProfile(
 
   // FUNNEL — inscription
   logFunnel('inscription', { talentId: profile.id, userId: user.id })
+
+  // Growth C — attribution parrainage (non-bloquant)
+  await recordReferralConversion(user.id, 'talent')
 
   // NOT-00 — confirmation au talent + alerte admin (non-bloquant)
   try {
