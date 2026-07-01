@@ -138,7 +138,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
 
       {/* Mobile toggle */}
       <button
-        className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+        className="flex size-11 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-expanded={mobileOpen}
         aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
@@ -156,7 +156,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                 <Link
                   href={dashboardHref}
                   onClick={() => setMobileOpen(false)}
-                  className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'justify-center')}
+                  className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'min-h-11 justify-center')}
                 >
                   {dashboardLabel}
                 </Link>
@@ -165,7 +165,7 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
                     type="submit"
                     className={cn(
                       buttonVariants({ variant: 'ghost', size: 'sm' }),
-                      'w-full justify-center text-rose-600 hover:bg-rose-500/10 hover:text-rose-600',
+                      'min-h-11 w-full justify-center text-rose-600 hover:bg-rose-500/10 hover:text-rose-600',
                     )}
                   >
                     Déconnexion
@@ -176,13 +176,13 @@ export function NavbarUserMenu({ user }: { user: UserInfo | null }) {
               <>
                 <Link
                   href="/connexion"
-                  className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'justify-center')}
+                  className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'min-h-11 justify-center')}
                 >
                   Se connecter
                 </Link>
                 <Link
                   href="/inscription"
-                  className={cn(buttonVariants({ size: 'sm' }), 'justify-center')}
+                  className={cn(buttonVariants({ size: 'sm' }), 'min-h-11 justify-center')}
                 >
                   S&apos;inscrire
                 </Link>

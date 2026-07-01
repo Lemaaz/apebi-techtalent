@@ -23,7 +23,7 @@ export function NavLinks({ mobile = false }: { mobile?: boolean }) {
           <Link
             key={href}
             href={href}
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="flex min-h-11 items-center rounded-md px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             {label}
           </Link>
