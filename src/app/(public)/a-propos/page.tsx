@@ -53,20 +53,21 @@ export default function AProposPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-border bg-gradient-to-b from-primary/5 to-background px-4 py-16 text-center sm:px-6 sm:py-24">
-          <div className="mx-auto max-w-2xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-primary">
+        <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-primary/5 to-background px-4 py-16 text-center sm:px-6 sm:py-24">
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
+          <div className="relative mx-auto max-w-2xl">
+            <p className="rise-in mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--apebi-coral)]">
               Commission C5 — APEBI
             </p>
-            <h1 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
+            <h1 className="rise-in font-heading text-3xl font-bold text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Le hub RH tech de la Fédération APEBI
             </h1>
-            <p className="mt-4 text-base text-muted-foreground">
+            <p className="rise-in mt-4 text-base text-muted-foreground" style={{ animationDelay: '160ms' }}>
               APEBI TechTalent est la concrétisation de l&apos;Axe C (Tech Talent Bridge) de la
               Commission C5. Notre mission : connecter les talents tech marocains aux entreprises
               membres APEBI et accélérer la croissance du secteur numérique au Maroc.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="rise-in mt-8 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: '240ms' }}>
               <Link href="/entreprises" className={cn(buttonVariants({ size: 'sm' }))}>
                 Voir les entreprises
               </Link>
@@ -106,7 +107,7 @@ export default function AProposPage() {
               {FEATURES.map((feature) => {
                 const Icon = feature.icon
                 return (
-                  <div key={feature.title} className="rounded-xl border border-border bg-card p-5">
+                  <div key={feature.title} className="card-lift rounded-xl border border-border bg-card p-5 hover:border-primary/40 hover:shadow-glow-soft">
                     <div className="mb-3 inline-flex size-9 items-center justify-center rounded-lg bg-primary/10">
                       <Icon className="size-5 text-primary" aria-hidden />
                     </div>
