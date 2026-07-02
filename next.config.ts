@@ -45,6 +45,9 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // N'annonce pas le framework/version dans les headers (fingerprinting)
+  poweredByHeader: false,
+
   images: {
     remotePatterns: [
       {
