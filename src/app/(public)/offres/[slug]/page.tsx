@@ -274,7 +274,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                         {requiredSkills.map((s) => (
                           <span
                             key={s}
-                            className="rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2.5 py-1 text-xs font-medium text-[var(--apebi-cyan)]"
+                            className="badge-tech"
                           >
                             {s}
                           </span>

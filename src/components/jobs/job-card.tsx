@@ -111,7 +111,7 @@ export function JobCard({ job }: { job: JobCardData }) {
             {job.skills.slice(0, 4).map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2 py-0.5 text-[10px] font-medium text-[var(--apebi-cyan)]"
+                className="badge-tech"
               >
                 {skill}
               </span>

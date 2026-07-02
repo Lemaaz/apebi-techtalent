@@ -217,7 +217,7 @@ export default async function PublicTalentPage({ params }: { params: Params }) {
                   <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">{domainName}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {skills.map((name) => (
-                      <span key={name} className="rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/5 px-2.5 py-1 text-xs font-medium text-[var(--apebi-cyan)]">{name}</span>
+                      <span key={name} className="badge-tech">{name}</span>
                     ))}
                   </div>
                 </div>
