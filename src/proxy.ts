@@ -21,6 +21,10 @@ const RATE_RULES: { pattern: RegExp; limit: number; windowMs: number }[] = [
   { pattern: /^\/(inscription|entreprises\/inscription)(\/|$)/, limit: 5, windowMs: 600_000 },
   // Anti-spam email route (admin-only but still protect against brute force)
   { pattern: /^\/api\/email(\/|$)/, limit: 20, windowMs: 60_000 },
+  // Anti-brute-force login (per-IP — tight window, credential stuffing is fast-fire)
+  { pattern: /^\/connexion(\/|$)/, limit: 8, windowMs: 60_000 },
+  // Anti-spam password reset (per-IP — wider window, a real user rarely retries this fast)
+  { pattern: /^\/mot-de-passe-oublie(\/|$)/, limit: 3, windowMs: 600_000 },
 ]
 
 function checkRateLimit(ip: string, pathname: string): { limited: boolean; retryAfter: number } {
