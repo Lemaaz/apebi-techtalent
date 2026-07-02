@@ -54,6 +54,8 @@ export async function createCompanyDirect(
   const role = (formData.get('role_in_company') as string)?.trim() || 'Administrateur'
 
   if (!name || !email || !password) return { error: 'Tous les champs sont requis.' }
+  if (!email.includes('@')) return { error: 'Email invalide.' }
+  if (password.length < 8) return { error: 'Le mot de passe doit contenir au moins 8 caractères.' }
 
   // 1. Créer le compte auth
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
