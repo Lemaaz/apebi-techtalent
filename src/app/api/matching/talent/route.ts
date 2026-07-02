@@ -4,7 +4,11 @@ import { matchJobsToTalent } from '@/lib/ai-matching'
 
 export const maxDuration = 60
 
-export async function GET() {
+// POST (pas GET) : cette route mute l'état (increment_matching_quota).
+// GET+cookie-session-auth serait rejouable via une simple navigation
+// cross-site (SameSite=Lax exempte les GET de navigation top-level) —
+// POST profite de la protection CSRF réelle de SameSite=Lax sur les cookies.
+export async function POST() {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()

@@ -250,7 +250,7 @@ export function TalentMatchingPanel() {
   async function runMatching() {
     setState('loading')
     try {
-      const res = await fetch('/api/matching/talent')
+      const res = await fetch('/api/matching/talent', { method: 'POST' })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Erreur')
       setResults(data.results)
