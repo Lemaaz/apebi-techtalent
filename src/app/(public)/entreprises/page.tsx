@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { Building2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/layout/navbar'
+import { PublicPageHeader } from '@/components/layout/public-page-header'
 import { Footer } from '@/components/layout/footer'
 import { CompanyCard } from '@/components/company/company-card'
 import { CompanyFilters } from '@/components/company/company-filters'
@@ -111,20 +112,11 @@ export default async function EntreprisesPage({
 
       <main className="flex-1">
         {/* ── Header + filters ───────────────────── */}
-        <div className="relative overflow-hidden border-b border-white/8 bg-[var(--apebi-dark-90)] px-4 py-10 sm:px-6">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
-          <div className="relative mx-auto max-w-7xl">
-            <h1 className="rise-in font-heading text-2xl font-bold text-white sm:text-3xl">
-              Entreprises membres APEBI
-            </h1>
-
-            <div className="mt-4">
-              <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-white/10" />}>
-                <CompanyFilters total={companies.length} />
-              </Suspense>
-            </div>
-          </div>
-        </div>
+        <PublicPageHeader title="Entreprises membres APEBI">
+          <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-white/10" />}>
+            <CompanyFilters total={companies.length} />
+          </Suspense>
+        </PublicPageHeader>
 
         {/* ── Company grid ───────────────────────── */}
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">

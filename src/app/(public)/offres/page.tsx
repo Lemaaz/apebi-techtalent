@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { Briefcase } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/layout/navbar'
+import { PublicPageHeader } from '@/components/layout/public-page-header'
 import { Footer } from '@/components/layout/footer'
 import { JobFilters } from '@/components/jobs/job-filters'
 import { JobCard, type JobCardData } from '@/components/jobs/job-card'
@@ -117,20 +118,14 @@ export default async function OffresPage({ searchParams }: { searchParams: Searc
       <Navbar />
       <main className="flex-1">
         {/* Header + filters */}
-        <div className="relative overflow-hidden border-b border-white/8 px-4 py-10 sm:px-6">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
-          <div className="relative mx-auto max-w-7xl">
-            <h1 className="rise-in mb-1 font-heading text-2xl font-bold text-white sm:text-3xl">
-              Offres d&apos;emploi
-            </h1>
-            <p className="rise-in mb-5 text-sm text-white/45" style={{ animationDelay: '80ms' }}>
-              Les opportunités tech des entreprises membres APEBI
-            </p>
-            <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-white/5" />}>
-              <JobFilters total={jobs.length} />
-            </Suspense>
-          </div>
-        </div>
+        <PublicPageHeader
+          title="Offres d'emploi"
+          subtitle="Les opportunités tech des entreprises membres APEBI"
+        >
+          <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-white/5" />}>
+            <JobFilters total={jobs.length} />
+          </Suspense>
+        </PublicPageHeader>
 
         {/* Job grid */}
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
