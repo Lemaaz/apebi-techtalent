@@ -1,0 +1,25 @@
+-- ============================================================
+-- APEBI TechTalent — Migration 030 : retire le CHECK constraint
+-- sur company_members.role_in_company (audit sécurité 2026-07-02)
+-- ============================================================
+-- company_members.role_in_company est un LABEL D'AFFICHAGE libre
+-- (utilisé uniquement dans entreprise/dashboard/page.tsx et
+-- entreprise/layout.tsx pour afficher "DRH"/"CEO"/etc à côté du nom).
+-- Aucune logique d'autorisation ne dépend de cette colonne (vérifié
+-- par grep exhaustif sur src/).
+--
+-- Le CHECK constraint CHECK (role_in_company = ANY (ARRAY['Owner',
+-- 'Admin', 'Recruiter'])) est un reliquat qui contredit le champ
+-- texte libre réellement exposé côté UI (placeholder "DRH, Recruteur,
+-- CEO…", src/app/entreprises/inscription/_form.tsx). Il cassait
+-- l'inscription entreprise EN PRODUCTION pour toute saisie réaliste,
+-- y compris les valeurs d'exemple suggérées par le placeholder
+-- lui-même, et la valeur par défaut du RPC create_company_with_member
+-- ('Recruteur') et de admin/super/actions.ts ('Administrateur').
+--
+-- Vérifié en direct avant ce fix : create_company_with_member échoue
+-- systématiquement avec "violates check constraint
+-- company_members_role_in_company_check" pour 'Recruteur' et 'DRH'.
+-- ============================================================
+
+ALTER TABLE company_members DROP CONSTRAINT IF EXISTS company_members_role_in_company_check;
