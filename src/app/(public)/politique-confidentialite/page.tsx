@@ -33,7 +33,7 @@ export default function PolitiqueConfidentialitePage() {
             <p>
               Le responsable du traitement des données personnelles collectées via la plateforme
               APEBI TechTalent est l&apos;<strong>APEBI</strong> (Association des Professionnels des
-              Technologies de l&apos;Information), Commission Formation &amp; Tech Talents (C5).
+              Technologies de l&apos;Information), Commission Formation &amp; Talents Tech.
               Contact : <a href="mailto:techtalent@apebi.ma">techtalent@apebi.ma</a>
             </p>
 

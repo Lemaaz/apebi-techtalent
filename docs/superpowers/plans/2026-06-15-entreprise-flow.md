@@ -462,7 +462,7 @@ export function CompanyRegistrationForm() {
 
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700">
             <strong>Validation APEBI requise.</strong> Votre demande sera examinée par l&apos;équipe
-            C5 avant activation. Vous recevrez un email de confirmation sous 48h.
+            APEBI avant activation. Vous recevrez un email de confirmation sous 48h.
           </div>
 
           {state.error && (
@@ -539,7 +539,7 @@ export default async function EntrepriseInscriptionPage() {
               Inscrire mon entreprise
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Réservé aux membres APEBI. Votre inscription sera validée par l&apos;équipe C5.
+              Réservé aux membres APEBI. Votre inscription sera validée par l&apos;équipe APEBI.
             </p>
           </div>
 
@@ -2044,14 +2044,14 @@ export default function AProposPage() {
         <section className="border-b border-border bg-gradient-to-b from-primary/5 to-background px-4 py-16 text-center sm:px-6 sm:py-24">
           <div className="mx-auto max-w-2xl">
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-primary">
-              Commission C5 — APEBI
+              Commission Formation &amp; Talents Tech — APEBI
             </p>
             <h1 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
               Le hub RH tech de la Fédération APEBI
             </h1>
             <p className="mt-4 text-base text-muted-foreground">
               APEBI TechTalent est la concrétisation de l&apos;Axe C (Tech Talent Bridge) de la
-              Commission C5. Notre mission : connecter les talents tech marocains aux entreprises
+              Commission Formation &amp; Talents Tech. Notre mission : connecter les talents tech marocains aux entreprises
               membres APEBI et accélérer la croissance du secteur numérique au Maroc.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

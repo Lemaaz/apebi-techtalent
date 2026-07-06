@@ -33,32 +33,32 @@ const LEVELS: Record<ApebiScoreLevel, Omit<ApebiScore, 'level'>> = {
   0: {
     label: 'Profil incomplet',
     description: 'Complétez votre profil pour apparaître dans le score.',
-    color: 'text-white/30',
-    bgColor: 'bg-white/5',
+    color: 'text-[#797979]',
+    bgColor: 'bg-[#F5F5F5]',
   },
   1: {
     label: 'Membre APEBI',
-    description: 'Entreprise validée par la Commission C5.',
-    color: 'text-[var(--apebi-cyan)]',
-    bgColor: 'bg-[var(--apebi-cyan)]/10',
+    description: 'Entreprise validée par APEBI.',
+    color: 'text-[#0E6E85]',
+    bgColor: 'bg-[var(--apebi-cyan-muted)]',
   },
   2: {
     label: 'Actif',
     description: 'Profil complet avec au moins une offre active.',
-    color: 'text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-emerald-700',
+    bgColor: 'bg-emerald-50',
   },
   3: {
     label: 'Engagé',
     description: 'Recruteur régulier avec 3 offres actives ou plus.',
-    color: 'text-violet-400',
-    bgColor: 'bg-violet-500/10',
+    color: 'text-violet-700',
+    bgColor: 'bg-violet-50',
   },
   4: {
     label: 'Labellisé APEBI',
     description: 'Label APEBI TechTalent — excellence en recrutement tech.',
-    color: 'text-amber-400',
-    bgColor: 'bg-amber-500/10',
+    color: 'text-amber-700',
+    bgColor: 'bg-amber-50',
   },
 }
 

@@ -46,7 +46,7 @@ export function FormationFilters({
   }
 
   function selectCls() {
-    return 'rounded-lg border border-white/10 bg-[#1a2035] px-3 py-2 text-sm text-white/70 focus:outline-none focus:ring-1 focus:ring-[var(--apebi-cyan)] focus:border-[var(--apebi-cyan)] transition-colors [&>option]:bg-[#1a2035] [&>option]:text-white'
+    return 'rounded-lg border border-[var(--apebi-border)] bg-white px-3 py-2 text-sm text-[var(--apebi-text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--apebi-cyan)] focus:border-[var(--apebi-cyan)] transition-colors'
   }
 
   return (
@@ -55,13 +55,13 @@ export function FormationFilters({
       <div className="flex flex-wrap gap-3">
         {/* Search */}
         <div className="relative min-w-[200px] flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/30" aria-hidden />
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--apebi-text-light)]" aria-hidden />
           <input
             type="search"
             placeholder="Rechercher une formation…"
             value={q}
             onChange={(e) => update('q', e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/30 focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-1 focus:ring-[var(--apebi-cyan)]"
+            className="w-full rounded-lg border border-[var(--apebi-border)] bg-white py-2 pl-9 pr-3 text-sm text-[var(--apebi-text)] placeholder:text-[var(--apebi-text-light)] focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-1 focus:ring-[var(--apebi-cyan)]"
           />
         </div>
 
@@ -71,9 +71,9 @@ export function FormationFilters({
           onChange={(e) => update('modality', e.target.value)}
           className={selectCls()}
         >
-          <option value="" style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>Toutes modalités</option>
+          <option value="">Toutes modalités</option>
           {MODALITIES.map((m) => (
-            <option key={m} value={m} style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>{m}</option>
+            <option key={m} value={m}>{m}</option>
           ))}
         </select>
 
@@ -83,16 +83,16 @@ export function FormationFilters({
           onChange={(e) => update('level', e.target.value)}
           className={selectCls()}
         >
-          <option value="" style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>Tous niveaux</option>
+          <option value="">Tous niveaux</option>
           {LEVELS.map((l) => (
-            <option key={l} value={l} style={{ backgroundColor: '#1a2035', color: '#ffffffb3' }}>{l}</option>
+            <option key={l} value={l}>{l}</option>
           ))}
         </select>
 
         {hasFilters && (
           <button
             onClick={reset}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-sm text-white/50 transition-colors hover:border-white/20 hover:text-white"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--apebi-border)] px-3 py-2 text-sm text-[var(--apebi-text-muted)] transition-colors hover:border-[var(--apebi-cyan)] hover:text-[var(--apebi-text)]"
           >
             <X className="size-3.5" aria-hidden />
             Réinitialiser
@@ -113,8 +113,8 @@ export function FormationFilters({
                 className="rounded-full border px-3 py-1 text-xs font-medium transition-all"
                 style={
                   active
-                    ? { background: `${color}25`, borderColor: color, color }
-                    : { borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)' }
+                    ? { background: `${color}1A`, borderColor: color, color }
+                    : { borderColor: 'var(--apebi-border)', color: 'var(--apebi-text-muted)' }
                 }
               >
                 {d.name_fr}
@@ -124,7 +124,7 @@ export function FormationFilters({
         </div>
       )}
 
-      <p className="text-[12px] text-white/35">
+      <p className="text-[12px] text-[var(--apebi-text-light)]">
         {total} formation{total !== 1 ? 's' : ''}{hasFilters ? ' trouvée' : ''}{total !== 1 && hasFilters ? 's' : ''}
       </p>
     </div>

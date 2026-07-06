@@ -113,7 +113,7 @@ export default async function EntreprisesPage({
       <main className="flex-1">
         {/* ── Header + filters ───────────────────── */}
         <PublicPageHeader title="Entreprises membres APEBI">
-          <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-white/10" />}>
+          <Suspense fallback={<div className="h-8 animate-pulse rounded-lg bg-[var(--apebi-bg-alt)]" />}>
             <CompanyFilters total={companies.length} />
           </Suspense>
         </PublicPageHeader>

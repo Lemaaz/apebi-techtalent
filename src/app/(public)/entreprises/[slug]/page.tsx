@@ -123,7 +123,7 @@ function CompanyInitials({ name }: { name: string }) {
   return (
     <div
       aria-hidden
-      className="flex size-full items-center justify-center font-heading text-xl font-semibold text-[var(--apebi-cyan)]"
+      className="flex size-full items-center justify-center bg-[var(--apebi-navy)] font-heading text-xl font-semibold text-white"
     >
       {initials}
     </div>
@@ -143,15 +143,15 @@ function SizeLabel(size: string | null) {
 
 function EmptyJobs() {
   return (
-    <div className="flex flex-col items-center rounded-xl border border-dashed border-white/15 py-10 text-center">
-      <Briefcase className="mb-3 size-8 text-white/25" aria-hidden />
-      <p className="font-heading text-sm font-semibold text-white">Aucune offre en ce moment</p>
-      <p className="mt-1 text-xs text-white/45">
+    <div className="flex flex-col items-center rounded-xl border border-dashed border-[var(--apebi-border)] py-10 text-center">
+      <Briefcase className="mb-3 size-8 text-[var(--apebi-text-light)]" aria-hidden />
+      <p className="font-heading text-sm font-semibold text-[var(--apebi-text)]">Aucune offre en ce moment</p>
+      <p className="mt-1 text-xs text-[var(--apebi-text-muted)]">
         Consultez toutes les offres de l&apos;écosystème APEBI.
       </p>
       <Link
         href="/offres"
-        className="mt-4 inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+        className="mt-4 inline-flex items-center rounded-lg border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-3 py-1.5 text-xs text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-cyan-muted)]"
       >
         Voir toutes les offres
       </Link>
@@ -218,11 +218,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
         />
 
         {/* ── Company header ──────────────────────── */}
-        <div className="border-b border-white/8 bg-[var(--apebi-dark-90)] px-4 pb-6 sm:px-6">
+        <div className="border-b border-[var(--apebi-border)] bg-[#FFFFFF] px-4 pb-6 sm:px-6">
           <div className="mx-auto max-w-7xl">
 
             {/* Logo — overlaps banner */}
-            <div className="-mt-7 mb-4 size-14 overflow-hidden rounded-xl border-2 border-[var(--apebi-dark-90)] bg-[var(--apebi-dark-85)] shadow-sm">
+            <div className="-mt-7 mb-4 size-14 overflow-hidden rounded-xl border-2 border-[#FFFFFF] bg-[var(--apebi-bg-alt)] shadow-sm">
               {company.logo_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -239,15 +239,15 @@ export default async function EntreprisePage({ params }: { params: Params }) {
               {/* Name + meta */}
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="font-heading text-xl font-bold text-white">{company.name}</h1>
+                  <h1 className="font-heading text-xl font-bold text-[var(--apebi-text)]">{company.name}</h1>
                   {company.is_featured && (
-                    <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]">
+                    <span className="rounded-full bg-[var(--apebi-cyan-muted)] px-2 py-0.5 text-[11px] font-medium text-[#0E6E85]">
                       En vedette
                     </span>
                   )}
                 </div>
 
-                <p className="mt-1 text-sm text-white/50">
+                <p className="mt-1 text-sm text-[var(--apebi-text-muted)]">
                   {company.sector}
                   {company.city ? ` · ${company.city}` : ''}
                   {sizeLabel ? ` · ${sizeLabel}` : ''}
@@ -256,25 +256,25 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 {/* Badges */}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {company.apebi_member_since && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan-muted)] px-3 py-1 text-xs font-medium text-[#0E6E85]">
                       <Check className="size-3" aria-hidden />
                       Membre APEBI{memberYear ? ` depuis ${memberYear}` : ''}
                     </span>
                   )}
                   {company.has_techtalent_label && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-success-muted)] px-3 py-1 text-xs font-medium text-[var(--color-success-text)]">
                       <Award className="size-3" aria-hidden />
                       Label APEBI TechTalent
                     </span>
                   )}
                   {company.city && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/8 px-3 py-1 text-xs text-white/50">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-muted)]">
                       <MapPin className="size-3" aria-hidden />
                       {company.city}, {company.country}
                     </span>
                   )}
                   {sizeLabel && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/8 px-3 py-1 text-xs text-white/50">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-muted)]">
                       <Users className="size-3" aria-hidden />
                       {sizeLabel}
                     </span>
@@ -289,7 +289,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                     href={company.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--apebi-border)] bg-[#FFFFFF] px-3 py-1.5 text-xs text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-bg-alt)]"
                   >
                     <Globe className="size-3.5" aria-hidden />
                     Site web
@@ -300,7 +300,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                     href={company.linkedin_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--apebi-border)] bg-[#FFFFFF] px-3 py-1.5 text-xs text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-bg-alt)]"
                   >
                     <ExternalLink className="size-3.5" aria-hidden />
                     LinkedIn
@@ -320,7 +320,7 @@ export default async function EntreprisePage({ params }: { params: Params }) {
             {/* Back link */}
             <Link
               href="/entreprises"
-              className="inline-flex items-center gap-1 text-xs text-white/45 hover:text-white"
+              className="inline-flex items-center gap-1 text-xs text-[var(--apebi-text-muted)] hover:text-[var(--apebi-text)]"
             >
               <ArrowLeft className="size-3.5" aria-hidden />
               Toutes les entreprises
@@ -330,11 +330,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
               <section aria-labelledby="about-heading">
                 <h2
                   id="about-heading"
-                  className="mb-3 font-heading text-base font-semibold text-white"
+                  className="mb-3 font-heading text-base font-semibold text-[var(--apebi-text)]"
                 >
                   À propos
                 </h2>
-                <p className="text-sm leading-relaxed text-white/55 whitespace-pre-wrap">
+                <p className="text-sm leading-relaxed text-[var(--apebi-text-muted)] whitespace-pre-wrap">
                   {company.description}
                 </p>
               </section>
@@ -344,20 +344,20 @@ export default async function EntreprisePage({ params }: { params: Params }) {
               <section aria-labelledby="culture-heading">
                 <h2
                   id="culture-heading"
-                  className="mb-3 font-heading text-base font-semibold text-white"
+                  className="mb-3 font-heading text-base font-semibold text-[var(--apebi-text)]"
                 >
                   Culture &amp; valeurs
                 </h2>
-                <p className="text-sm leading-relaxed text-white/55 whitespace-pre-wrap">
+                <p className="text-sm leading-relaxed text-[var(--apebi-text-muted)] whitespace-pre-wrap">
                   {company.culture}
                 </p>
               </section>
             )}
 
             {!company.description && !company.culture && (
-              <div className="flex flex-col items-center rounded-xl border border-dashed border-white/15 py-12 text-center">
-                <Building2 className="mb-3 size-8 text-white/25" aria-hidden />
-                <p className="text-sm text-white/45">
+              <div className="flex flex-col items-center rounded-xl border border-dashed border-[var(--apebi-border)] py-12 text-center">
+                <Building2 className="mb-3 size-8 text-[var(--apebi-text-light)]" aria-hidden />
+                <p className="text-sm text-[var(--apebi-text-muted)]">
                   Cette entreprise n&apos;a pas encore complété sa présentation.
                 </p>
               </div>
@@ -380,11 +380,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
                 ].map(({ label, value, icon: Icon }) => (
                   <div
                     key={label}
-                    className="flex flex-col items-center rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-3 text-center"
+                    className="flex flex-col items-center rounded-xl border border-[var(--apebi-border)] bg-[#FFFFFF] p-3 text-center shadow-[var(--shadow-card)]"
                   >
-                    <Icon className="mb-1.5 size-4 text-[var(--apebi-cyan)]/70" aria-hidden />
-                    <p className="font-heading text-xl font-bold text-white">{value}</p>
-                    <p className="mt-0.5 text-[10px] text-white/40">{label}</p>
+                    <Icon className="mb-1.5 size-4 text-[var(--apebi-cyan)]" aria-hidden />
+                    <p className="font-heading text-xl font-bold text-[var(--apebi-text)]">{value}</p>
+                    <p className="mt-0.5 text-[10px] text-[var(--apebi-text-light)]">{label}</p>
                   </div>
                 ))}
               </div>
@@ -393,11 +393,11 @@ export default async function EntreprisePage({ params }: { params: Params }) {
             <div>
             <h2
               id="jobs-heading"
-              className="mb-4 font-heading text-base font-semibold text-white"
+              className="mb-4 font-heading text-base font-semibold text-[var(--apebi-text)]"
             >
               Offres actives
               {jobs.length > 0 && (
-                <span className="ml-2 rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-xs font-medium text-[var(--apebi-cyan)]">
+                <span className="ml-2 rounded-full bg-[var(--apebi-cyan-muted)] px-2 py-0.5 text-xs font-medium text-[#0E6E85]">
                   {jobs.length}
                 </span>
               )}

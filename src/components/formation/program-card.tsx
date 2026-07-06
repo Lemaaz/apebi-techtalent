@@ -30,7 +30,7 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
 
   return (
     <Link href={detailHref} className="block">
-    <article className="card-lift group flex flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] hover:border-white/16 hover:bg-[var(--apebi-dark-70)] hover:shadow-glow-soft">
+    <article className="card-lift group flex flex-col rounded-xl border border-[var(--apebi-border)] bg-white shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]">
       {/* Domain stripe */}
       <div
         className="h-1 w-full rounded-t-2xl"
@@ -44,24 +44,24 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
           {program.domain && (
             <span
               className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-              style={{ background: `${domainColor}20`, color: domainColor }}
+              style={{ background: `${domainColor}1A`, color: domainColor }}
             >
               {program.domain.name_fr}
             </span>
           )}
           {program.is_featured && (
-            <Star className="ml-auto size-3.5 shrink-0 fill-amber-400 text-amber-400" aria-label="Mise en avant" />
+            <Star className="ml-auto size-3.5 shrink-0 fill-amber-500 text-amber-500" aria-label="Mise en avant" />
           )}
         </div>
 
         {/* Title */}
-        <h3 className="font-heading text-[15px] font-semibold leading-snug text-white line-clamp-2">
+        <h3 className="font-heading text-[15px] font-semibold leading-snug text-[var(--apebi-text)] line-clamp-2">
           {program.title}
         </h3>
 
         {/* Institution */}
         {program.institution && (
-          <p className="text-[12px] text-white/50">
+          <p className="text-[12px] text-[var(--apebi-text-muted)]">
             {program.institution.name}
             {program.institution.city && ` · ${program.institution.city}`}
           </p>
@@ -69,7 +69,7 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
 
         {/* Description */}
         {program.description && (
-          <p className="flex-1 text-[13px] leading-relaxed text-white/40 line-clamp-2">
+          <p className="flex-1 text-[13px] leading-relaxed text-[var(--apebi-text-light)] line-clamp-2">
             {program.description}
           </p>
         )}
@@ -77,18 +77,18 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
         {/* Chips */}
         <div className="flex flex-wrap gap-1.5">
           {program.modality && (
-            <span className="flex items-center gap-1 rounded-full border border-white/10 px-2 py-0.5 text-[11px] text-white/50">
+            <span className="flex items-center gap-1 rounded-full border border-[var(--apebi-border)] px-2 py-0.5 text-[11px] text-[var(--apebi-text-muted)]">
               <ModalityIcon className="size-3" aria-hidden />
               {program.modality}
             </span>
           )}
           {program.level && program.level !== 'Tous niveaux' && (
-            <span className="rounded-full border border-white/10 px-2 py-0.5 text-[11px] text-white/50">
+            <span className="rounded-full border border-[var(--apebi-border)] px-2 py-0.5 text-[11px] text-[var(--apebi-text-muted)]">
               {program.level}
             </span>
           )}
           {program.duration_text && (
-            <span className="flex items-center gap-1 rounded-full border border-white/10 px-2 py-0.5 text-[11px] text-white/50">
+            <span className="flex items-center gap-1 rounded-full border border-[var(--apebi-border)] px-2 py-0.5 text-[11px] text-[var(--apebi-text-muted)]">
               <Clock className="size-3" aria-hidden />
               {program.duration_text}
             </span>
@@ -98,7 +98,7 @@ export function ProgramCard({ program }: { program: ProgramCardData }) {
         {/* Footer: price + "Voir" indicator (pas d'<a> imbriqué — la card entière est cliquable) */}
         <div className="mt-auto flex items-center justify-between gap-3 pt-2">
           {program.price_range ? (
-            <span className="text-[12px] font-medium text-white/60">{program.price_range}</span>
+            <span className="text-[12px] font-medium text-[var(--apebi-text-muted)]">{program.price_range}</span>
           ) : (
             <span />
           )}

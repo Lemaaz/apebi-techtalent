@@ -16,11 +16,11 @@ export interface JobListItemData {
 }
 
 const CONTRACT_STYLES: Record<string, string> = {
-  CDI: 'bg-[var(--apebi-cyan)]/10 text-[var(--apebi-cyan)]',
-  CDD: 'bg-amber-500/10 text-amber-400',
-  Freelance: 'bg-purple-500/10 text-purple-400',
-  Stage: 'bg-blue-500/10 text-blue-400',
-  Alternance: 'bg-pink-500/10 text-pink-400',
+  CDI: 'bg-[var(--apebi-cyan-muted)] text-[#0E6E85] dark:text-[var(--apebi-cyan)]',
+  CDD: 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+  Freelance: 'bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400',
+  Stage: 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+  Alternance: 'bg-pink-50 text-pink-700 dark:bg-pink-500/10 dark:text-pink-400',
 }
 
 const REMOTE_LABELS: Record<string, string> = {
@@ -40,19 +40,19 @@ function timeAgo(dateStr: string): string {
 }
 
 export function JobListItem({ job }: { job: JobListItemData }) {
-  const contractStyle = CONTRACT_STYLES[job.contract_type] ?? 'bg-white/8 text-white/60'
+  const contractStyle = CONTRACT_STYLES[job.contract_type] ?? 'bg-muted text-muted-foreground'
   const location = [job.city, job.remote_policy ? REMOTE_LABELS[job.remote_policy] : null]
     .filter(Boolean)
     .join(' · ')
 
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)]">
+    <article className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-all hover:border-[var(--apebi-cyan)]/40">
       {/* Title */}
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-heading text-sm font-semibold leading-snug text-white">
+        <h3 className="font-heading text-sm font-semibold leading-snug text-foreground">
           {job.title}
         </h3>
-        <span className="shrink-0 text-xs text-white/35">{timeAgo(job.created_at)}</span>
+        <span className="shrink-0 text-xs text-muted-foreground">{timeAgo(job.created_at)}</span>
       </div>
 
       {/* Badges */}
@@ -61,14 +61,14 @@ export function JobListItem({ job }: { job: JobListItemData }) {
           {job.contract_type}
         </span>
         {job.seniority_level && (
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-[11px] text-white/55">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
             {job.seniority_level}
           </span>
         )}
       </div>
 
       {/* Meta */}
-      <div className="flex flex-wrap items-center gap-3 text-xs text-white/45">
+      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         {location && (
           <span className="flex items-center gap-1">
             <MapPin className="size-3" aria-hidden />
@@ -89,13 +89,13 @@ export function JobListItem({ job }: { job: JobListItemData }) {
           {job.skills.slice(0, 4).map((s) => (
             <span
               key={s}
-              className="rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]"
+              className="rounded-full border border-[var(--apebi-cyan)]/20 bg-[var(--apebi-cyan)]/8 px-2 py-0.5 text-[11px] font-medium text-[#0E6E85] dark:text-[var(--apebi-cyan)]"
             >
               {s}
             </span>
           ))}
           {job.skills.length > 4 && (
-            <span className="rounded-full bg-white/8 px-2 py-0.5 text-[11px] text-white/50">
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
               +{job.skills.length - 4}
             </span>
           )}

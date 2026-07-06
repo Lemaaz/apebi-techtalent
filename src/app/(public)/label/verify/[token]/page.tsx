@@ -28,23 +28,23 @@ const STATUS_UI: Record<
   valid: {
     label: 'Label valide',
     icon: ShieldCheck,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10',
-    ring: 'ring-emerald-500/30',
+    color: 'text-emerald-700',
+    bg: 'bg-emerald-50',
+    ring: 'ring-emerald-200',
   },
   expired: {
     label: 'Label expiré',
     icon: ShieldAlert,
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10',
-    ring: 'ring-amber-500/30',
+    color: 'text-amber-700',
+    bg: 'bg-amber-50',
+    ring: 'ring-amber-200',
   },
   revoked: {
     label: 'Label révoqué',
     icon: ShieldX,
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    ring: 'ring-red-500/30',
+    color: 'text-red-700',
+    bg: 'bg-red-50',
+    ring: 'ring-red-200',
   },
 }
 
@@ -60,20 +60,20 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
         <div className="mx-auto max-w-md">
           {!result ? (
             // ── Token introuvable / invalide ──
-            <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-85)] p-8 text-center">
-              <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
-                <ShieldX className="size-7 text-white/40" aria-hidden />
+            <div className="rounded-2xl border border-[var(--apebi-border)] bg-white p-8 text-center shadow-[var(--shadow-card)]">
+              <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-[var(--apebi-bg-alt)] ring-1 ring-[var(--apebi-border)]">
+                <ShieldX className="size-7 text-[var(--apebi-text-light)]" aria-hidden />
               </div>
-              <h1 className="font-heading text-lg font-bold text-white">
+              <h1 className="font-heading text-lg font-bold text-[var(--apebi-text)]">
                 Label introuvable
               </h1>
-              <p className="mt-2 text-sm text-white/50">
+              <p className="mt-2 text-sm text-[var(--apebi-text-muted)]">
                 Ce code de vérification ne correspond à aucun Label APEBI TechTalent.
                 Vérifiez le lien ou le QR code scanné.
               </p>
               <Link
                 href="/"
-                className="mt-6 inline-flex rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                className="mt-6 inline-flex rounded-lg border border-[var(--apebi-border)] bg-white px-4 py-2 text-xs text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-bg-alt)]"
               >
                 Retour à l&apos;accueil
               </Link>
@@ -86,7 +86,7 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
               const TypeIcon = result.type === 'enterprise' ? Building2 : User
               return (
                 <div
-                  className={`rounded-2xl border border-white/8 bg-[var(--apebi-dark-85)] p-8 text-center ring-1 ${ui.ring}`}
+                  className={`rounded-2xl border border-[var(--apebi-border)] bg-white p-8 text-center shadow-[var(--shadow-card)] ring-1 ${ui.ring}`}
                 >
                   <div
                     className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-full ${ui.bg}`}
@@ -98,23 +98,23 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
                     {ui.label}
                   </p>
 
-                  <h1 className="mt-2 font-heading text-xl font-bold text-white">
+                  <h1 className="mt-2 font-heading text-xl font-bold text-[var(--apebi-text)]">
                     {result.name}
                   </h1>
 
-                  <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-white/50">
+                  <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-[var(--apebi-text-muted)]">
                     <TypeIcon className="size-3.5" aria-hidden />
                     {result.type === 'enterprise' ? 'Entreprise labellisée' : 'Talent labellisé'}
                   </p>
 
-                  <div className="mt-6 rounded-xl bg-white/5 p-4">
-                    <p className="text-[11px] uppercase tracking-wider text-white/40">
+                  <div className="mt-6 rounded-xl bg-[var(--apebi-bg-alt)] p-4">
+                    <p className="text-[11px] uppercase tracking-wider text-[var(--apebi-text-light)]">
                       Label APEBI TechTalent
                     </p>
                     {result.validUntil ? (
-                      <p className="mt-1 text-sm text-white/70">
+                      <p className="mt-1 text-sm text-[var(--apebi-text-muted)]">
                         {result.status === 'expired' ? 'Expiré le ' : 'Valide jusqu’au '}
-                        <span className="font-medium text-white">
+                        <span className="font-medium text-[var(--apebi-text)]">
                           {new Date(result.validUntil).toLocaleDateString('fr-FR', {
                             day: 'numeric',
                             month: 'long',
@@ -123,12 +123,12 @@ export default async function LabelVerifyPage({ params }: { params: Params }) {
                         </span>
                       </p>
                     ) : (
-                      <p className="mt-1 text-sm text-white/70">Sans date d’expiration</p>
+                      <p className="mt-1 text-sm text-[var(--apebi-text-muted)]">Sans date d’expiration</p>
                     )}
                   </div>
 
-                  <p className="mt-6 text-xs text-white/35">
-                    Vérifié par <span className="text-[var(--apebi-cyan)]">APEBI TechTalent</span> ·
+                  <p className="mt-6 text-xs text-[var(--apebi-text-light)]">
+                    Vérifié par <span className="text-[#0E6E85]">APEBI TechTalent</span> ·
                     Commission Formation &amp; Talent Tech
                   </p>
                 </div>

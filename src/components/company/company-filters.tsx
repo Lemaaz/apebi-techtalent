@@ -65,7 +65,7 @@ function useFilters() {
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-sm text-white appearance-none focus:border-[var(--apebi-cyan)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/30'
+  'h-8 rounded-lg border border-[var(--apebi-border)] bg-white px-3 py-1 text-sm text-[var(--apebi-text-muted)] appearance-none focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/30'
 
 export function CompanyFilters({ total }: { total: number }) {
   const { current, push, reset, hasFilters, isPending } = useFilters()
@@ -84,7 +84,7 @@ export function CompanyFilters({ total }: { total: number }) {
         <label className="relative flex flex-1 min-w-48 items-center">
           <span className="sr-only">Rechercher une entreprise</span>
           <Search
-            className="pointer-events-none absolute left-3 size-4 text-white/40"
+            className="pointer-events-none absolute left-3 size-4 text-[var(--apebi-text-light)]"
             aria-hidden
           />
           <input
@@ -100,14 +100,14 @@ export function CompanyFilters({ total }: { total: number }) {
               const val = e.target.value.trim()
               if (val !== current.q) push({ q: val })
             }}
-            className="h-8 w-full rounded-lg border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/35 focus:border-[var(--apebi-cyan)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/30"
+            className="h-8 w-full rounded-lg border border-[var(--apebi-border)] bg-white py-2 pl-9 pr-3 text-sm text-[var(--apebi-text)] placeholder:text-[var(--apebi-text-light)] focus:border-[var(--apebi-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--apebi-cyan)]/30"
           />
         </label>
 
         {/* Sector select */}
         <div className="relative flex items-center">
           <SlidersHorizontal
-            className="pointer-events-none absolute left-2.5 size-3.5 text-white/40"
+            className="pointer-events-none absolute left-2.5 size-3.5 text-[var(--apebi-text-light)]"
             aria-hidden
           />
           <select
@@ -115,9 +115,9 @@ export function CompanyFilters({ total }: { total: number }) {
             onChange={(e) => push({ sector: e.target.value })}
             className={cn(SELECT_CLASS, 'pl-8 pr-8 w-52')}
           >
-            <option className="bg-[#1a1a1a] text-white" value="">Tous secteurs</option>
+            <option value="">Tous secteurs</option>
             {SECTORS.map((s) => (
-              <option key={s} className="bg-[#1a1a1a] text-white" value={s}>{s}</option>
+              <option key={s} value={s}>{s}</option>
             ))}
           </select>
         </div>
@@ -128,9 +128,9 @@ export function CompanyFilters({ total }: { total: number }) {
           onChange={(e) => push({ size: e.target.value })}
           className={cn(SELECT_CLASS, 'pr-8 w-44')}
         >
-          <option className="bg-[#1a1a1a] text-white" value="">Toute taille</option>
+          <option value="">Toute taille</option>
           {SIZES.map(({ value, label }) => (
-            <option key={value} className="bg-[#1a1a1a] text-white" value={value}>{label}</option>
+            <option key={value} value={value}>{label}</option>
           ))}
         </select>
 
@@ -141,8 +141,8 @@ export function CompanyFilters({ total }: { total: number }) {
           className={cn(
             'inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-colors',
             current.label
-              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
-              : 'border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white',
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              : 'border-[var(--apebi-border)] bg-white text-[var(--apebi-text-muted)] hover:bg-[var(--apebi-bg-alt)] hover:text-[var(--apebi-text)]',
           )}
           aria-pressed={current.label}
         >
@@ -154,7 +154,7 @@ export function CompanyFilters({ total }: { total: number }) {
           <button
             type="button"
             onClick={reset}
-            className="flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-white/40 hover:bg-white/8 hover:text-white"
+            className="flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-[var(--apebi-text-light)] hover:bg-[var(--apebi-bg-alt)] hover:text-[var(--apebi-text)]"
           >
             <X className="size-3.5" aria-hidden />
             Effacer
@@ -163,7 +163,7 @@ export function CompanyFilters({ total }: { total: number }) {
       </div>
 
       {/* Results count */}
-      <p className="mt-3 text-xs text-white/40">
+      <p className="mt-3 text-xs text-[var(--apebi-text-light)]">
         {total} entreprise{total !== 1 ? 's' : ''}
         {hasFilters ? ' trouvée' + (total !== 1 ? 's' : '') : ''}
       </p>

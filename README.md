@@ -1,6 +1,6 @@
 # APEBI TechTalent
 
-Plateforme tech bilingue (FR/EN) de l'écosystème APEBI : vitrine marque employeur des entreprises membres, vivier de talents tech marocains, et mise en relation. Concrétisation digitale de l'Axe C (Tech Talent Bridge) de la Commission sectorielle Formation & Talent (C5) de l'APEBI.
+Plateforme tech bilingue (FR/EN) de l'écosystème APEBI : vitrine marque employeur des entreprises membres, vivier de talents tech marocains, et mise en relation. Concrétisation digitale de l'Axe C (Tech Talent Bridge) de la Commission sectorielle Formation & Talents Tech de l'APEBI.
 
 **Production :** https://techtalent-apebi.vercel.app
 **Statut :** déployée (~95%), non lancée publiquement. Avancement et prochaines étapes → `../TODOS.md` et `../ROADMAP_NEXT.md`.
@@ -57,4 +57,4 @@ Application Next.js App Router. Documentation produit/technique complète dans l
 
 ---
 
-*Commission C5 APEBI — APEBI TechTalent*
+*Commission Formation & Talents Tech APEBI — APEBI TechTalent*

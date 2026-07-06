@@ -110,7 +110,7 @@ export default async function CompanyLabelPage() {
                 Candidature en cours d&apos;examen
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Le dossier de {company.name} a été transmis à la Commission C5.
+                Le dossier de {company.name} a été transmis à l&apos;équipe APEBI.
               </p>
             </div>
           ) : (
@@ -131,7 +131,7 @@ export default async function CompanyLabelPage() {
                 <>
                   <p className="text-sm text-muted-foreground">
                     {company.name} est éligible. En candidatant, vous soumettez votre dossier à
-                    l&apos;examen de la Commission C5. Une fois approuvé, le badge vérifiable
+                    l&apos;examen de l&apos;équipe APEBI. Une fois approuvé, le badge vérifiable
                     apparaîtra sur votre vitrine publique.
                   </p>
                   <form action={applyForCompanyLabel} className="mt-5">
@@ -147,7 +147,7 @@ export default async function CompanyLabelPage() {
               ) : (
                 <div>
                   <p className="text-sm text-muted-foreground">
-                    Votre entreprise doit être validée par l&apos;équipe C5 avant de pouvoir
+                    Votre entreprise doit être validée par l&apos;équipe APEBI avant de pouvoir
                     candidater au Label.
                   </p>
                   <Link

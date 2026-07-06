@@ -76,7 +76,7 @@ export function ModifierFormationForm({
           </select>
         </div>
         <div>
-          <label className="mb-1.5 block text-xs font-medium">Domaine C5</label>
+          <label className="mb-1.5 block text-xs font-medium">Domaine</label>
           <select name="domain_id" className={selectCls()} defaultValue={program.domain_id ?? ''}>
             <option value="">Tous domaines</option>
             {domains.map((d) => (

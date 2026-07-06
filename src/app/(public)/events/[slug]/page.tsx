@@ -109,7 +109,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
       ? Math.max(0, event.places_disponibles - (registeredCount ?? 0))
       : null
 
-  const organiser = event.is_apebi_event ? 'APEBI · Commission C5' : event.company_profiles?.name
+  const organiser = event.is_apebi_event ? 'APEBI' : event.company_profiles?.name
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -119,7 +119,7 @@ export default async function EventDetailPage({ params }: { params: Params }) {
         <div className="mx-auto max-w-3xl">
           <Link
             href="/events"
-            className="mb-6 inline-flex items-center gap-1 text-xs text-white/45 hover:text-white"
+            className="mb-6 inline-flex items-center gap-1 text-xs text-[var(--apebi-text-light)] hover:text-[var(--apebi-text)]"
           >
             <ArrowLeft className="size-3.5" aria-hidden />
             Tous les événements
@@ -127,47 +127,47 @@ export default async function EventDetailPage({ params }: { params: Params }) {
 
           <div className="flex flex-wrap items-center gap-2">
             {event.type_event && (
-              <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
+              <span className="rounded-full bg-[var(--apebi-cyan-muted)] px-3 py-1 text-xs font-medium text-[#0E6E85]">
                 {TYPE_LABELS[event.type_event] ?? event.type_event}
               </span>
             )}
             {event.is_apebi_event && (
-              <span className="rounded-full bg-white/8 px-3 py-1 text-xs text-white/55">APEBI</span>
+              <span className="rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-muted)]">APEBI</span>
             )}
             {isPast && (
-              <span className="rounded-full bg-white/8 px-3 py-1 text-xs text-white/45">Passé</span>
+              <span className="rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-light)]">Passé</span>
             )}
           </div>
 
-          <h1 className="mt-3 font-heading text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-3 font-heading text-2xl font-bold text-[var(--apebi-text)] sm:text-3xl">
             {event.title}
           </h1>
 
           <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_280px]">
             {/* Contenu */}
             <div className="space-y-6 min-w-0">
-              <dl className="space-y-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 text-sm">
-                <div className="flex items-center gap-2.5 text-white/70">
+              <dl className="space-y-3 rounded-xl border border-[var(--apebi-border)] bg-white p-5 text-sm shadow-[var(--shadow-card)]">
+                <div className="flex items-center gap-2.5 text-[var(--apebi-text)]">
                   <Calendar className="size-4 shrink-0 text-[var(--apebi-cyan)]" aria-hidden />
                   {formatDateTime(event.date_debut)}
                 </div>
                 {event.date_fin && (
-                  <div className="flex items-center gap-2.5 text-white/55">
-                    <Clock className="size-4 shrink-0 text-white/40" aria-hidden />
+                  <div className="flex items-center gap-2.5 text-[var(--apebi-text-muted)]">
+                    <Clock className="size-4 shrink-0 text-[var(--apebi-text-light)]" aria-hidden />
                     Jusqu&apos;au {formatDateTime(event.date_fin)}
                   </div>
                 )}
                 {event.lieu && (
-                  <div className="flex items-center gap-2.5 text-white/70">
+                  <div className="flex items-center gap-2.5 text-[var(--apebi-text)]">
                     <MapPin className="size-4 shrink-0 text-[var(--apebi-cyan)]" aria-hidden />
                     {event.lieu}
                   </div>
                 )}
                 {organiser && (
-                  <div className="flex items-center gap-2.5 text-white/70">
-                    <Building2 className="size-4 shrink-0 text-white/40" aria-hidden />
+                  <div className="flex items-center gap-2.5 text-[var(--apebi-text)]">
+                    <Building2 className="size-4 shrink-0 text-[var(--apebi-text-light)]" aria-hidden />
                     {event.company_profiles?.slug ? (
-                      <Link href={`/entreprises/${event.company_profiles.slug}`} className="hover:text-[var(--apebi-cyan)]">
+                      <Link href={`/entreprises/${event.company_profiles.slug}`} className="hover:text-[var(--apebi-cyan-dark)]">
                         {organiser}
                       </Link>
                     ) : (
@@ -179,8 +179,8 @@ export default async function EventDetailPage({ params }: { params: Params }) {
 
               {event.description && (
                 <section>
-                  <h2 className="mb-2 font-heading text-base font-semibold text-white">À propos</h2>
-                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/55">
+                  <h2 className="mb-2 font-heading text-base font-semibold text-[var(--apebi-text)]">À propos</h2>
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--apebi-text-muted)]">
                     {event.description}
                   </p>
                 </section>
@@ -189,11 +189,11 @@ export default async function EventDetailPage({ params }: { params: Params }) {
 
             {/* Inscription */}
             <aside>
-              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5">
-                <p className="mb-3 font-heading text-sm font-semibold text-white">Inscription</p>
+              <div className="rounded-xl border border-[var(--apebi-border)] bg-white p-5 shadow-[var(--shadow-card)]">
+                <p className="mb-3 font-heading text-sm font-semibold text-[var(--apebi-text)]">Inscription</p>
 
                 {placesLeft != null && !isPast && (
-                  <p className="mb-3 flex items-center gap-1.5 text-xs text-white/50">
+                  <p className="mb-3 flex items-center gap-1.5 text-xs text-[var(--apebi-text-muted)]">
                     <Users className="size-3.5" aria-hidden />
                     {placesLeft > 0 ? `${placesLeft} place${placesLeft > 1 ? 's' : ''} restante${placesLeft > 1 ? 's' : ''}` : 'Complet'}
                   </p>

@@ -32,7 +32,7 @@ export default function MentionsLegalesPage() {
             <h2>Éditeur</h2>
             <p>
               La plateforme <strong>APEBI TechTalent</strong> est une initiative de la{' '}
-              <strong>Commission Formation &amp; Tech Talents (C5)</strong> de l&apos;
+              <strong>Commission Formation &amp; Talents Tech</strong> de l&apos;
               <strong>Association des Professionnels des Technologies de l&apos;Information (APEBI)</strong>.
             </p>
             <ul>

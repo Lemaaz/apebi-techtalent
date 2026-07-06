@@ -89,13 +89,13 @@ export default async function EventsPage() {
             <EmptyState
               icon={CalendarDays}
               title="Aucun événement pour le moment"
-              description="Les prochains événements de la Commission C5 apparaîtront ici."
+              description="Les prochains événements de l'APEBI apparaîtront ici."
             />
           ) : (
             <>
               {(upcoming ?? []).length > 0 && (
                 <section aria-labelledby="upcoming-h">
-                  <h2 id="upcoming-h" className="mb-4 font-heading text-sm font-semibold uppercase tracking-wide text-white/45">
+                  <h2 id="upcoming-h" className="mb-4 font-heading text-sm font-semibold uppercase tracking-wide text-[var(--apebi-text-light)]">
                     À venir
                   </h2>
                   <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" role="list">
@@ -110,7 +110,7 @@ export default async function EventsPage() {
 
               {(past ?? []).length > 0 && (
                 <section aria-labelledby="past-h" className="mt-12">
-                  <h2 id="past-h" className="mb-4 font-heading text-sm font-semibold uppercase tracking-wide text-white/45">
+                  <h2 id="past-h" className="mb-4 font-heading text-sm font-semibold uppercase tracking-wide text-[var(--apebi-text-light)]">
                     Passés
                   </h2>
                   <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" role="list">
@@ -133,26 +133,26 @@ export default async function EventsPage() {
 }
 
 function EventCard({ event, past = false }: { event: EventRow; past?: boolean }) {
-  const organiser = event.is_apebi_event ? 'APEBI · Commission C5' : event.company_profiles?.name
+  const organiser = event.is_apebi_event ? 'APEBI' : event.company_profiles?.name
   return (
     <Link
       href={`/events/${event.slug}`}
-      className={`block h-full rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 transition-colors hover:border-[var(--apebi-cyan)]/30 ${past ? 'opacity-70' : ''}`}
+      className={`block h-full rounded-xl border border-[var(--apebi-border)] bg-white p-5 shadow-[var(--shadow-card)] transition-colors hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)] ${past ? 'opacity-70' : ''}`}
     >
       <div className="flex items-center gap-2">
         {event.type_event && (
-          <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-2.5 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]">
+          <span className="rounded-full bg-[var(--apebi-cyan-muted)] px-2.5 py-0.5 text-[11px] font-medium text-[#0E6E85]">
             {TYPE_LABELS[event.type_event] ?? event.type_event}
           </span>
         )}
         {event.is_apebi_event && (
-          <span className="rounded-full bg-white/8 px-2.5 py-0.5 text-[11px] text-white/55">APEBI</span>
+          <span className="rounded-full bg-[var(--apebi-bg-alt)] px-2.5 py-0.5 text-[11px] text-[var(--apebi-text-muted)]">APEBI</span>
         )}
       </div>
 
-      <h3 className="mt-3 font-heading text-base font-semibold text-white">{event.title}</h3>
+      <h3 className="mt-3 font-heading text-base font-semibold text-[var(--apebi-text)]">{event.title}</h3>
 
-      <div className="mt-3 space-y-1.5 text-xs text-white/55">
+      <div className="mt-3 space-y-1.5 text-xs text-[var(--apebi-text-muted)]">
         <p className="flex items-center gap-1.5">
           <Calendar className="size-3.5 shrink-0" aria-hidden />
           {formatDate(event.date_debut)}

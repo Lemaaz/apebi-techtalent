@@ -147,7 +147,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
           {/* Back */}
           <Link
             href="/offres"
-            className="mb-6 inline-flex items-center gap-1 text-xs text-white/45 hover:text-white"
+            className="mb-6 inline-flex items-center gap-1 text-xs text-[var(--apebi-text-light)] hover:text-[var(--apebi-text)]"
           >
             <ArrowLeft className="size-3.5" aria-hidden />
             Toutes les offres
@@ -161,7 +161,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                 {company && (
                   <Link
                     href={`/entreprises/${company.slug}`}
-                    className="mb-2 inline-flex items-center gap-2 text-sm text-[var(--apebi-cyan)] hover:underline"
+                    className="mb-2 inline-flex items-center gap-2 text-sm text-[#0E6E85] hover:underline"
                   >
                     {company.logo_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -177,39 +177,39 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                   </Link>
                 )}
 
-                <h1 className="font-heading text-2xl font-bold text-white">{job.title}</h1>
+                <h1 className="font-heading text-2xl font-bold text-[var(--apebi-text)]">{job.title}</h1>
 
                 {/* Meta chips */}
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[var(--apebi-cyan)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]">
+                  <span className="rounded-full bg-[var(--apebi-cyan-muted)] px-3 py-1 text-xs font-medium text-[#0E6E85]">
                     {job.contract_type}
                   </span>
                   {job.seniority_level && (
-                    <span className="rounded-full bg-white/8 px-3 py-1 text-xs text-white/55">
+                    <span className="rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-muted)]">
                       {job.seniority_level}
                     </span>
                   )}
                   {job.city && (
-                    <span className="flex items-center gap-1 rounded-full bg-white/8 px-3 py-1 text-xs text-white/55">
+                    <span className="flex items-center gap-1 rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-muted)]">
                       <MapPin className="size-3" aria-hidden />
                       {job.city}
                     </span>
                   )}
                   {job.remote_policy && (
-                    <span className="flex items-center gap-1 rounded-full bg-white/8 px-3 py-1 text-xs text-white/55">
+                    <span className="flex items-center gap-1 rounded-full bg-[var(--apebi-bg-alt)] px-3 py-1 text-xs text-[var(--apebi-text-muted)]">
                       <Wifi className="size-3" aria-hidden />
                       {job.remote_policy}
                     </span>
                   )}
                   {job.salary_range && (
-                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
                       {job.salary_range}
                     </span>
                   )}
                 </div>
 
                 {/* Dates */}
-                <div className="mt-3 flex items-center gap-4 text-xs text-white/45">
+                <div className="mt-3 flex items-center gap-4 text-xs text-[var(--apebi-text-light)]">
                   {publishedDaysAgo !== null && (
                     <span className="flex items-center gap-1">
                       <Clock className="size-3" aria-hidden />
@@ -222,7 +222,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                     </span>
                   )}
                   {job.closes_at && (
-                    <span className="flex items-center gap-1 text-amber-400">
+                    <span className="flex items-center gap-1 text-amber-700">
                       <Calendar className="size-3" aria-hidden />
                       Clôture le{' '}
                       {new Date(job.closes_at).toLocaleDateString('fr-FR', {
@@ -236,7 +236,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
 
               {/* OFF-07 — Partager l'offre */}
               <div className="flex items-center gap-2 pt-1">
-                <span className="text-[12px] text-white/35">Partager :</span>
+                <span className="text-[12px] text-[var(--apebi-text-light)]">Partager :</span>
                 <ShareOfferButton
                   offerUrl={`${APP_URL}/offres/${job.slug}`}
                   title={job.title}
@@ -247,11 +247,11 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
               <section aria-labelledby="desc-heading">
                 <h2
                   id="desc-heading"
-                  className="mb-3 font-heading text-base font-semibold text-white"
+                  className="mb-3 font-heading text-base font-semibold text-[var(--apebi-text)]"
                 >
                   Description du poste
                 </h2>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/55">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--apebi-text-muted)]">
                   {job.description}
                 </p>
               </section>
@@ -261,20 +261,20 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                 <section aria-labelledby="skills-heading">
                   <h2
                     id="skills-heading"
-                    className="mb-3 font-heading text-base font-semibold text-white"
+                    className="mb-3 font-heading text-base font-semibold text-[var(--apebi-text)]"
                   >
                     Compétences
                   </h2>
                   {requiredSkills.length > 0 && (
                     <div className="mb-3">
-                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--apebi-text-light)]">
                         Requises
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {requiredSkills.map((s) => (
                           <span
                             key={s}
-                            className="badge-tech"
+                            className="badge-skill"
                           >
                             {s}
                           </span>
@@ -284,14 +284,14 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                   )}
                   {optionalSkills.length > 0 && (
                     <div>
-                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--apebi-text-light)]">
                         Un plus
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {optionalSkills.map((s) => (
                           <span
                             key={s}
-                            className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/55"
+                            className="rounded-full border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-2.5 py-1 text-xs text-[var(--apebi-text-muted)]"
                           >
                             {s}
                           </span>
@@ -306,8 +306,8 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
             {/* ── Right: Sidebar ── */}
             <aside className="space-y-4">
               {/* Apply box */}
-              <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5">
-                <p className="mb-4 font-heading text-sm font-semibold text-white">
+              <div className="rounded-xl border border-[var(--apebi-border)] bg-white p-5 shadow-[var(--shadow-card)]">
+                <p className="mb-4 font-heading text-sm font-semibold text-[var(--apebi-text)]">
                   Postuler à cette offre
                 </p>
                 <ApplyForm
@@ -319,14 +319,14 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
 
               {/* Company card */}
               {company && (
-                <div className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4">
-                  <p className="mb-3 font-heading text-sm font-semibold text-white">
+                <div className="rounded-xl border border-[var(--apebi-border)] bg-white p-4 shadow-[var(--shadow-card)]">
+                  <p className="mb-3 font-heading text-sm font-semibold text-[var(--apebi-text)]">
                     L&apos;entreprise
                   </p>
-                  <p className="text-sm font-medium text-white">{company.name}</p>
-                  <p className="mt-0.5 text-xs text-white/50">{company.sector}</p>
+                  <p className="text-sm font-medium text-[var(--apebi-text)]">{company.name}</p>
+                  <p className="mt-0.5 text-xs text-[var(--apebi-text-muted)]">{company.sector}</p>
                   {company.city && (
-                    <p className="mt-1 flex items-center gap-1 text-xs text-white/50">
+                    <p className="mt-1 flex items-center gap-1 text-xs text-[var(--apebi-text-muted)]">
                       <MapPin className="size-3" aria-hidden />
                       {company.city}
                     </p>
@@ -334,7 +334,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                   <div className="mt-3 flex flex-col gap-2">
                     <Link
                       href={`/entreprises/${company.slug}`}
-                      className="inline-flex items-center justify-start gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                      className="inline-flex items-center justify-start gap-1.5 rounded-lg border border-[var(--apebi-border)] bg-white px-3 py-1.5 text-xs text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-bg-alt)]"
                     >
                       <Building2 className="size-3.5" aria-hidden />
                       Voir la vitrine
@@ -344,7 +344,7 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                         href={company.website_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-start gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                        className="inline-flex items-center justify-start gap-1.5 rounded-lg border border-[var(--apebi-border)] bg-white px-3 py-1.5 text-xs text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-bg-alt)]"
                       >
                         <ExternalLink className="size-3.5" aria-hidden />
                         Site web
@@ -355,17 +355,17 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
               )}
 
               {/* Stats */}
-              <div className="rounded-xl border border-white/8 bg-white/5 p-4">
+              <div className="rounded-xl border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] p-4">
                 <dl className="flex justify-around text-center">
                   <div>
-                    <dt className="text-[11px] text-white/40">Candidatures</dt>
-                    <dd className="font-heading text-lg font-bold text-white">
+                    <dt className="text-[11px] text-[var(--apebi-text-light)]">Candidatures</dt>
+                    <dd className="font-heading text-lg font-bold text-[var(--apebi-text)]">
                       {job.applications_count}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-[11px] text-white/40">Vues</dt>
-                    <dd className="font-heading text-lg font-bold text-white">
+                    <dt className="text-[11px] text-[var(--apebi-text-light)]">Vues</dt>
+                    <dd className="font-heading text-lg font-bold text-[var(--apebi-text)]">
                       {job.views_count}
                     </dd>
                   </div>
@@ -377,8 +377,8 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
 
         {/* OFF-08 — Offres similaires */}
         {similarJobs && similarJobs.length > 0 && (
-          <section aria-labelledby="similar-heading" className="mt-12 border-t border-white/8 pt-8">
-            <h2 id="similar-heading" className="mb-4 font-heading text-base font-semibold text-white">
+          <section aria-labelledby="similar-heading" className="mt-12 border-t border-[var(--apebi-border)] pt-8">
+            <h2 id="similar-heading" className="mb-4 font-heading text-base font-semibold text-[var(--apebi-text)]">
               Offres similaires
             </h2>
             <ul className="grid gap-3 sm:grid-cols-3" role="list">
@@ -386,16 +386,16 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                 <li key={similar.id}>
                   <Link
                     href={`/offres/${similar.slug}`}
-                    className="block rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4 transition-all hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-78)]"
+                    className="block rounded-xl border border-[var(--apebi-border)] bg-white p-4 shadow-[var(--shadow-card)] transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
                   >
-                    <p className="truncate font-heading text-[13px] font-semibold text-white">
+                    <p className="truncate font-heading text-[13px] font-semibold text-[var(--apebi-text)]">
                       {similar.title}
                     </p>
-                    <p className="mt-1 text-[11px] text-white/45">
+                    <p className="mt-1 text-[11px] text-[var(--apebi-text-light)]">
                       {similar.company_profiles?.name ?? '—'}
                       {similar.city ? ` · ${similar.city}` : ''}
                     </p>
-                    <span className="mt-2 inline-block rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--apebi-cyan)]">
+                    <span className="mt-2 inline-block rounded-full bg-[var(--apebi-cyan-muted)] px-2 py-0.5 text-[10px] font-medium text-[#0E6E85]">
                       {similar.contract_type}
                     </span>
                   </Link>

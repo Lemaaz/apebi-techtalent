@@ -5,12 +5,12 @@ import { computeApebiScore } from '@/lib/apebi-score'
 import { ApebiScoreBadge } from './apebi-score-badge'
 
 const AVATAR_PALETTES = [
-  'bg-[var(--apebi-cyan)]/10 text-[var(--apebi-cyan)]',
-  'bg-white/8 text-white/60',
-  'bg-emerald-500/10 text-emerald-400',
-  'bg-violet-500/10 text-violet-400',
-  'bg-amber-500/10 text-amber-400',
-  'bg-rose-500/10 text-rose-400',
+  'bg-[var(--apebi-cyan-muted)] text-[#0E6E85]',
+  'bg-[var(--apebi-navy)] text-white',
+  'bg-emerald-50 text-emerald-700',
+  'bg-violet-50 text-violet-700',
+  'bg-amber-50 text-amber-700',
+  'bg-rose-50 text-rose-700',
 ] as const
 
 function avatarColour(name: string) {
@@ -53,7 +53,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
       aria-label={`Voir la vitrine de ${name}`}
       className="group block"
     >
-      <div className="card-lift flex h-full flex-col rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-5 hover:border-[var(--apebi-cyan)]/40 hover:bg-[var(--apebi-dark-80)] hover:shadow-glow-soft">
+      <div className="card-lift flex h-full flex-col rounded-xl border border-[var(--apebi-border)] bg-[#FFFFFF] p-5 shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]">
 
         {/* Header — avatar + nom */}
         <div className="mb-3 flex items-center gap-3">
@@ -77,23 +77,23 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
             </div>
           )}
           <div className="min-w-0">
-            <p className="truncate font-heading text-sm font-semibold text-white group-hover:text-[var(--apebi-cyan)] transition-colors">
+            <p className="truncate font-heading text-sm font-semibold text-[var(--apebi-text)] group-hover:text-[var(--apebi-cyan-dark)] transition-colors">
               {name}
             </p>
-            <p className="truncate text-xs text-white/50">{sector}</p>
+            <p className="truncate text-xs text-[var(--apebi-text-muted)]">{sector}</p>
           </div>
         </div>
 
         {/* Badges */}
         <div className="mb-3 flex flex-wrap gap-1.5">
           {apebi_member_since && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--apebi-cyan)]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--apebi-cyan-muted)] px-2 py-0.5 text-[11px] font-medium text-[#0E6E85]">
               <Check className="size-2.5" aria-hidden />
               Membre APEBI
             </span>
           )}
           {has_techtalent_label && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-success-muted)] px-2 py-0.5 text-[11px] font-medium text-[var(--color-success-text)]">
               <Award className="size-2.5" aria-hidden />
               Label TechTalent
             </span>
@@ -110,7 +110,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
         {/* Footer */}
         <div className="mt-auto flex items-center justify-between">
           {city ? (
-            <span className="flex items-center gap-1 text-xs text-white/40">
+            <span className="flex items-center gap-1 text-xs text-[var(--apebi-text-light)]">
               <MapPin className="size-3" aria-hidden />
               {city}
             </span>
@@ -120,7 +120,7 @@ export function CompanyCard({ company, jobCount }: CompanyCardProps) {
           <span
             className={cn(
               'text-xs font-medium',
-              jobCount > 0 ? 'text-[var(--apebi-cyan)]' : 'text-white/35',
+              jobCount > 0 ? 'text-[#0E6E85]' : 'text-[var(--apebi-text-light)]',
             )}
           >
             {jobCount > 0 ? `${jobCount} offre${jobCount > 1 ? 's' : ''}` : 'Aucune offre'}

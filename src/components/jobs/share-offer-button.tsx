@@ -34,8 +34,8 @@ export function ShareOfferButton({ offerUrl, title }: ShareOfferButtonProps) {
         className={cn(
           'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-heading text-[12px] font-semibold transition-all',
           copied
-            ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-            : 'border-white/15 bg-white/5 text-white/55 hover:border-[var(--apebi-cyan)]/40 hover:text-[var(--apebi-cyan)]',
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+            : 'border-[var(--apebi-border)] bg-white text-[var(--apebi-text-muted)] hover:border-[var(--apebi-cyan)] hover:text-[var(--apebi-cyan-dark)]',
         )}
         aria-label={copied ? 'Lien copié !' : 'Copier le lien'}
       >
@@ -49,7 +49,7 @@ export function ShareOfferButton({ offerUrl, title }: ShareOfferButtonProps) {
         href={linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-heading text-[12px] font-semibold text-white/45 hover:border-[#0A66C2]/40 hover:text-[#0A66C2] transition-colors"
+        className="inline-flex items-center gap-1 rounded-lg border border-[var(--apebi-border)] bg-white px-3 py-1.5 font-heading text-[12px] font-semibold text-[var(--apebi-text-muted)] hover:border-[#0A66C2]/40 hover:text-[#0A66C2] transition-colors"
         aria-label="Partager sur LinkedIn"
         title="Partager sur LinkedIn"
       >
@@ -61,7 +61,7 @@ export function ShareOfferButton({ offerUrl, title }: ShareOfferButtonProps) {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-heading text-[12px] font-semibold text-white/45 hover:border-[#25D366]/40 hover:text-[#25D366] transition-colors"
+        className="inline-flex items-center gap-1 rounded-lg border border-[var(--apebi-border)] bg-white px-3 py-1.5 font-heading text-[12px] font-semibold text-[var(--apebi-text-muted)] hover:border-[#25D366]/40 hover:text-[#25D366] transition-colors"
         aria-label="Partager sur WhatsApp"
         title="Partager sur WhatsApp"
       >

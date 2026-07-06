@@ -1,10 +1,32 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import { BarChart3, TrendingUp, Users, MapPin, Scale, Info } from 'lucide-react'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { EmptyState } from '@/components/ui/empty-state'
 import { StatBar } from '@/components/observatoire/stat-bar'
+
+// Accès restreint (décision produit) : admins APEBI, super-admin et entreprises
+// membres connectées uniquement — pas encore ouvert aux talents ni aux visiteurs.
+// Retiré du menu public en conséquence (nav-links.tsx, footer.tsx).
+async function assertObservatoireAccess() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/connexion?next=/observatoire')
+
+  const { data: isAdmin } = await supabase.rpc('is_admin')
+  if (isAdmin) return
+
+  const { data: member } = await supabase
+    .from('company_members')
+    .select('company_id')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (member) return
+
+  redirect('/')
+}
 
 // Observatoire des Compétences (T7) — levier de plaidoyer APEBI.
 // Lit les 4 vues matérialisées (008). Simple SELECT, pas d'agrégation
@@ -25,11 +47,11 @@ export const metadata: Metadata = {
   title: 'Observatoire des Compétences Tech',
   openGraph: {
     title: 'Observatoire des Compétences Tech — APEBI TechTalent',
-    description: "Données en temps réel du marché tech marocain : compétences demandées, vivier de talents, tensions par domaine. Par la Commission C5 de l'APEBI.",
+    description: "Données en temps réel du marché tech marocain : compétences demandées, vivier de talents, tensions par domaine. Par la Commission Formation & Talents Tech de l'APEBI.",
     url: 'https://techtalent-apebi.vercel.app/observatoire',
   },
   description:
-    "Données du marché des compétences tech marocaines : compétences demandées, vivier de talents, répartition par domaine et géographie. Par la Commission Formation & Talent Tech de l'APEBI.",
+    "Données du marché des compétences tech marocaines : compétences demandées, vivier de talents, répartition par domaine et géographie. Par la Commission Formation & Talents Tech de l'APEBI.",
 }
 
 type SkillDemandRow = { name: string; domain_code: string | null; demand_count: number }
@@ -105,6 +127,8 @@ async function fetchObservatoire() {
 }
 
 export default async function ObservatoirePage() {
+  await assertObservatoireAccess()
+
   const { demand, supply, geo, domains, activeJobsCount, approvedTalentsCount } = await fetchObservatoire()
 
   // Seuil de représentativité — données masquées tant qu'il n'y a pas assez de signaux
@@ -124,23 +148,23 @@ export default async function ObservatoirePage() {
 
       <main className="flex-1">
         {/* ── Hero institutionnel ───────────────────── */}
-        <section className="relative overflow-hidden border-b border-white/8 px-4 py-14 sm:px-6">
+        <section className="relative overflow-hidden border-b border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-4 py-14 sm:px-6">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
+            <div className="absolute inset-0 bg-grid-cyan mask-radial opacity-30" />
             <div
               className="aurora absolute -right-24 -top-20 size-[380px] rounded-full blur-[100px]"
-              style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.18), transparent 70%)' }}
+              style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.12), transparent 70%)' }}
             />
           </div>
           <div className="relative mx-auto max-w-5xl">
-            <p className="rise-in inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-coral)]/10 px-3 py-1 text-xs font-medium text-[var(--apebi-coral)]">
+            <p className="rise-in inline-flex items-center gap-1.5 rounded-full bg-[var(--apebi-coral-muted)] px-3 py-1 text-xs font-medium text-[var(--apebi-coral)]">
               <BarChart3 className="size-3.5" aria-hidden />
               Observatoire des Talents · Commission Formation & Tech Talents
             </p>
-            <h1 className="rise-in mt-4 font-heading text-3xl font-bold text-white sm:text-4xl" style={{ animationDelay: '80ms' }}>
+            <h1 className="rise-in mt-4 font-heading text-3xl font-bold text-[var(--apebi-text)] sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Observatoire des Compétences Tech
             </h1>
-            <p className="rise-in mt-3 max-w-2xl text-sm leading-relaxed text-white/55" style={{ animationDelay: '160ms' }}>
+            <p className="rise-in mt-3 max-w-2xl text-sm leading-relaxed text-[var(--apebi-text-muted)]" style={{ animationDelay: '160ms' }}>
               Une lecture en temps réel du marché des compétences numériques marocaines,
               alimentée par l&apos;écosystème APEBI : ce que les entreprises recherchent, le
               vivier de talents disponible, et les déséquilibres par domaine. Un outil au
@@ -149,17 +173,17 @@ export default async function ObservatoirePage() {
 
             {/* KPIs */}
             <div className="rise-in mt-6 flex flex-wrap gap-3" style={{ animationDelay: '240ms' }}>
-              <div className="card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3 hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft">
-                <p className="font-heading text-2xl font-bold text-white">{totalActiveJobs}</p>
-                <p className="text-xs text-white/45">Offres actives</p>
+              <div className="card-lift rounded-xl border border-[var(--apebi-border)] bg-white px-4 py-3 shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]">
+                <p className="font-heading text-2xl font-bold text-[var(--apebi-text)]">{totalActiveJobs}</p>
+                <p className="text-xs text-[var(--apebi-text-light)]">Offres actives</p>
               </div>
-              <div className="card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3 hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft">
-                <p className="font-heading text-2xl font-bold text-white">{totalTalents}</p>
-                <p className="text-xs text-white/45">Talents référencés</p>
+              <div className="card-lift rounded-xl border border-[var(--apebi-border)] bg-white px-4 py-3 shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]">
+                <p className="font-heading text-2xl font-bold text-[var(--apebi-text)]">{totalTalents}</p>
+                <p className="text-xs text-[var(--apebi-text-light)]">Talents référencés</p>
               </div>
-              <div className="card-lift rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] px-4 py-3 hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft">
-                <p className="font-heading text-2xl font-bold text-white">{domains.length}</p>
-                <p className="text-xs text-white/45">Domaines tech</p>
+              <div className="card-lift rounded-xl border border-[var(--apebi-border)] bg-white px-4 py-3 shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]">
+                <p className="font-heading text-2xl font-bold text-[var(--apebi-text)]">{domains.length}</p>
+                <p className="text-xs text-[var(--apebi-text-light)]">Domaines tech</p>
               </div>
             </div>
           </div>
@@ -167,18 +191,18 @@ export default async function ObservatoirePage() {
 
         {!isAboveThreshold ? (
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <div className="rounded-2xl border border-white/8 bg-[var(--apebi-dark-85)] p-8 text-center">
-              <Info className="mx-auto mb-4 size-10 text-white/20" aria-hidden />
-              <h2 className="font-heading text-lg font-semibold text-white">
+            <div className="rounded-2xl border border-[var(--apebi-border)] bg-white p-8 text-center shadow-[var(--shadow-card)]">
+              <Info className="mx-auto mb-4 size-10 text-[var(--apebi-text-light)]" aria-hidden />
+              <h2 className="font-heading text-lg font-semibold text-[var(--apebi-text)]">
                 Données en cours de collecte
               </h2>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/45">
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--apebi-text-muted)]">
                 L&apos;Observatoire sera activé dès que la plateforme atteindra{' '}
-                <strong className="text-white/70">{THRESHOLD_TALENTS} talents validés</strong> et{' '}
-                <strong className="text-white/70">{THRESHOLD_JOBS} offres actives</strong>.
+                <strong className="text-[var(--apebi-text)]">{THRESHOLD_TALENTS} talents validés</strong> et{' '}
+                <strong className="text-[var(--apebi-text)]">{THRESHOLD_JOBS} offres actives</strong>.
                 Ces seuils garantissent la représentativité des données publiées par l&apos;APEBI.
               </p>
-              <p className="mt-4 text-xs text-white/25">
+              <p className="mt-4 text-xs text-[var(--apebi-text-light)]">
                 Actuellement : {approvedTalentsCount} talent{approvedTalentsCount !== 1 ? 's' : ''} validé{approvedTalentsCount !== 1 ? 's' : ''} · {totalActiveJobs} offre{totalActiveJobs !== 1 ? 's' : ''} active{totalActiveJobs !== 1 ? 's' : ''}
               </p>
             </div>
@@ -187,11 +211,11 @@ export default async function ObservatoirePage() {
           <div className="mx-auto max-w-5xl space-y-12 px-4 py-12 sm:px-6">
             {/* ── Compétences demandées ──────────────── */}
             <section aria-labelledby="demand-h">
-              <h2 id="demand-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
+              <h2 id="demand-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-[var(--apebi-text)]">
                 <TrendingUp className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
                 Compétences les plus demandées
               </h2>
-              <p className="mb-5 text-xs text-white/45">Par les offres d&apos;emploi actives.</p>
+              <p className="mb-5 text-xs text-[var(--apebi-text-light)]">Par les offres d&apos;emploi actives.</p>
               {demand.length > 0 ? (
                 <div className="space-y-2.5">
                   {demand.map((d) => (
@@ -205,17 +229,17 @@ export default async function ObservatoirePage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-white/40">Aucune offre active pour le moment.</p>
+                <p className="text-sm text-[var(--apebi-text-light)]">Aucune offre active pour le moment.</p>
               )}
             </section>
 
             {/* ── Compétences déclarées ──────────────── */}
             <section aria-labelledby="supply-h">
-              <h2 id="supply-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
-                <Users className="size-4 text-emerald-400" aria-hidden />
+              <h2 id="supply-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-[var(--apebi-text)]">
+                <Users className="size-4 text-emerald-600" aria-hidden />
                 Compétences les plus représentées
               </h2>
-              <p className="mb-5 text-xs text-white/45">Dans le vivier de talents validés.</p>
+              <p className="mb-5 text-xs text-[var(--apebi-text-light)]">Dans le vivier de talents validés.</p>
               {supply.length > 0 ? (
                 <div className="space-y-2.5">
                   {supply.map((s) => (
@@ -225,22 +249,22 @@ export default async function ObservatoirePage() {
                       value={s.supply_count}
                       max={maxSupply}
                       hint={s.domain_code ?? undefined}
-                      barClass="bg-emerald-400"
+                      barClass="bg-emerald-500"
                     />
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-white/40">Aucun talent validé pour le moment.</p>
+                <p className="text-sm text-[var(--apebi-text-light)]">Aucun talent validé pour le moment.</p>
               )}
             </section>
 
             {/* ── Activité par domaine (offre vs vivier) ── */}
             <section aria-labelledby="domain-h">
-              <h2 id="domain-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
+              <h2 id="domain-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-[var(--apebi-text)]">
                 <Scale className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
                 Équilibre offre / vivier par domaine
               </h2>
-              <p className="mb-5 text-xs text-white/45">
+              <p className="mb-5 text-xs text-[var(--apebi-text-light)]">
                 Les 6 domaines de compétences tech — tension entre offres actives et talents disponibles.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -249,22 +273,22 @@ export default async function ObservatoirePage() {
                     ? d.active_jobs > 0 ? 'Sous tension' : '—'
                     : `${(d.active_jobs / d.approved_talents).toFixed(1)} offre/talent`
                   return (
-                    <div key={d.code} className="rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-4">
+                    <div key={d.code} className="rounded-xl border border-[var(--apebi-border)] bg-white p-4 shadow-[var(--shadow-card)]">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <p className="text-[11px] font-semibold text-[var(--apebi-cyan)]">{d.code}</p>
-                          <p className="text-sm font-medium text-white">{d.name_fr}</p>
+                          <p className="text-[11px] font-semibold text-[var(--apebi-cyan-dark)]">{d.code}</p>
+                          <p className="text-sm font-medium text-[var(--apebi-text)]">{d.name_fr}</p>
                         </div>
-                        <span className="shrink-0 rounded-full bg-white/5 px-2 py-0.5 text-[11px] text-white/55">
+                        <span className="shrink-0 rounded-full bg-[var(--apebi-bg-alt)] px-2 py-0.5 text-[11px] text-[var(--apebi-text-muted)]">
                           {tension}
                         </span>
                       </div>
                       <div className="mt-3 flex gap-4 text-xs">
-                        <span className="text-white/55">
-                          <span className="font-heading text-base font-bold text-white">{d.active_jobs}</span> offres
+                        <span className="text-[var(--apebi-text-muted)]">
+                          <span className="font-heading text-base font-bold text-[var(--apebi-text)]">{d.active_jobs}</span> offres
                         </span>
-                        <span className="text-white/55">
-                          <span className="font-heading text-base font-bold text-white">{d.approved_talents}</span> talents
+                        <span className="text-[var(--apebi-text-muted)]">
+                          <span className="font-heading text-base font-bold text-[var(--apebi-text)]">{d.approved_talents}</span> talents
                         </span>
                       </div>
                     </div>
@@ -276,11 +300,11 @@ export default async function ObservatoirePage() {
             {/* ── Répartition géographique ───────────── */}
             {geo.length > 0 && (
               <section aria-labelledby="geo-h">
-                <h2 id="geo-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-white">
+                <h2 id="geo-h" className="mb-1 flex items-center gap-2 font-heading text-lg font-semibold text-[var(--apebi-text)]">
                   <MapPin className="size-4 text-[var(--apebi-cyan)]" aria-hidden />
                   Répartition géographique des talents
                 </h2>
-                <p className="mb-5 text-xs text-white/45">Villes les plus représentées dans le vivier.</p>
+                <p className="mb-5 text-xs text-[var(--apebi-text-light)]">Villes les plus représentées dans le vivier.</p>
                 <div className="space-y-2.5">
                   {geo.map((g) => (
                     <StatBar key={g.city} label={g.city} value={g.talent_count} max={maxGeo} />
@@ -290,9 +314,9 @@ export default async function ObservatoirePage() {
             )}
 
             {/* ── Disclaimer représentativité ────────── */}
-            <div className="flex gap-3 rounded-xl border border-white/8 bg-white/[0.02] p-4">
-              <Info className="size-4 shrink-0 text-white/40" aria-hidden />
-              <p className="text-xs leading-relaxed text-white/45">
+            <div className="flex gap-3 rounded-xl border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] p-4">
+              <Info className="size-4 shrink-0 text-[var(--apebi-text-light)]" aria-hidden />
+              <p className="text-xs leading-relaxed text-[var(--apebi-text-muted)]">
                 Ces données reflètent la population de la plateforme APEBI TechTalent (entreprises
                 membres et talents inscrits validés), et non l&apos;ensemble du marché tech marocain.
                 Elles donnent une tendance, non une mesure statistique exhaustive. La représentativité

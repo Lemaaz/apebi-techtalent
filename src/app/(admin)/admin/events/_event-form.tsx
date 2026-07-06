@@ -101,7 +101,7 @@ export function EventCreateForm({ onSuccess }: { onSuccess?: () => void }) {
 
       <div className="flex items-center gap-2">
         <input id="ev-apebi" name="is_apebi_event" type="checkbox" value="true" className="size-4 rounded border-[var(--apebi-border)]" defaultChecked />
-        <label htmlFor="ev-apebi" className="text-sm text-foreground">Organisé par APEBI · Commission C5</label>
+        <label htmlFor="ev-apebi" className="text-sm text-foreground">Organisé par APEBI</label>
       </div>
 
       {state.error && (

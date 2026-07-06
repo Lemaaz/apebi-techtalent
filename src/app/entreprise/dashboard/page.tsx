@@ -80,7 +80,7 @@ export default async function DashboardRecruteurPage() {
         <EmptyState
           icon={Briefcase}
           title="Compte non associé"
-          description="Votre compte n'est pas encore associé à une entreprise APEBI. Contactez l'équipe C5 pour activer votre accès recruteur."
+          description="Votre compte n'est pas encore associé à une entreprise APEBI. Contactez l'équipe APEBI pour activer votre accès recruteur."
         />
       </div>
     )

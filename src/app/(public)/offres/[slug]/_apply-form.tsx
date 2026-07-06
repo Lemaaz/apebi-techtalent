@@ -45,14 +45,14 @@ export function ApplyForm({
 
   if (state.success) {
     return (
-      <div className="flex flex-col items-center rounded-xl bg-emerald-500/10 p-6 text-center">
-        <div className="mb-3 flex size-10 items-center justify-center rounded-full bg-emerald-500/20">
-          <Check className="size-5 text-emerald-400" aria-hidden />
+      <div className="flex flex-col items-center rounded-xl bg-[var(--color-success-muted)] p-6 text-center">
+        <div className="mb-3 flex size-10 items-center justify-center rounded-full bg-[var(--color-success)]/20">
+          <Check className="size-5 text-[var(--color-success-text)]" aria-hidden />
         </div>
-        <p className="font-heading text-sm font-semibold text-emerald-400">
+        <p className="font-heading text-sm font-semibold text-[var(--color-success-text)]">
           Candidature envoyée !
         </p>
-        <p className="mt-1 text-xs text-emerald-500">
+        <p className="mt-1 text-xs text-[var(--color-success-text)]">
           Le recruteur a été notifié. Suivez votre candidature depuis votre espace talent.
         </p>
       </div>
@@ -61,11 +61,11 @@ export function ApplyForm({
 
   if (!isAuthenticated) {
     return (
-      <div className="rounded-xl border border-white/8 bg-white/5 p-5 text-center">
-        <p className="text-sm font-medium text-white">
+      <div className="rounded-xl border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] p-5 text-center">
+        <p className="text-sm font-medium text-[var(--apebi-text)]">
           Connectez-vous pour postuler
         </p>
-        <p className="mt-1 text-xs text-white/45">
+        <p className="mt-1 text-xs text-[var(--apebi-text-light)]">
           Vous devez être connecté avec un compte talent pour postuler.
         </p>
         <a
@@ -80,11 +80,11 @@ export function ApplyForm({
 
   if (!hasProfile) {
     return (
-      <div className="rounded-xl border border-white/8 bg-white/5 p-5 text-center">
-        <p className="text-sm font-medium text-white">
+      <div className="rounded-xl border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] p-5 text-center">
+        <p className="text-sm font-medium text-[var(--apebi-text)]">
           Complétez votre profil d&apos;abord
         </p>
-        <p className="mt-1 text-xs text-white/45">
+        <p className="mt-1 text-xs text-[var(--apebi-text-light)]">
           Créez votre profil talent pour pouvoir postuler aux offres.
         </p>
         <a
@@ -102,21 +102,21 @@ export function ApplyForm({
       <input type="hidden" name="job_id" value={jobId} />
 
       <div>
-        <label className="mb-1.5 block text-xs font-medium text-white/70">
+        <label className="mb-1.5 block text-xs font-medium text-[var(--apebi-text-muted)]">
           Lettre de motivation{' '}
-          <span className="font-normal text-white/40">(optionnel, max 1 000 car.)</span>
+          <span className="font-normal text-[var(--apebi-text-light)]">(optionnel, max 1 000 car.)</span>
         </label>
         <Textarea
           name="cover_letter"
           placeholder="Expliquez brièvement pourquoi vous êtes intéressé·e par ce poste et ce que vous apporteriez à l'équipe…"
           rows={5}
           maxLength={1000}
-          className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[var(--apebi-cyan)]/50 focus-visible:ring-[var(--apebi-cyan)]/30"
+          className="border-[var(--apebi-border)] bg-white text-[var(--apebi-text)] placeholder:text-[var(--apebi-text-light)] focus:border-[var(--apebi-cyan)] focus-visible:ring-[var(--apebi-cyan)]/30"
         />
       </div>
 
       {state.error && (
-        <p role="alert" className="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400">
+        <p role="alert" className="rounded-lg bg-[var(--color-error-muted)] px-3 py-2 text-sm text-[var(--color-error-text)]">
           {state.error}
         </p>
       )}

@@ -57,14 +57,14 @@ export default function AProposPage() {
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
           <div className="relative mx-auto max-w-2xl">
             <p className="rise-in mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--apebi-coral)]">
-              Commission C5 — APEBI
+              Commission Formation &amp; Talents Tech — APEBI
             </p>
             <h1 className="rise-in font-heading text-3xl font-bold text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Le hub RH tech de la Fédération APEBI
             </h1>
             <p className="rise-in mt-4 text-base text-muted-foreground" style={{ animationDelay: '160ms' }}>
               APEBI TechTalent est la concrétisation de l&apos;Axe C (Tech Talent Bridge) de la
-              Commission C5. Notre mission : connecter les talents tech marocains aux entreprises
+              Commission Formation &amp; Talents Tech. Notre mission : connecter les talents tech marocains aux entreprises
               membres APEBI et accélérer la croissance du secteur numérique au Maroc.
             </p>
             <div className="rise-in mt-8 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: '240ms' }}>

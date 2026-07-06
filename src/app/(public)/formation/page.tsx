@@ -11,7 +11,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 export const metadata: Metadata = {
   title: 'Formation Hub',
   description:
-    'Découvrez les formations tech de l\'écosystème APEBI : écoles, bootcamps, certifications. Parcours par domaine C5.',
+    'Découvrez les formations tech de l\'écosystème APEBI : écoles, bootcamps, certifications, par domaine.',
 }
 
 type SearchParams = Promise<{
@@ -150,21 +150,21 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
   const stats = [
     { label: 'Formations disponibles', value: programs.length > 0 ? programs.length : '—', icon: BookOpen },
     { label: 'Partenaires', value: institutions.length > 0 ? institutions.length : '—', icon: Building2 },
-    { label: 'Domaines C5', value: domains.length, icon: GraduationCap },
+    { label: 'Domaines', value: domains.length, icon: GraduationCap },
   ]
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[var(--apebi-dark-90)]">
+    <div className="flex min-h-dvh flex-col">
       <Navbar />
 
       <main className="flex-1">
 
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section className="relative overflow-hidden border-b border-white/8 px-4 py-14 sm:px-6">
+        <section className="relative overflow-hidden border-b border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-4 py-14 sm:px-6">
           {/* Texture réseau + lueur */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-50" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-30" />
           <div
-            className="aurora pointer-events-none absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full opacity-25 blur-3xl"
+            className="aurora pointer-events-none absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full opacity-20 blur-3xl"
             style={{ background: 'radial-gradient(circle, var(--apebi-cyan), transparent 70%)' }}
             aria-hidden
           />
@@ -175,16 +175,16 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
               style={{ borderColor: 'rgba(244,120,91,0.3)', color: 'var(--apebi-coral)', background: 'rgba(244,120,91,0.08)' }}
             >
               <GraduationCap className="size-3.5" aria-hidden />
-              Formation Hub — Axe F · C5
+              Formation Hub
             </div>
 
-            <h1 className="rise-in mb-4 font-heading text-3xl font-bold text-white sm:text-4xl" style={{ animationDelay: '80ms' }}>
+            <h1 className="rise-in mb-4 font-heading text-3xl font-bold text-[var(--apebi-text)] sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Développez vos compétences{' '}
               <span className="text-gradient-cyan">tech</span>
             </h1>
 
-            <p className="rise-in mx-auto max-w-xl text-base leading-relaxed text-white/50" style={{ animationDelay: '160ms' }}>
-              Le catalogue officiel C5 des formations et certifications tech de l&apos;écosystème
+            <p className="rise-in mx-auto max-w-xl text-base leading-relaxed text-[var(--apebi-text-muted)]" style={{ animationDelay: '160ms' }}>
+              Le catalogue officiel des formations et certifications tech de l&apos;écosystème
               APEBI — écoles, bootcamps, parcours par domaine.
             </p>
           </div>
@@ -194,11 +194,11 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
             {stats.map(({ label, value, icon: Icon }) => (
               <div
                 key={label}
-                className="card-lift flex flex-col items-center gap-1.5 rounded-xl border border-white/8 bg-white/3 p-4 text-center hover:border-[var(--apebi-cyan)]/40 hover:shadow-glow-soft"
+                className="card-lift flex flex-col items-center gap-1.5 rounded-xl border border-[var(--apebi-border)] bg-white p-4 text-center shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
               >
-                <Icon className="size-5 text-white/30" aria-hidden />
-                <span className="font-heading text-2xl font-bold text-white">{value}</span>
-                <span className="text-[11px] text-white/40">{label}</span>
+                <Icon className="size-5 text-[var(--apebi-cyan)]" aria-hidden />
+                <span className="font-heading text-2xl font-bold text-[var(--apebi-text)]">{value}</span>
+                <span className="text-[11px] text-[var(--apebi-text-light)]">{label}</span>
               </div>
             ))}
           </div>
@@ -206,11 +206,11 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
         {/* ── Catalogue ─────────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-          <h2 className="mb-6 font-heading text-lg font-semibold text-white">
+          <h2 className="mb-6 font-heading text-lg font-semibold text-[var(--apebi-text)]">
             Catalogue des formations
           </h2>
 
-          <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-white/5" />}>
+          <Suspense fallback={<div className="h-24 animate-pulse rounded-lg bg-[var(--apebi-bg-alt)]" />}>
             <FormationFilters domains={domains} total={programs.length} />
           </Suspense>
 
@@ -244,12 +244,12 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
         {/* ── Parcours par domaine ───────────────────────────── */}
         {domains.length > 0 && (
-          <section className="border-t border-white/8 px-4 py-12 sm:px-6">
+          <section className="border-t border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-4 py-12 sm:px-6">
             <div className="mx-auto max-w-7xl">
-              <h2 className="mb-2 font-heading text-lg font-semibold text-white">
+              <h2 className="mb-2 font-heading text-lg font-semibold text-[var(--apebi-text)]">
                 Parcours par domaine Apebi
               </h2>
-              <p className="mb-8 text-[13px] text-white/40">
+              <p className="mb-8 text-[13px] text-[var(--apebi-text-light)]">
                 Filtrez le catalogue par domaine technique pour trouver les formations qui correspondent à votre trajectoire.
               </p>
 
@@ -260,21 +260,21 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
                     <li key={d.id}>
                       <a
                         href={`/formation?domain=${d.code}`}
-                        className="group flex items-start gap-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] p-4 transition-all hover:border-white/16 hover:bg-[var(--apebi-dark-70)]"
+                        className="group flex items-start gap-3 rounded-xl border border-[var(--apebi-border)] bg-white p-4 shadow-[var(--shadow-card)] transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
                       >
                         <div
                           className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg text-sm"
-                          style={{ background: `${color}20`, color }}
+                          style={{ background: `${color}1A`, color }}
                           aria-hidden
                         >
                           {d.icon ?? '⚡'}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-heading text-[13px] font-semibold text-white">
+                          <p className="font-heading text-[13px] font-semibold text-[var(--apebi-text)]">
                             {d.name_fr}
                           </p>
                           {d.description_fr && (
-                            <p className="mt-0.5 text-[11px] leading-relaxed text-white/40 line-clamp-2">
+                            <p className="mt-0.5 text-[11px] leading-relaxed text-[var(--apebi-text-light)] line-clamp-2">
                               {d.description_fr}
                             </p>
                           )}
@@ -293,12 +293,12 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
         {/* ── Partenaires ───────────────────────────────────── */}
         {institutions.length > 0 && (
-          <section className="border-t border-white/8 px-4 py-12 sm:px-6">
+          <section className="border-t border-[var(--apebi-border)] px-4 py-12 sm:px-6">
             <div className="mx-auto max-w-7xl">
-              <h2 className="mb-2 font-heading text-lg font-semibold text-white">
+              <h2 className="mb-2 font-heading text-lg font-semibold text-[var(--apebi-text)]">
                 Institutions partenaires
               </h2>
-              <p className="mb-8 text-[13px] text-white/40">
+              <p className="mb-8 text-[13px] text-[var(--apebi-text-light)]">
                 Écoles, bootcamps et organismes de certification reconnus par l&apos;APEBI.
               </p>
 
@@ -309,10 +309,10 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
                       href={inst.website_url ?? '#'}
                       target={inst.website_url ? '_blank' : undefined}
                       rel="noopener noreferrer"
-                      className="group flex flex-col gap-3 rounded-xl border border-white/8 bg-[var(--apebi-dark-74)] p-4 transition-all hover:border-white/16 hover:bg-[var(--apebi-dark-70)]"
+                      className="group flex flex-col gap-3 rounded-xl border border-[var(--apebi-border)] bg-white p-4 shadow-[var(--shadow-card)] transition-all hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]"
                     >
                       {/* Logo placeholder */}
-                      <div className="flex size-10 items-center justify-center rounded-lg bg-white/8 text-lg font-bold text-white/50">
+                      <div className="flex size-10 items-center justify-center rounded-lg bg-[var(--apebi-bg-alt)] text-lg font-bold text-[var(--apebi-text-muted)]">
                         {inst.logo_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -327,26 +327,26 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
 
                       <div>
                         <div className="flex items-start justify-between gap-2">
-                          <p className="font-heading text-[13px] font-semibold leading-snug text-white">
+                          <p className="font-heading text-[13px] font-semibold leading-snug text-[var(--apebi-text)]">
                             {inst.name}
                           </p>
                           {inst.is_apebi_partner && (
                             <span
                               className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
-                              style={{ background: 'rgba(0,175,210,0.15)', color: 'var(--apebi-cyan)' }}
+                              style={{ background: 'var(--apebi-cyan-muted)', color: '#0E6E85' }}
                             >
                               Partenaire
                             </span>
                           )}
                         </div>
 
-                        <p className="mt-0.5 text-[11px] text-white/40">
+                        <p className="mt-0.5 text-[11px] text-[var(--apebi-text-light)]">
                           {TYPE_LABELS[inst.type] ?? inst.type}
                           {inst.city && ` · ${inst.city}`}
                         </p>
 
                         {inst.description && (
-                          <p className="mt-2 text-[11px] leading-relaxed text-white/35 line-clamp-2">
+                          <p className="mt-2 text-[11px] leading-relaxed text-[var(--apebi-text-light)] line-clamp-2">
                             {inst.description}
                           </p>
                         )}

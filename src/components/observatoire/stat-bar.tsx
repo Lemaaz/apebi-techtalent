@@ -17,11 +17,11 @@ export function StatBar({ label, value, max, hint, barClass = 'bg-[var(--apebi-c
 
   return (
     <div className="flex items-center gap-3">
-      <div className="w-40 shrink-0 truncate text-right text-xs text-white/70" title={label}>
+      <div className="w-40 shrink-0 truncate text-right text-xs text-[var(--apebi-text-muted)]" title={label}>
         {label}
-        {hint && <span className="ml-1.5 text-white/30">{hint}</span>}
+        {hint && <span className="ml-1.5 text-[var(--apebi-text-light)]">{hint}</span>}
       </div>
-      <div className="h-5 flex-1 overflow-hidden rounded-md bg-white/5">
+      <div className="h-5 flex-1 overflow-hidden rounded-md bg-[var(--apebi-bg-alt)]">
         <div
           className={`flex h-full items-center justify-end rounded-md ${barClass} px-2`}
           style={{ width: `${pct}%` }}

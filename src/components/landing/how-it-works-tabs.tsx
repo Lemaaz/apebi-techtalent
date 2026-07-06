@@ -47,15 +47,15 @@ export function HowItWorksTabs() {
     <div>
       {/* Tab switcher */}
       <div className="mb-10 flex justify-center">
-        <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 backdrop-blur-sm">
+        <div className="inline-flex rounded-xl border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] p-1">
           <button
             type="button"
             onClick={() => setActive('recruiter')}
             className={cn(
               'rounded-lg px-5 py-2.5 text-sm font-medium transition-all',
               active === 'recruiter'
-                ? 'bg-[var(--apebi-cyan)] text-white shadow-glow-cyan'
-                : 'text-white/50 hover:text-white/80',
+                ? 'bg-[var(--apebi-cyan)] text-white shadow-[var(--shadow-card)]'
+                : 'text-[var(--apebi-text-muted)] hover:text-[var(--apebi-text)]',
             )}
           >
             Je recrute
@@ -66,8 +66,8 @@ export function HowItWorksTabs() {
             className={cn(
               'rounded-lg px-5 py-2.5 text-sm font-medium transition-all',
               active === 'talent'
-                ? 'bg-[var(--apebi-cyan)] text-white shadow-glow-cyan'
-                : 'text-white/50 hover:text-white/80',
+                ? 'bg-[var(--apebi-cyan)] text-white shadow-[var(--shadow-card)]'
+                : 'text-[var(--apebi-text-muted)] hover:text-[var(--apebi-text)]',
             )}
           >
             Je cherche un poste
@@ -87,12 +87,12 @@ export function HowItWorksTabs() {
               />
             )}
 
-            <div className="card-lift group rounded-xl border border-white/8 bg-[var(--apebi-dark-85)] p-6 text-center hover:border-[var(--apebi-cyan)]/30 hover:shadow-glow-soft">
-              <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan)]/10 shadow-glow-soft transition-transform duration-300 group-hover:scale-105">
-                <span className="font-heading text-lg font-bold text-[var(--apebi-cyan)]">{step}</span>
+            <div className="card-lift group rounded-xl border border-[var(--apebi-border)] bg-white p-6 text-center shadow-[var(--shadow-card)] hover:border-[var(--apebi-cyan)] hover:shadow-[var(--shadow-card-hover)]">
+              <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan-muted)] transition-transform duration-300 group-hover:scale-105">
+                <span className="font-heading text-lg font-bold text-[var(--apebi-cyan-dark)]">{step}</span>
               </div>
-              <h3 className="font-heading text-base font-semibold text-white">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/50">{description}</p>
+              <h3 className="font-heading text-base font-semibold text-[var(--apebi-text)]">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--apebi-text-muted)]">{description}</p>
             </div>
           </div>
         ))}

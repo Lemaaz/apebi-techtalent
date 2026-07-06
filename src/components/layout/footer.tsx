@@ -4,7 +4,6 @@ import Link from 'next/link'
 const PLATFORM_LINKS = [
   { href: '/entreprises', label: 'Entreprises membres' },
   { href: '/offres', label: 'Offres d\'emploi' },
-  { href: '/observatoire', label: 'Observatoire' },
   { href: '/formation', label: 'Formation' },
   { href: '/a-propos', label: 'À propos' },
 ]

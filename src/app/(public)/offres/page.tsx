@@ -114,7 +114,7 @@ export default async function OffresPage({ searchParams }: { searchParams: Searc
   const jobs = await fetchJobs({ q, contract, remote, seniority })
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[var(--apebi-dark-90)]">
+    <div className="flex min-h-dvh flex-col">
       <Navbar />
       <main className="flex-1">
         {/* Header + filters */}

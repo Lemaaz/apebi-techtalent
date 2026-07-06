@@ -21,7 +21,7 @@ export function RegisterButton({ eventId, slug, isAuthenticated, isRegistered, i
 
   if (isPast) {
     return (
-      <p className="rounded-lg border border-white/8 bg-white/5 px-4 py-2.5 text-center text-sm text-white/45">
+      <p className="rounded-lg border border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-4 py-2.5 text-center text-sm text-[var(--apebi-text-light)]">
         Événement terminé
       </p>
     )
@@ -41,7 +41,7 @@ export function RegisterButton({ eventId, slug, isAuthenticated, isRegistered, i
   if (isRegistered) {
     return (
       <div className="space-y-2">
-        <div className="flex items-center justify-center gap-2 rounded-lg bg-emerald-500/10 px-4 py-2.5 text-sm font-semibold text-emerald-400">
+        <div className="flex items-center justify-center gap-2 rounded-lg bg-[var(--color-success-muted)] px-4 py-2.5 text-sm font-semibold text-[var(--color-success-text)]">
           <CalendarCheck className="size-4" aria-hidden />
           Vous êtes inscrit·e
         </div>
@@ -59,7 +59,7 @@ export function RegisterButton({ eventId, slug, isAuthenticated, isRegistered, i
               }
             })
           }
-          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-white/10 px-4 py-2 text-xs text-white/55 transition-colors hover:bg-white/5 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--apebi-border)] px-4 py-2 text-xs text-[var(--apebi-text-muted)] transition-colors hover:bg-[var(--apebi-bg-alt)] disabled:opacity-60"
         >
           {pending ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : <CalendarX className="size-3.5" aria-hidden />}
           Annuler mon inscription

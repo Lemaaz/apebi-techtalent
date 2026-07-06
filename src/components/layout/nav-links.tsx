@@ -12,7 +12,6 @@ export function NavLinks({ mobile = false }: { mobile?: boolean }) {
     { href: '/entreprises', label: t('companies') },
     { href: '/offres', label: t('jobs') },
     { href: '/formation', label: t('training') },
-    { href: '/observatoire', label: t('observatory') },
     { href: '/a-propos', label: t('about') },
   ]
 
