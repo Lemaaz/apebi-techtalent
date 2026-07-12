@@ -374,6 +374,23 @@
   }
   .float-slow { animation: float-slow 7s ease-in-out infinite; will-change: transform; }
 
+  /* ── Dérive des nœuds du graphe réseau (mimique le canvas à particules du mockup) ── */
+  @keyframes node-drift-a { 0%,100% { transform: translate(0,0); } 50% { transform: translate(3px,-4px); } }
+  @keyframes node-drift-b { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-4px,3px); } }
+  @keyframes node-drift-c { 0%,100% { transform: translate(0,0); } 50% { transform: translate(3px,4px); } }
+  @keyframes node-drift-d { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-3px,-3px); } }
+  .node-drift-a { animation: node-drift-a 9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .node-drift-b { animation: node-drift-b 11s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .node-drift-c { animation: node-drift-c 8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .node-drift-d { animation: node-drift-d 10s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+  /* ── Flux le long des lignes de connexion (mimique le redraw du canvas) ── */
+  @keyframes line-flow {
+    0%, 100% { stroke-opacity: var(--line-op, 0.12); }
+    50%      { stroke-opacity: calc(var(--line-op, 0.12) * 2.2); }
+  }
+  .line-flow { animation: line-flow 5s ease-in-out infinite; }
+
   /* ── Défilement marquee (bandeau confiance) ── */
   @keyframes marquee-scroll {
     from { transform: translateX(0); }
@@ -405,12 +422,19 @@
     box-shadow: 0 8px 30px -12px rgba(0, 175, 210, 0.35);
   }
 
-  /* ── Texte dégradé cyan (accent premium, retenu) ── */
+  /* ── Texte dégradé cyan animé (accent premium hero) ── */
+  @keyframes gradient-shift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
   .text-gradient-cyan {
     background: linear-gradient(114deg, #00AFD2 0%, #57D6EC 48%, #00AFD2 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    animation: gradient-shift 6s ease infinite;
   }
 
   /* ── Carte à survol « lift » (dark) ── */
@@ -437,6 +461,8 @@
     .aurora, .node-pulse, .float-slow, .marquee-track { animation: none !important; }
     .rise-in { animation: none !important; opacity: 1 !important; transform: none !important; }
     .btn-shine:hover::after { animation: none !important; }
+    .text-gradient-cyan { animation: none !important; }
+    .node-drift-a, .node-drift-b, .node-drift-c, .node-drift-d, .line-flow { animation: none !important; }
   }
 
   /* ── Interactive card base ── */

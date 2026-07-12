@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/footer'
 import { HowItWorksTabs } from '@/components/landing/how-it-works-tabs'
 import { NetworkGraph } from '@/components/landing/network-graph'
 import { TrustMarquee } from '@/components/landing/trust-marquee'
+import { ScrollReveal } from '@/components/landing/scroll-reveal'
 
 export const metadata: Metadata = {
   title: { absolute: 'APEBI TechTalent — Talents tech & entreprises numériques au Maroc' },
@@ -228,7 +229,7 @@ export default async function LandingPage() {
         <TrustMarquee />
 
         {/* ── Stats bar ─────────────────────────────────────────── */}
-        <section aria-label="Chiffres clés" className="border-t border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)]">
+        <ScrollReveal as="section" aria-label="Chiffres clés" className="border-t border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)]">
           <dl className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-[var(--apebi-border)] sm:grid-cols-4">
             {liveStats.map(({ value, label }) => (
               <div
@@ -240,10 +241,11 @@ export default async function LandingPage() {
               </div>
             ))}
           </dl>
-        </section>
+        </ScrollReveal>
 
         {/* ── Comment ça marche ─────────────────────────────────── */}
-        <section
+        <ScrollReveal
+          as="section"
           aria-labelledby="how-heading"
           className="relative overflow-hidden bg-white px-4 py-20 sm:px-6"
         >
@@ -265,10 +267,11 @@ export default async function LandingPage() {
             </p>
             <HowItWorksTabs />
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ── Entreprises en vedette ────────────────────────────── */}
-        <section
+        <ScrollReveal
+          as="section"
           aria-labelledby="companies-heading"
           className="border-t border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-4 py-20 sm:px-6"
         >
@@ -341,10 +344,11 @@ export default async function LandingPage() {
               </ul>
             )}
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ── Légitimité institutionnelle ──────────────────────── */}
-        <section
+        <ScrollReveal
+          as="section"
           id="institution"
           aria-labelledby="institution-heading"
           className="relative overflow-hidden bg-[var(--apebi-dark-90)] px-4 py-24 sm:px-6"
@@ -404,10 +408,11 @@ export default async function LandingPage() {
               ))}
             </div>
           </div>
-        </section>
+        </ScrollReveal>
 
         {/* ── Bottom CTA ────────────────────────────────────────── */}
-        <section
+        <ScrollReveal
+          as="section"
           aria-labelledby="cta-heading"
           className="relative overflow-hidden bg-gradient-to-br from-[var(--apebi-dark-90)] to-[#16232A] px-4 py-24 text-center sm:px-6"
         >
@@ -447,7 +452,7 @@ export default async function LandingPage() {
               </Link>
             </div>
           </div>
-        </section>
+        </ScrollReveal>
       </main>
 
       <Footer />

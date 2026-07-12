@@ -145,11 +145,13 @@ Switch `46×26px`, knob `20×20px` qui coulisse `left:3px↔23px`, `transition:l
 - [x] Structure de sections identique
 - [x] Palette identique (tokenisée)
 - [x] `rise-in` hero
-- [ ] Dégradé animé sur « Maroc numérique » (gap #1)
-- [ ] Canvas réseau dynamique (gap #2) — ou décision explicite de garder le SVG statique comme écart acté
-- [ ] Reveal au scroll sur les 6 sections hors hero (gap #3)
-- [ ] Navbar transition scroll dark→light (à vérifier, gap potentiel)
-- [ ] Burger menu mobile fonctionnel avec overlay plein écran (gap #4, à vérifier)
+- [x] Dégradé animé sur « Maroc numérique » (gap #1 — corrigé 12/07/2026, `gradient-shift` sur `.text-gradient-cyan`)
+- [x] Mouvement continu sur le graphe réseau (gap #2 — corrigé 12/07/2026 : dérive CSS des nœuds + pulsation des lignes, plutôt qu'une réécriture canvas — voir note ci-dessous)
+- [x] Reveal au scroll sur les 5 sections hors hero (gap #3 — corrigé 12/07/2026, composant `ScrollReveal` client + `IntersectionObserver`)
+- [ ] Navbar transition scroll dark→light (à vérifier, gap potentiel — non traité dans ce lot)
+- [ ] Burger menu mobile fonctionnel avec overlay plein écran (gap #4, à vérifier — non traité dans ce lot)
+
+> **Note sur le gap #2** : le produit remplace le canvas générique à particules du mockup par un SVG affichant les hubs de domaines nommés (DEV BACKEND, DATA SCIENCE, CYBER SECURITY, CLOUD INFRA) autour d'un nœud central APEBI TechTalent — une info-design plus riche que la décoration d'ambiance du mockup. Plutôt que de revenir à un canvas générique, la dynamique manquante (dérive des nœuds, pulsation des connexions) a été ajoutée en CSS pur sur cette structure existante. Traité comme un **écart acté**, pas un gap restant.
 
 ### 4.2 Connexion / Inscription (`/connexion`, `/inscription`)
 Layout 2 colonnes `0.9fr / 1.1fr`. **Gauche** : panneau sombre `#0F0F0F` avec lueurs radiales statiques, logo, H1 « Rejoignez l'écosystème tech officiel du Maroc », liste de 3 bullets (losange cyan `rotate(45deg)`), mention légale en bas. **Droite** : formulaire sur fond blanc, tabs pill Connexion/Inscription, si Inscription → sélecteur de rôle (2 cartes Talent/Entreprise), champs email/mot de passe (bouton afficher/masquer), lien mot de passe oublié (login only), CTA submit, séparateur « ou continuer avec », boutons Google/LinkedIn (présents dans le mockup — **non implémentés en prod, à trancher**, voir Écarts à trancher), mentions légales en pied.
@@ -191,14 +193,16 @@ Décisions prises lors de l'import initial (PR #1), à ne pas reconsidérer sans
 2. **Navbar transition dark→light au scroll sur Landing** — le mockup a une navbar qui commence transparente/sombre puis devient blanche après 40px de scroll. Le produit a-t-il ce comportement, ou une navbar blanche fixe partout (cohérent avec la décision « thème light unifié » du commit `217c0c2`) ? Si la navbar blanche fixe est le choix assumé post-unification thème, documenter ici comme acté et retirer de cette liste.
 3. **Burger menu mobile Landing** — à vérifier si l'overlay plein écran + cascade de liens du mockup existe dans le produit actuel ou si le menu mobile suit un autre pattern (ex. Sheet shadcn).
 
-## 7. Gaps de fidélité confirmés (audit du 12/07/2026, à corriger en priorité)
+## 7. Gaps de fidélité — suivi
 
-| # | Gap | Page | Sévérité |
-|---|---|---|---|
-| 1 | Dégradé du titre hero statique au lieu d'animé (`gradientShift`) | Landing | Basse — cosmétique |
-| 2 | `NetworkGraph` est un SVG statique à 5 nœuds au lieu du canvas à 42 nœuds dynamiques | Landing | Moyenne — signature visuelle du hero |
-| 3 | Aucun reveal au scroll sur les sections hors hero | Landing (et probablement Formation/Entreprises/OffreDetail qui partagent le même esprit) | Moyenne — impression de page « statique » vs mockup |
-| 4 | Burger menu mobile à vérifier (existence + fidélité de l'animation) | Landing | À investiguer |
+| # | Gap | Page | Sévérité | Statut |
+|---|---|---|---|---|
+| 1 | Dégradé du titre hero statique au lieu d'animé (`gradientShift`) | Landing | Basse — cosmétique | ✅ Corrigé 12/07/2026 |
+| 2 | `NetworkGraph` sans dynamique de mouvement | Landing | Moyenne — signature visuelle du hero | ✅ Corrigé 12/07/2026 (dérive CSS, structure hub conservée — voir note §4.1) |
+| 3 | Aucun reveal au scroll sur les sections hors hero | Landing | Moyenne — impression de page « statique » vs mockup | ✅ Corrigé 12/07/2026 (`ScrollReveal`) |
+| 4 | Burger menu mobile à vérifier (existence + fidélité de l'animation) | Landing | À investiguer | ⏳ Non traité |
+| 5 | Navbar transition scroll dark→light à vérifier vs choix thème light unifié | Landing | À trancher | ⏳ Non traité — voir §6 |
+| 6 | Reveal au scroll non vérifié sur Formation/Entreprises/OffreDetail (sections dans le même esprit que Landing) | Formation, Entreprises, OffreDetail | À investiguer | ⏳ Non traité — hors scope de ce lot (correction limitée à Landing) |
 
 ---
 
