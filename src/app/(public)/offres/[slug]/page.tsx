@@ -371,6 +371,24 @@ export default async function OffreDetailPage({ params }: { params: Params }) {
                   </div>
                 </dl>
               </div>
+
+              {/* Talent onboarding CTA — visiteurs non connectés */}
+              {!isAuthenticated && (
+                <div className="rounded-xl bg-[var(--apebi-dark-90)] p-5 text-center">
+                  <p className="mb-1.5 font-heading text-sm font-semibold text-white">
+                    Ce poste vous correspond ?
+                  </p>
+                  <p className="mb-4 text-xs text-white/55">
+                    Créez votre profil talent en 5 minutes.
+                  </p>
+                  <Link
+                    href={`/talent/inscription?redirect=/offres/${job.slug}`}
+                    className="block rounded-lg bg-[var(--apebi-cyan)] px-4 py-2.5 text-center font-heading text-xs font-semibold text-white transition-colors hover:bg-[var(--apebi-cyan-dark)]"
+                  >
+                    Postuler maintenant
+                  </Link>
+                </div>
+              )}
             </aside>
           </div>
         </div>

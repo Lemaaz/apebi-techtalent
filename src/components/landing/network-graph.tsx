@@ -41,32 +41,32 @@ export function NetworkGraph() {
         <circle cx="55" cy="368" r="6" fill="currentColor" opacity="0.65" className="node-pulse" style={{ animationDelay: '2400ms' }} />
 
         {/* Mid-tier domain nodes */}
-        <circle cx="100" cy="120" r="32" fill="#FFFFFF" opacity="0.95" />
+        <circle cx="100" cy="120" r="32" fill="#0A1620" opacity="0.95" />
         <circle cx="100" cy="120" r="32" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.35" />
         <text x="100" y="116" textAnchor="middle" fill="currentColor" fontSize="8.5" fontWeight="600" fontFamily="Poppins, sans-serif">DEV</text>
-        <text x="100" y="127" textAnchor="middle" fill="#797979" fontSize="7" fontFamily="Hind, sans-serif">BACKEND</text>
+        <text x="100" y="127" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontFamily="Hind, sans-serif">BACKEND</text>
 
-        <circle cx="360" cy="130" r="32" fill="#FFFFFF" opacity="0.95" />
+        <circle cx="360" cy="130" r="32" fill="#0A1620" opacity="0.95" />
         <circle cx="360" cy="130" r="32" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.35" />
         <text x="360" y="126" textAnchor="middle" fill="currentColor" fontSize="8.5" fontWeight="600" fontFamily="Poppins, sans-serif">DATA</text>
-        <text x="360" y="137" textAnchor="middle" fill="#797979" fontSize="7" fontFamily="Hind, sans-serif">SCIENCE</text>
+        <text x="360" y="137" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontFamily="Hind, sans-serif">SCIENCE</text>
 
-        <circle cx="375" cy="285" r="32" fill="#FFFFFF" opacity="0.95" />
+        <circle cx="375" cy="285" r="32" fill="#0A1620" opacity="0.95" />
         <circle cx="375" cy="285" r="32" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.35" />
         <text x="375" y="281" textAnchor="middle" fill="currentColor" fontSize="8.5" fontWeight="600" fontFamily="Poppins, sans-serif">CYBER</text>
-        <text x="375" y="292" textAnchor="middle" fill="#797979" fontSize="7" fontFamily="Hind, sans-serif">SECURITY</text>
+        <text x="375" y="292" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontFamily="Hind, sans-serif">SECURITY</text>
 
-        <circle cx="115" cy="300" r="32" fill="#FFFFFF" opacity="0.95" />
+        <circle cx="115" cy="300" r="32" fill="#0A1620" opacity="0.95" />
         <circle cx="115" cy="300" r="32" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.35" />
         <text x="115" y="296" textAnchor="middle" fill="currentColor" fontSize="8.5" fontWeight="600" fontFamily="Poppins, sans-serif">CLOUD</text>
-        <text x="115" y="307" textAnchor="middle" fill="#797979" fontSize="7" fontFamily="Hind, sans-serif">INFRA</text>
+        <text x="115" y="307" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontFamily="Hind, sans-serif">INFRA</text>
 
         {/* Central node — APEBI TechTalent hub */}
         <circle cx="230" cy="210" r="60" fill="currentColor" opacity="0.05" />
         <circle cx="230" cy="210" r="48" fill="currentColor" opacity="0.07" />
-        <circle cx="230" cy="210" r="36" fill="#FFFFFF" opacity="0.98" />
+        <circle cx="230" cy="210" r="36" fill="#0A1620" opacity="0.98" />
         <circle cx="230" cy="210" r="36" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.60" />
-        <text x="230" y="205" textAnchor="middle" fill="#797979" fontSize="8" fontFamily="Poppins, sans-serif" fontWeight="400">APEBI</text>
+        <text x="230" y="205" textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="8" fontFamily="Poppins, sans-serif" fontWeight="400">APEBI</text>
         <text x="230" y="218" textAnchor="middle" fill="currentColor" fontSize="9" fontWeight="700" fontFamily="Poppins, sans-serif">TechTalent</text>
       </svg>
 

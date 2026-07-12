@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { GraduationCap, Building2, BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
@@ -160,37 +161,36 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
       <main className="flex-1">
 
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section className="relative overflow-hidden border-b border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)] px-4 py-14 sm:px-6">
-          {/* Texture réseau + lueur */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-30" />
+        <section className="relative overflow-hidden bg-[var(--apebi-dark-90)] px-4 py-20 sm:px-6">
+          {/* Lueur cyan */}
           <div
-            className="aurora pointer-events-none absolute -top-24 left-1/2 h-64 w-96 -translate-x-1/2 rounded-full opacity-20 blur-3xl"
-            style={{ background: 'radial-gradient(circle, var(--apebi-cyan), transparent 70%)' }}
             aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: 'radial-gradient(circle at 85% 20%, rgba(0,175,210,0.18), transparent 55%)' }}
           />
 
           <div className="relative mx-auto max-w-3xl text-center">
             <div
               className="rise-in mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider"
-              style={{ borderColor: 'rgba(244,120,91,0.3)', color: 'var(--apebi-coral)', background: 'rgba(244,120,91,0.08)' }}
+              style={{ borderColor: 'rgba(0,175,210,0.3)', color: 'var(--apebi-cyan)', background: 'rgba(0,175,210,0.08)' }}
             >
               <GraduationCap className="size-3.5" aria-hidden />
               Formation Hub
             </div>
 
-            <h1 className="rise-in mb-4 font-heading text-3xl font-bold text-[var(--apebi-text)] sm:text-4xl" style={{ animationDelay: '80ms' }}>
+            <h1 className="rise-in mb-4 font-heading text-3xl font-bold text-white sm:text-4xl" style={{ animationDelay: '80ms' }}>
               Développez vos compétences{' '}
               <span className="text-gradient-cyan">tech</span>
             </h1>
 
-            <p className="rise-in mx-auto max-w-xl text-base leading-relaxed text-[var(--apebi-text-muted)]" style={{ animationDelay: '160ms' }}>
+            <p className="rise-in mx-auto max-w-xl text-base leading-relaxed text-white/60" style={{ animationDelay: '160ms' }}>
               Le catalogue officiel des formations et certifications tech de l&apos;écosystème
               APEBI — écoles, bootcamps, parcours par domaine.
             </p>
           </div>
 
           {/* Stats */}
-          <div className="rise-in mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-4" style={{ animationDelay: '240ms' }}>
+          <div className="rise-in relative mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-4" style={{ animationDelay: '240ms' }}>
             {stats.map(({ label, value, icon: Icon }) => (
               <div
                 key={label}
@@ -358,6 +358,29 @@ export default async function FormationPage({ searchParams }: { searchParams: Se
             </div>
           </section>
         )}
+        {/* ── CTA partenaire ────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-[var(--apebi-dark-90)] px-4 py-20 text-center sm:px-6">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: 'radial-gradient(circle at 50% 0%, rgba(0,175,210,0.16), transparent 60%)' }}
+          />
+          <div className="relative mx-auto max-w-xl">
+            <h2 className="mb-3 font-heading text-2xl font-bold text-white sm:text-3xl">
+              Vous formez des talents tech ?
+            </h2>
+            <p className="mb-7 text-sm leading-relaxed text-white/60">
+              Écoles, universités et bootcamps : rejoignez le réseau des partenaires pédagogiques
+              labellisés et connectez vos diplômés aux entreprises membres APEBI.
+            </p>
+            <Link
+              href="/connexion"
+              className="btn-shine inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--apebi-cyan-dark)]"
+            >
+              Demander la labellisation
+            </Link>
+          </div>
+        </section>
       </main>
 
       <Footer />

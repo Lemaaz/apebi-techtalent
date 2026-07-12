@@ -374,6 +374,13 @@
   }
   .float-slow { animation: float-slow 7s ease-in-out infinite; will-change: transform; }
 
+  /* ── Défilement marquee (bandeau confiance) ── */
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .marquee-track { animation: marquee-scroll 32s linear infinite; }
+
   /* ── Balayage lumineux (bouton) ── */
   @keyframes shine-sweep {
     0%      { transform: translateX(-130%) skewX(-18deg); }
@@ -427,7 +434,7 @@
 
   /* ── Respect de prefers-reduced-motion ── */
   @media (prefers-reduced-motion: reduce) {
-    .aurora, .node-pulse, .float-slow { animation: none !important; }
+    .aurora, .node-pulse, .float-slow, .marquee-track { animation: none !important; }
     .rise-in { animation: none !important; opacity: 1 !important; transform: none !important; }
     .btn-shine:hover::after { animation: none !important; }
   }

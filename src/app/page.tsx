@@ -6,6 +6,7 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { HowItWorksTabs } from '@/components/landing/how-it-works-tabs'
 import { NetworkGraph } from '@/components/landing/network-graph'
+import { TrustMarquee } from '@/components/landing/trust-marquee'
 
 export const metadata: Metadata = {
   title: { absolute: 'APEBI TechTalent — Talents tech & entreprises numériques au Maroc' },
@@ -135,27 +136,26 @@ export default async function LandingPage() {
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section
           aria-labelledby="hero-heading"
-          className="relative overflow-hidden bg-white"
+          className="relative overflow-hidden bg-[var(--apebi-dark-90)]"
         >
           {/* Couches de fond — texture réseau + lueurs */}
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-grid-cyan mask-radial opacity-40" />
             <div
               className="aurora absolute -left-40 -top-32 size-[460px] rounded-full blur-[110px]"
-              style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.14), transparent 70%)' }}
+              style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.16), transparent 55%)' }}
             />
             <div
               className="aurora aurora-slow absolute -right-32 top-16 size-[500px] rounded-full blur-[120px]"
-              style={{ background: 'radial-gradient(circle, rgba(244,120,91,0.10), transparent 70%)' }}
+              style={{ background: 'radial-gradient(circle, rgba(58,70,82,0.4), transparent 55%)' }}
             />
           </div>
 
-          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-32">
 
             {/* Left — text + CTAs */}
             <div className="flex flex-col justify-center">
               <span
-                className="rise-in mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--apebi-cyan)]/30 bg-[var(--apebi-cyan-muted)] px-3 py-1 text-xs font-medium text-[#0E6E85]"
+                className="rise-in mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--apebi-cyan)]/30 bg-white/[0.06] px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]"
                 style={{ animationDelay: '0ms' }}
               >
                 <span className="node-pulse size-1.5 rounded-full bg-[var(--apebi-cyan)]" aria-hidden />
@@ -164,7 +164,7 @@ export default async function LandingPage() {
 
               <h1
                 id="hero-heading"
-                className="rise-in font-heading text-4xl font-bold leading-tight tracking-tight text-[var(--apebi-text)] sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
+                className="rise-in font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
                 style={{ animationDelay: '80ms' }}
               >
                 Connectez les talents tech aux entreprises qui construisent le{' '}
@@ -172,7 +172,7 @@ export default async function LandingPage() {
               </h1>
 
               <p
-                className="rise-in mt-5 max-w-lg text-base leading-relaxed text-[var(--apebi-text-muted)] sm:text-lg"
+                className="rise-in mt-5 max-w-lg text-base leading-relaxed text-white/60 sm:text-lg"
                 style={{ animationDelay: '160ms' }}
               >
                 La plateforme officielle de l&apos;APEBI pour mettre en relation les entreprises
@@ -189,7 +189,7 @@ export default async function LandingPage() {
                 </Link>
                 <Link
                   href="/offres"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--apebi-cyan)]/50 px-6 py-3 text-sm font-semibold text-[var(--apebi-cyan-dark)] transition-all duration-200 hover:border-[var(--apebi-cyan)] hover:bg-[var(--apebi-cyan-muted)]"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/[0.06] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:border-[var(--apebi-cyan)] hover:bg-white/[0.1]"
                 >
                   <Users className="size-4" aria-hidden />
                   Je cherche une opportunité
@@ -202,17 +202,17 @@ export default async function LandingPage() {
                   {(avatarInitials.length > 0 ? avatarInitials : ['CI', 'DX', 'TS', 'AI']).map((init) => (
                     <div
                       key={init}
-                      className="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[var(--apebi-navy)] text-[9px] font-bold text-white"
+                      className="flex size-7 items-center justify-center rounded-full border-2 border-[var(--apebi-dark-90)] bg-[var(--apebi-navy)] text-[9px] font-bold text-white"
                     >
                       {init}
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-[var(--apebi-text-muted)]">
-                  <span className="font-semibold text-[var(--apebi-text)]">
+                <p className="text-xs text-white/50">
+                  <span className="font-semibold text-white">
                     {displayCount(companyCount, STAT_FLOORS.companies)} entreprises
                   </span>{' '}
-                  membres APEBI
+                  membres de l&apos;écosystème APEBI
                 </p>
               </div>
             </div>
@@ -223,6 +223,9 @@ export default async function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ── Trust marquee ─────────────────────────────────────── */}
+        <TrustMarquee />
 
         {/* ── Stats bar ─────────────────────────────────────────── */}
         <section aria-label="Chiffres clés" className="border-t border-[var(--apebi-border)] bg-[var(--apebi-bg-alt)]">
@@ -340,21 +343,88 @@ export default async function LandingPage() {
           </div>
         </section>
 
+        {/* ── Légitimité institutionnelle ──────────────────────── */}
+        <section
+          id="institution"
+          aria-labelledby="institution-heading"
+          className="relative overflow-hidden bg-[var(--apebi-dark-90)] px-4 py-24 sm:px-6"
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 -top-32 size-[360px] rounded-full blur-[110px]"
+            style={{ background: 'radial-gradient(circle, rgba(0,175,210,0.14), transparent 70%)' }}
+          />
+          <div className="relative mx-auto grid max-w-7xl gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--apebi-cyan)]">
+                Légitimité institutionnelle
+              </span>
+              <h2
+                id="institution-heading"
+                className="mt-3 font-heading text-3xl font-bold leading-tight text-white sm:text-4xl"
+              >
+                Portée par l&apos;APEBI, la fédération officielle du numérique marocain
+              </h2>
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60 sm:text-base">
+                APEBI TechTalent est l&apos;outil digital de l&apos;axe « Tech Talent Bridge » porté
+                par la Commission sectorielle Formation &amp; Talent tech (C5) de l&apos;APEBI —
+                l&apos;interlocuteur institutionnel des pouvoirs publics sur les politiques
+                numériques.
+              </p>
+              <dl className="mt-8 flex flex-wrap gap-8">
+                {[
+                  { value: '300+', label: 'entreprises membres APEBI' },
+                  { value: 'C5', label: 'Commission Formation & Talent tech' },
+                  { value: '48h', label: 'délai de validation des comptes' },
+                ].map(({ value, label }) => (
+                  <div key={label}>
+                    <dt className="font-heading text-2xl font-bold text-white">{value}</dt>
+                    <dd className="mt-1 text-xs text-white/45">{label}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {[
+                'Fédération officielle du numérique marocain',
+                '300+ entreprises membres APEBI',
+                'Label APEBI TechTalent',
+                'Axe C — Tech Talent Bridge',
+              ].map((label) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-3.5 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4"
+                >
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[var(--apebi-cyan)]/10">
+                    <span className="size-2 rotate-45 rounded-[2px] bg-[var(--apebi-cyan)]" aria-hidden />
+                  </div>
+                  <span className="font-heading text-sm font-medium text-white">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── Bottom CTA ────────────────────────────────────────── */}
         <section
           aria-labelledby="cta-heading"
-          className="relative overflow-hidden border-t border-[var(--apebi-border)] bg-white px-4 py-20 text-center sm:px-6"
+          className="relative overflow-hidden bg-gradient-to-br from-[var(--apebi-dark-90)] to-[#16232A] px-4 py-24 text-center sm:px-6"
         >
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-cyan mask-radial opacity-30" />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: 'radial-gradient(circle at 50% 0%, rgba(0,175,210,0.16), transparent 60%)' }}
+          />
 
           <div className="relative mx-auto max-w-2xl">
             <h2
               id="cta-heading"
-              className="font-heading text-3xl font-bold text-[var(--apebi-text)] sm:text-4xl"
+              className="font-heading text-3xl font-bold text-white sm:text-4xl"
             >
-              Prêt à rejoindre la communauté ?
+              Prêt à rejoindre l&apos;écosystème ?
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-[var(--apebi-text-muted)]">
+            <p className="mt-3 text-sm leading-relaxed text-white/60">
               {displayCount(companyCount, STAT_FLOORS.companies)} entreprises membres et{' '}
               {displayCount(talentCount, STAT_FLOORS.talents)} talents vous attendent sur la
               plateforme officielle de l&apos;APEBI.
@@ -370,7 +440,7 @@ export default async function LandingPage() {
               </Link>
               <Link
                 href="/inscription"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--apebi-border)] px-6 py-3 text-sm font-semibold text-[var(--apebi-text)] transition-colors hover:bg-[var(--apebi-bg-alt)]"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/[0.06] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:border-[var(--apebi-cyan)] hover:bg-white/[0.1]"
               >
                 <Users className="size-4" aria-hidden />
                 Créer mon profil talent

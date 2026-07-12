@@ -90,12 +90,30 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           </svg>
         </div>
 
-        {/* Tagline + stats */}
+        {/* Tagline + value props + stats */}
         <div>
           <p className="mb-6 font-heading text-xl font-bold leading-tight text-white">
             La plateforme tech de référence de{' '}
             <span style={{ color: 'var(--apebi-cyan)' }}>l&apos;écosystème APEBI</span>
           </p>
+
+          <ul className="mb-7 flex flex-col gap-3">
+            {[
+              'Entreprises validées membres de la fédération APEBI',
+              'Profils talents vérifiés sous 48h par la Commission C5',
+              'Gratuit pour les membres APEBI et les talents tech',
+            ].map((label) => (
+              <li key={label} className="flex items-center gap-3">
+                <span
+                  className="size-2 shrink-0 rotate-45 rounded-[2px]"
+                  style={{ background: 'var(--apebi-cyan)' }}
+                  aria-hidden
+                />
+                <span className="text-sm text-white/70">{label}</span>
+              </li>
+            ))}
+          </ul>
+
           <dl className="grid grid-cols-3 gap-4">
             {DARK_STATS.map(({ value, label }) => (
               <div key={label}>
