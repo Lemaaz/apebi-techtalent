@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { Building2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
@@ -148,6 +149,25 @@ export default async function EntreprisesPage({
             </ul>
           )}
         </div>
+
+        {/* ── CTA ───────────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-[var(--apebi-dark-90)] px-4 py-20 text-center sm:px-6">
+          <div className="relative mx-auto max-w-xl">
+            <h2 className="mb-3 font-heading text-2xl font-bold text-white sm:text-3xl">
+              Votre entreprise est membre APEBI ?
+            </h2>
+            <p className="mb-7 text-sm leading-relaxed text-white/60">
+              Créez votre vitrine, publiez vos offres et accédez au vivier de talents tech
+              validés.
+            </p>
+            <Link
+              href="/entreprises/inscription"
+              className="btn-shine inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--apebi-cyan)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--apebi-cyan-dark)]"
+            >
+              Inscrire mon entreprise
+            </Link>
+          </div>
+        </section>
       </main>
 
       <Footer />

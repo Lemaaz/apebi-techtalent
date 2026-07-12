@@ -214,6 +214,24 @@ export default async function TalentProfilPage() {
 
   return (
     <>
+      {/* ── Status banner ────────────────────────────────── */}
+      {talent.validation_status === 'approved' && (
+        <div
+          className="mb-6 flex items-center gap-3 rounded-xl px-5 py-3.5"
+          style={{ background: 'var(--color-success-muted)', border: '1px solid var(--color-success)' }}
+        >
+          <span
+            className="size-2 shrink-0 rounded-full"
+            style={{ background: 'var(--color-success)' }}
+            aria-hidden
+          />
+          <p className="text-[13px]" style={{ color: 'var(--color-success-text)' }}>
+            <span className="font-heading font-semibold">Profil validé</span> — votre profil est
+            visible par les recruteurs des entreprises membres APEBI.
+          </p>
+        </div>
+      )}
+
       {/* ── Profile header card ─────────────────────────── */}
       <div
         className="mb-8 rounded-xl border p-5"

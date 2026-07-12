@@ -33,20 +33,22 @@ export function NavLinks({ mobile = false }: { mobile?: boolean }) {
 
   return (
     <nav className="hidden items-center gap-6 md:flex" aria-label="Navigation principale">
-      {NAV_LINKS.map(({ href, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className={cn(
-            'text-sm transition-colors hover:text-foreground',
-            pathname.startsWith(href)
-              ? 'font-medium text-foreground'
-              : 'text-muted-foreground',
-          )}
-        >
-          {label}
-        </Link>
-      ))}
+      {NAV_LINKS.map(({ href, label }) => {
+        const active = pathname.startsWith(href)
+        return (
+          <Link
+            key={href}
+            href={href}
+            data-active={active ? 'true' : undefined}
+            className={cn(
+              'nav-link text-sm transition-colors hover:text-foreground',
+              active ? 'font-medium text-foreground' : 'text-muted-foreground',
+            )}
+          >
+            {label}
+          </Link>
+        )
+      })}
     </nav>
   )
 }

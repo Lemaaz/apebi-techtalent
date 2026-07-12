@@ -3,7 +3,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function resend(): Resend {
+  return (_resend ??= new Resend(process.env.RESEND_API_KEY))
+}
 const FROM   = process.env.EMAIL_FROM      ?? 'noreply@techtalent-apebi.vercel.app'
 const FROM_NAME = process.env.EMAIL_FROM_NAME ?? 'APEBI TechTalent'
 const APP_URL   = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
@@ -177,7 +180,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       }))
 
       if (resendEnabled) {
-        await resend.emails.send({
+        await resend().emails.send({
           from: `${FROM_NAME} <${FROM}>`,
           to: email,
           subject: `${jobAlerts.length} nouvelle${jobAlerts.length > 1 ? 's' : ''} offre${jobAlerts.length > 1 ? 's' : ''} pour vous sur APEBI TechTalent`,

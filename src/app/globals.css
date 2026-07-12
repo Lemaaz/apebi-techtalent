@@ -353,6 +353,16 @@
   }
   .aurora-slow { animation-duration: 22s; animation-direction: reverse; }
 
+  /* ── Navbar landing : adaptation des couleurs quand transparente au-dessus du hero (gap #5) ──
+     Actif uniquement quand la navbar landing est en haut de page (data-nav-top='true').
+     Sélecteurs à specificité > utilitaires Tailwind pour piloter la couleur des enfants. */
+  header[data-nav-top='true'] .nav-wordmark { color: #fff !important; }
+  header[data-nav-top='true'] .nav-link { color: rgba(255, 255, 255, 0.72) !important; }
+  header[data-nav-top='true'] .nav-link:hover,
+  header[data-nav-top='true'] .nav-link[data-active='true'] { color: #fff !important; }
+  header[data-nav-top='true'] .nav-ghost { color: #fff !important; }
+  header[data-nav-top='true'] .nav-ghost:hover { color: #fff !important; background-color: rgba(255, 255, 255, 0.1) !important; }
+
   /* ── Entrées échelonnées ── */
   @keyframes rise-in {
     from { opacity: 0; transform: translateY(18px); }
@@ -373,6 +383,83 @@
     50%      { transform: translateY(-10px); }
   }
   .float-slow { animation: float-slow 7s ease-in-out infinite; will-change: transform; }
+
+  /* ── Dérive des nœuds du graphe réseau (mimique le canvas à particules du mockup) ── */
+  @keyframes node-drift-a { 0%,100% { transform: translate(0,0); } 50% { transform: translate(3px,-4px); } }
+  @keyframes node-drift-b { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-4px,3px); } }
+  @keyframes node-drift-c { 0%,100% { transform: translate(0,0); } 50% { transform: translate(3px,4px); } }
+  @keyframes node-drift-d { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-3px,-3px); } }
+  .node-drift-a { animation: node-drift-a 9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .node-drift-b { animation: node-drift-b 11s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .node-drift-c { animation: node-drift-c 8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .node-drift-d { animation: node-drift-d 10s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+  /* ── Flux le long des lignes de connexion (mimique le redraw du canvas) ── */
+  @keyframes line-flow {
+    0%, 100% { stroke-opacity: var(--line-op, 0.12); }
+    50%      { stroke-opacity: calc(var(--line-op, 0.12) * 2.2); }
+  }
+  .line-flow { animation: line-flow 5s ease-in-out infinite; }
+
+  /* ── Réseau vivant : signaux qui circulent le long des liens (hub ↔ domaines) ── */
+  @keyframes signal-travel {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    12%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)); }
+  }
+  .signal {
+    animation: signal-travel 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: transform, opacity;
+  }
+
+  /* ── Flux directionnel : tirets qui défilent le long des liens ── */
+  @keyframes line-stream { to { stroke-dashoffset: -13; } }
+  .line-stream {
+    stroke-dasharray: 3 10;
+    animation: line-stream 1.1s linear infinite;
+  }
+
+  /* ── Cœur APEBI : anneaux qui rayonnent (la fédération émet) ── */
+  @keyframes hub-ring {
+    0%   { transform: scale(1); opacity: 0.55; }
+    70%  { opacity: 0.06; }
+    100% { transform: scale(2.1); opacity: 0; }
+  }
+  .hub-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hub-ring 4.2s ease-out infinite;
+  }
+
+  /* ── Halo des nœuds-domaines qui respire ── */
+  @keyframes node-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50%      { transform: scale(1.12); opacity: 0.15; }
+  }
+  .node-breathe {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: node-breathe 3.6s ease-in-out infinite;
+  }
+
+  /* ── Anneau du cœur : légère pulsation ── */
+  @keyframes hub-core {
+    0%, 100% { opacity: 0.45; }
+    50%      { opacity: 0.9; }
+  }
+  .hub-core {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hub-core 3.2s ease-in-out infinite;
+  }
+
+  /* ── Défilement marquee (bandeau confiance) ── */
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .marquee-track { animation: marquee-scroll 32s linear infinite; }
 
   /* ── Balayage lumineux (bouton) ── */
   @keyframes shine-sweep {
@@ -398,12 +485,19 @@
     box-shadow: 0 8px 30px -12px rgba(0, 175, 210, 0.35);
   }
 
-  /* ── Texte dégradé cyan (accent premium, retenu) ── */
+  /* ── Texte dégradé cyan animé (accent premium hero) ── */
+  @keyframes gradient-shift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
   .text-gradient-cyan {
     background: linear-gradient(114deg, #00AFD2 0%, #57D6EC 48%, #00AFD2 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    animation: gradient-shift 6s ease infinite;
   }
 
   /* ── Carte à survol « lift » (dark) ── */
@@ -427,9 +521,14 @@
 
   /* ── Respect de prefers-reduced-motion ── */
   @media (prefers-reduced-motion: reduce) {
-    .aurora, .node-pulse, .float-slow { animation: none !important; }
+    .aurora, .node-pulse, .float-slow, .marquee-track { animation: none !important; }
     .rise-in { animation: none !important; opacity: 1 !important; transform: none !important; }
     .btn-shine:hover::after { animation: none !important; }
+    .text-gradient-cyan { animation: none !important; }
+    .node-drift-a, .node-drift-b, .node-drift-c, .node-drift-d, .line-flow { animation: none !important; }
+    .signal, .line-stream, .hub-ring, .node-breathe, .hub-core { animation: none !important; }
+    .signal { opacity: 0 !important; }
+    .hub-ring { opacity: 0 !important; }
   }
 
   /* ── Interactive card base ── */

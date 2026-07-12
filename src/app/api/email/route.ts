@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function resend(): Resend {
+  return (_resend ??= new Resend(process.env.RESEND_API_KEY))
+}
 const FROM = process.env.EMAIL_FROM ?? 'noreply@techtalent-apebi.vercel.app'
 const FROM_NAME = process.env.EMAIL_FROM_NAME ?? 'APEBI TechTalent'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
@@ -197,7 +200,7 @@ export async function POST(req: NextRequest) {
         )
 
         for (const email of emails) {
-          await resend.emails.send({
+          await resend().emails.send({
             from: `${FROM_NAME} <${FROM}>`,
             to: email,
             subject: `Nouvelle candidature — ${app.job_postings.title}`,
@@ -222,7 +225,7 @@ export async function POST(req: NextRequest) {
         }
 
         const html = accountValidatedEmail(firstName, payload.role)
-        await resend.emails.send({
+        await resend().emails.send({
           from: `${FROM_NAME} <${FROM}>`,
           to: authUser.user.email,
           subject: 'Votre compte APEBI TechTalent est activé !',
@@ -246,7 +249,7 @@ export async function POST(req: NextRequest) {
         }
 
         const html = accountRejectedEmail(firstName, payload.reason ?? null)
-        await resend.emails.send({
+        await resend().emails.send({
           from: `${FROM_NAME} <${FROM}>`,
           to: authUser.user.email,
           subject: 'Mise à jour de votre demande APEBI TechTalent',
@@ -282,7 +285,7 @@ export async function POST(req: NextRequest) {
           app.job_postings.company_profiles?.name ?? '',
         )
 
-        await resend.emails.send({
+        await resend().emails.send({
           from: `${FROM_NAME} <${FROM}>`,
           to: authUser.user.email,
           subject: `Mise à jour de votre candidature — ${app.job_postings.title}`,

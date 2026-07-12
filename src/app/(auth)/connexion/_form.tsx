@@ -33,6 +33,19 @@ export function ConnexionForm({
 
   return (
     <div className="w-full max-w-sm">
+      {/* Connexion / Inscription switcher */}
+      <div className="mb-8 flex gap-1 rounded-xl bg-[var(--apebi-bg-alt)] p-1">
+        <span className="flex-1 rounded-lg bg-white py-2.5 text-center font-heading text-[13px] font-semibold text-[#0E6E85] shadow-[var(--shadow-card)]">
+          Connexion
+        </span>
+        <Link
+          href="/inscription"
+          className="flex-1 rounded-lg py-2.5 text-center font-heading text-[13px] font-semibold text-[var(--apebi-text-muted)] transition-colors hover:text-[var(--apebi-text)]"
+        >
+          Inscription
+        </Link>
+      </div>
+
       <div className="mb-6 text-center">
         <h1 className="font-heading text-2xl font-bold text-foreground">Se connecter</h1>
         <p className="mt-1 text-sm text-muted-foreground">

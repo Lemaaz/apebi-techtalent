@@ -1,12 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { NavbarShell } from './navbar-shell'
 import { NavLinks } from './nav-links'
 import { NavbarUserMenu } from './navbar-user-menu'
 import { LocaleToggle } from './locale-toggle'
 import { NotificationBell } from './notification-bell'
 
-export async function Navbar() {
+export async function Navbar({ variant = 'default' }: { variant?: 'default' | 'landing' }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -40,41 +41,39 @@ export async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        {/* Logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <div className="rounded bg-white px-2 py-0.5">
-            <Image
-              src="/apebi-logo.png"
-              alt="APEBI"
-              width={80}
-              height={22}
-              className="h-[22px] w-auto object-contain"
-              style={{ width: 'auto' }}
-              priority
-            />
-          </div>
-          <span className="font-heading text-sm font-semibold text-foreground">
-            <span className="text-primary">Tech</span>Talent
-          </span>
-        </Link>
-
-        {/* Desktop nav links */}
-        <NavLinks />
-
-        {/* Locale toggle + notification bell + auth menu */}
-        <div className="flex items-center gap-1">
-          <LocaleToggle />
-          {user && (
-            <NotificationBell
-              userId={user.id}
-              initialNotifications={notifications}
-            />
-          )}
-          <NavbarUserMenu user={userInfo} />
+    <NavbarShell variant={variant}>
+      {/* Logo */}
+      <Link href="/" className="flex shrink-0 items-center gap-2.5">
+        <div className="rounded bg-white px-2 py-0.5">
+          <Image
+            src="/apebi-logo.png"
+            alt="APEBI"
+            width={80}
+            height={22}
+            className="h-[22px] w-auto object-contain"
+            style={{ width: 'auto' }}
+            priority
+          />
         </div>
+        <span className="nav-wordmark font-heading text-sm font-semibold text-foreground">
+          <span className="text-primary">Tech</span>Talent
+        </span>
+      </Link>
+
+      {/* Desktop nav links */}
+      <NavLinks />
+
+      {/* Locale toggle + notification bell + auth menu */}
+      <div className="flex items-center gap-1">
+        <LocaleToggle />
+        {user && (
+          <NotificationBell
+            userId={user.id}
+            initialNotifications={notifications}
+          />
+        )}
+        <NavbarUserMenu user={userInfo} />
       </div>
-    </header>
+    </NavbarShell>
   )
 }

@@ -1,7 +1,10 @@
 import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase/server'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function resend(): Resend {
+  return (_resend ??= new Resend(process.env.RESEND_API_KEY))
+}
 const FROM = process.env.EMAIL_FROM ?? 'noreply@techtalent-apebi.vercel.app'
 const FROM_NAME = process.env.EMAIL_FROM_NAME ?? 'APEBI TechTalent'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://techtalent-apebi.vercel.app'
@@ -74,7 +77,7 @@ export async function sendNewApplicationEmail(params: {
   `
   const html = baseLayout('Nouvelle candidature', content)
   for (const email of params.recruiterEmails) {
-    await resend.emails.send({
+    await resend().emails.send({
       from: `${FROM_NAME} <${FROM}>`,
       to: email,
       subject: `Nouvelle candidature — ${params.jobTitle}`,
@@ -132,7 +135,7 @@ export async function sendAccountStatusEmail(params: {
       }
       <a href="${dashboardUrl}" class="btn">Accéder à mon espace</a>
     `
-    await resend.emails.send({
+    await resend().emails.send({
       from: `${FROM_NAME} <${FROM}>`,
       to: authUser.user.email,
       subject: 'Votre compte APEBI TechTalent est activé !',
@@ -146,7 +149,7 @@ export async function sendAccountStatusEmail(params: {
       ${params.reason ? `<p>Motif : <em>${esc(params.reason)}</em></p>` : ''}
       <p>Pour plus d'informations, contactez-nous à <a href="mailto:techtalent@apebi.ma" style="color:#00AFD2">techtalent@apebi.ma</a>.</p>
     `
-    await resend.emails.send({
+    await resend().emails.send({
       from: `${FROM_NAME} <${FROM}>`,
       to: authUser.user.email,
       subject: 'Mise à jour de votre demande APEBI TechTalent',
@@ -196,7 +199,7 @@ export async function sendApplicationStatusEmail(params: {
     ${msg.body}
     <a href="${APP_URL}/talent/candidatures" class="btn">Voir mes candidatures</a>
   `
-  await resend.emails.send({
+  await resend().emails.send({
     from: `${FROM_NAME} <${FROM}>`,
     to: params.talentEmail,
     subject: msg.subject,
@@ -229,7 +232,7 @@ export async function sendProfileSubmittedEmail(params: {
     <p style="margin-top:16px;font-size:13px;color:#797979">Des questions ? Contactez-nous à <a href="mailto:techtalent@apebi.ma" style="color:#00AFD2">techtalent@apebi.ma</a></p>
   `
 
-  await resend.emails.send({
+  await resend().emails.send({
     from: `${FROM_NAME} <${FROM}>`,
     to: params.toEmail,
     subject: `Votre ${isEntreprise ? 'demande' : 'profil'} APEBI TechTalent est en cours de validation`,
@@ -255,7 +258,7 @@ export async function sendAdminNewProfileEmail(params: {
     <a href="${esc(params.adminReviewUrl)}" class="btn">Examiner le profil</a>
   `
 
-  await resend.emails.send({
+  await resend().emails.send({
     from: `${FROM_NAME} <${FROM}>`,
     to: ADMIN_EMAIL,
     subject: `[TechTalent] ${label} à valider — ${params.name}`,
@@ -294,7 +297,7 @@ export async function sendInvitationEmail(params: {
     </p>
   `
 
-  await resend.emails.send({
+  await resend().emails.send({
     from: `${FROM_NAME} <${FROM}>`,
     to: params.toEmail,
     subject: `${params.companyName} vous invite à postuler — ${params.jobTitle}`,
@@ -333,7 +336,7 @@ export async function sendEventConfirmationEmail(params: {
     <p style="margin-top:16px">Retrouvez vos événements inscrits depuis votre <a href="${APP_URL}/talent/dashboard" style="color:#00AFD2">tableau de bord talent</a>.</p>
   `
 
-  await resend.emails.send({
+  await resend().emails.send({
     from: `${FROM_NAME} <${FROM}>`,
     to: params.toEmail,
     subject: `Inscription confirmée — ${params.eventTitle}`,
