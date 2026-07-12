@@ -67,8 +67,8 @@ Chaque effet du mockup a un nom, une définition exacte, et son statut d'implém
 | Reveal au scroll (`data-reveal`) | Chaque section (stats, comment ça marche, entreprises, institutionnel, témoignages, CTA final) commence à `opacity:0, translateY(24px)` et transitionne à `opacity:1, translateY(0)` (`0.7s ease`) quand elle entre dans le viewport, via `IntersectionObserver({threshold:0.12})`, une seule fois (`unobserve` après trigger) | — | ❌ **ABSENT — aucune section hors hero n'anime au scroll.** Voir gap #3. |
 | `shineSweep` (bouton CTA) | *Non présent dans le mockup Landing* — ajout produit ultérieur (glissement de lueur au hover sur `btn-shine`) | `.btn-shine` | ➕ Ajout produit, hors spec mockup — à conserver (amélioration, pas une dérive) |
 | `auroraDrift` | *Non présent tel quel dans le mockup* — les lueurs radiales du hero (`radial-gradient`) sont statiques dans le mockup | `.aurora` / `.aurora-drift` | ➕ Ajout produit — acceptable, cohérent avec l'esprit ambiant du mockup |
-| Burger menu mobile (Landing) | 3 barres → transforment en X (`rotate(45deg)` / `opacity:0` / `rotate(-45deg)`), overlay plein écran fond `#0F0F0F` qui slide/apparaît, liens en cascade | `MobileMenu` (à vérifier) | ⚠️ À vérifier — voir gap #4 |
-| Navbar scroll transition | `background`/`border-color` transitionnent de transparent-sur-dark à blanc-sur-clair après `scrollY > 40`, `0.3s ease` | — | ⚠️ À vérifier sur la page produit (le mockup Landing gère ça en JS interne ; le produit a une navbar fixe blanche partout) — **écart potentiellement volontaire**, à trancher (voir « Écarts à trancher ») |
+| Burger menu mobile (Landing) | Bouton burger → overlay plein écran fond `#0F0F0F` (porté dans `<body>`), liens en cascade (`rise-in` échelonné 60ms), fermeture X + Escape, scroll-lock body | `NavbarUserMenu` (overlay `createPortal`) | ✅ **Implémenté 12/07/2026** — voir gap #4 |
+| Navbar scroll transition | `background`/`border-color`/`color` transitionnent de transparent-sur-dark (texte blanc) à blanc-sur-clair (texte sombre) après `scrollY > 40`, `0.3s ease` | `NavbarShell` (`variant="landing"`, `data-nav-top`) | ✅ **Implémenté 12/07/2026** — landing uniquement, voir gap #5 |
 
 ### Détail technique — reveal au scroll (à ré-implémenter)
 ```js
@@ -131,7 +131,7 @@ Switch `46×26px`, knob `20×20px` qui coulisse `left:3px↔23px`, `transition:l
 ## 4. Spec par page
 
 ### 4.1 Landing (`/`)
-- **Hero** : fond `#0F0F0F`, canvas réseau animé en fond (overlay `opacity:0.9`) + 2 lueurs radiales statiques (cyan haut-gauche, navy bas-droite). Eyebrow « La fédération du numérique marocain » (cyan). H1 avec dégradé animé sur « Maroc numérique ». Sous-titre. 2 CTA (plein cyan « Je cherche un talent » / outline « Je cherche une opportunité »). Avatars empilés + compteur entreprises.
+- **Hero** : fond `#0F0F0F`, canvas réseau animé en fond (overlay `opacity:0.9`) + 2 lueurs radiales statiques (cyan haut-gauche, navy bas-droite). Eyebrow « Plateforme officielle de l'APEBI » — **overline cyan sans cadre** (uppercase, tracking large, point pulsé), pas de pill encadrée (voir Écarts actés #4). H1 (poids 800) avec dégradé animé sur « Maroc numérique ». Sous-titre. 2 CTA (plein cyan « Je cherche un talent » / outline « Je cherche une opportunité »). Avatars empilés + compteur entreprises.
 - **Trust marquee** : bande grise défilante infinie, 6 secteurs dupliqués x2, séparateurs verticaux.
 - **Stats** : 4 colonnes bordées, `data-reveal`.
 - **Comment ça marche** : tabs Talent/Entreprise, `data-reveal`, 3 étapes numérotées par tab.
@@ -148,8 +148,9 @@ Switch `46×26px`, knob `20×20px` qui coulisse `left:3px↔23px`, `transition:l
 - [x] Dégradé animé sur « Maroc numérique » (gap #1 — corrigé 12/07/2026, `gradient-shift` sur `.text-gradient-cyan`)
 - [x] Mouvement continu sur le graphe réseau (gap #2 — corrigé 12/07/2026 : dérive CSS des nœuds + pulsation des lignes, plutôt qu'une réécriture canvas — voir note ci-dessous)
 - [x] Reveal au scroll sur les 5 sections hors hero (gap #3 — corrigé 12/07/2026, composant `ScrollReveal` client + `IntersectionObserver`)
-- [ ] Navbar transition scroll dark→light (à vérifier, gap potentiel — non traité dans ce lot)
-- [ ] Burger menu mobile fonctionnel avec overlay plein écran (gap #4, à vérifier — non traité dans ce lot)
+- [x] Navbar transition scroll dark→light (gap #5 — corrigé 12/07/2026 : `NavbarShell variant="landing"`, transparente au top puis blanche après 40px, couleurs enfants adaptées via `data-nav-top`)
+- [x] Burger menu mobile fonctionnel avec overlay plein écran (gap #4 — corrigé 12/07/2026 : overlay `#0F0F0F` porté dans `<body>`, cascade `rise-in`, Escape + scroll-lock)
+- [x] Eyebrow hero : pill encadrée remplacée par un overline cyan sans cadre (décision UX 12/07/2026 — voir Écarts actés #4)
 
 > **Note sur le gap #2** : le produit remplace le canvas générique à particules du mockup par un SVG affichant les hubs de domaines nommés (DEV BACKEND, DATA SCIENCE, CYBER SECURITY, CLOUD INFRA) autour d'un nœud central APEBI TechTalent — une info-design plus riche que la décoration d'ambiance du mockup. Plutôt que de revenir à un canvas générique, la dynamique manquante (dérive des nœuds, pulsation des connexions) a été ajoutée en CSS pur sur cette structure existante. Traité comme un **écart acté**, pas un gap restant.
 
@@ -186,12 +187,13 @@ Décisions prises lors de l'import initial (PR #1), à ne pas reconsidérer sans
 1. **Témoignages placeholder (Landing)** — non implémentés : le mockup utilise des slots factices sans données réelles ; les afficher aurait menti sur le produit.
 2. **Widget « Matching IA » (DashboardRecruteur)** — non implémenté : pas de moteur de matching IA réel branché à cette vue actuellement.
 3. **Widget « Shortlist talents » (DashboardRecruteur)** — non implémenté pour la même raison (données fictives dans le mockup).
+4. **Eyebrow hero = overline cyan sans cadre (12/07/2026)** — la pill encadrée (`border + bg-white/6 + rounded-full`) du hero a été retirée au profit d'un overline cyan uppercase sans cadre (décision porteur : la pill « above headline » lisait comme un pattern générique IA). Le signal de légitimité (« Plateforme officielle de l'APEBI ») est conservé sous forme d'overline, conforme au pattern overline du `DESIGN_SYSTEM.md` §3.3. Ne pas réintroduire la pill.
 
 ## 6. Écarts à trancher (nécessitent une décision produit avant d'être traités comme bug ou feature)
 
 1. **Boutons Google/LinkedIn sur Connexion/Inscription** — présents dans le mockup, absents du produit. Est-ce un OAuth à implémenter, ou un écart volontaire (pas de provider configuré) ?
-2. **Navbar transition dark→light au scroll sur Landing** — le mockup a une navbar qui commence transparente/sombre puis devient blanche après 40px de scroll. Le produit a-t-il ce comportement, ou une navbar blanche fixe partout (cohérent avec la décision « thème light unifié » du commit `217c0c2`) ? Si la navbar blanche fixe est le choix assumé post-unification thème, documenter ici comme acté et retirer de cette liste.
-3. **Burger menu mobile Landing** — à vérifier si l'overlay plein écran + cascade de liens du mockup existe dans le produit actuel ou si le menu mobile suit un autre pattern (ex. Sheet shadcn).
+2. ~~**Navbar transition dark→light au scroll sur Landing**~~ — **TRANCHÉ 12/07/2026 : implémenté** (gap #5). La navbar landing commence transparente sur le hero sombre (texte blanc) puis devient blanche/texte sombre après `scrollY > 40`, via `NavbarShell variant="landing"`. Les autres pages gardent la navbar blanche fixe (`variant="default"`, comportement inchangé) — cohérent avec « thème light unifié ». La transition est donc landing-only, pas un retour au dark global.
+3. ~~**Burger menu mobile Landing**~~ — **TRANCHÉ 12/07/2026 : implémenté** (gap #4). Overlay plein écran `#0F0F0F` porté dans `<body>` (via `createPortal`, pour échapper au containing-block du `backdrop-filter` de la navbar), liens en cascade, fermeture X + Escape, scroll-lock. Remplace l'ancien panneau déroulant. S'applique à toutes les pages publiques (pas seulement le landing) puisque la navbar est partagée.
 
 ## 7. Gaps de fidélité — suivi
 
@@ -200,8 +202,8 @@ Décisions prises lors de l'import initial (PR #1), à ne pas reconsidérer sans
 | 1 | Dégradé du titre hero statique au lieu d'animé (`gradientShift`) | Landing | Basse — cosmétique | ✅ Corrigé 12/07/2026 |
 | 2 | `NetworkGraph` sans dynamique de mouvement | Landing | Moyenne — signature visuelle du hero | ✅ Corrigé 12/07/2026 (dérive CSS, structure hub conservée — voir note §4.1) |
 | 3 | Aucun reveal au scroll sur les sections hors hero | Landing | Moyenne — impression de page « statique » vs mockup | ✅ Corrigé 12/07/2026 (`ScrollReveal`) |
-| 4 | Burger menu mobile à vérifier (existence + fidélité de l'animation) | Landing | À investiguer | ⏳ Non traité |
-| 5 | Navbar transition scroll dark→light à vérifier vs choix thème light unifié | Landing | À trancher | ⏳ Non traité — voir §6 |
+| 4 | Burger menu mobile — overlay plein écran + cascade | Landing (+ pages publiques) | Moyenne | ✅ Corrigé 12/07/2026 (`createPortal` vers `<body>`, Escape + scroll-lock) |
+| 5 | Navbar transition scroll dark→light | Landing | À trancher → tranché | ✅ Corrigé 12/07/2026 (`NavbarShell variant="landing"`, landing-only) |
 | 6 | Reveal au scroll non vérifié sur Formation/Entreprises/OffreDetail (sections dans le même esprit que Landing) | Formation, Entreprises, OffreDetail | À investiguer | ⏳ Non traité — hors scope de ce lot (correction limitée à Landing) |
 
 ---

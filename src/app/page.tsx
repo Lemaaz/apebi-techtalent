@@ -131,7 +131,7 @@ export default async function LandingPage() {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <Navbar />
+      <Navbar variant="landing" />
 
       <main className="flex-1">
         {/* ── Hero ──────────────────────────────────────────────── */}
@@ -156,16 +156,16 @@ export default async function LandingPage() {
             {/* Left — text + CTAs */}
             <div className="flex flex-col justify-center">
               <span
-                className="rise-in mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[var(--apebi-cyan)]/30 bg-white/[0.06] px-3 py-1 text-xs font-medium text-[var(--apebi-cyan)]"
+                className="rise-in mb-6 inline-flex w-fit items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--apebi-cyan)]"
                 style={{ animationDelay: '0ms' }}
               >
                 <span className="node-pulse size-1.5 rounded-full bg-[var(--apebi-cyan)]" aria-hidden />
-                Plateforme officielle APEBI
+                Plateforme officielle de l&apos;APEBI
               </span>
 
               <h1
                 id="hero-heading"
-                className="rise-in font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
+                className="rise-in font-heading text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-[52px] lg:leading-[1.1]"
                 style={{ animationDelay: '80ms' }}
               >
                 Connectez les talents tech aux entreprises qui construisent le{' '}
@@ -377,9 +377,9 @@ export default async function LandingPage() {
               </p>
               <dl className="mt-8 flex flex-wrap gap-8">
                 {[
-                  { value: '300+', label: 'entreprises membres APEBI' },
-                  { value: 'C5', label: 'Commission Formation & Talent tech' },
-                  { value: '48h', label: 'délai de validation des comptes' },
+                  { value: '260+', label: 'entreprises membres' },
+                  { value: 'Bridge APEBI', label: 'Commission Formation & Talent tech' },
+                  { value: '35+', label: 'années d\'existence' },
                 ].map(({ value, label }) => (
                   <div key={label}>
                     <dt className="font-heading text-2xl font-bold text-white">{value}</dt>
@@ -392,9 +392,9 @@ export default async function LandingPage() {
             <div className="flex flex-col gap-3">
               {[
                 'Fédération officielle du numérique marocain',
-                '300+ entreprises membres APEBI',
-                'Label APEBI TechTalent',
-                'Axe C — Tech Talent Bridge',
+                '260+ entreprises membres',
+                'Label apebi',
+                'Tech Talent Bridge',
               ].map((label) => (
                 <div
                   key={label}
@@ -430,8 +430,7 @@ export default async function LandingPage() {
               Prêt à rejoindre l&apos;écosystème ?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-white/60">
-              {displayCount(companyCount, STAT_FLOORS.companies)} entreprises membres et{' '}
-              {displayCount(talentCount, STAT_FLOORS.talents)} talents vous attendent sur la
+              {displayCount(companyCount, STAT_FLOORS.companies)} entreprises membres vous attendent sur la
               plateforme officielle de l&apos;APEBI.
             </p>
 
